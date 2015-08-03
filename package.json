@@ -1,0 +1,31 @@
+{
+  "name": "unexpected-markdown",
+  "version": "1.0.0",
+  "description": "A markdown parser that evaluates examples and highligh syntax using unexpected",
+  "main": "./lib/UnexpectedMarkdown.js",
+  "bugs": "https://github.com/unexpectedjs/unexpected-markdown/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unexpectedjs/unexpected-markdown"
+  },
+  "keywords": [
+    "markdown",
+    "unexpected",
+    "documentation"
+  ],
+  "peerDependencies": {
+    "unexpected": "*"
+  },
+  "dependencies": {
+    "async": "1.4.0",
+    "magicpen-prism": "2.0.0",
+    "marked-papandreou": "0.3.3-patch3",
+    "passerror": "1.1.0"
+  },
+  "devDependencies": {
+    "mocha": "2.2.5",
+    "unexpected": "9.4.0"
+  },
+  "author": "Sune Simonsen",
+  "license": "MIT"
+}
