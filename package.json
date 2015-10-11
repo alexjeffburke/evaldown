@@ -1,6 +1,6 @@
 {
   "name": "unexpected-markdown",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A markdown parser that evaluates examples and highligh syntax using unexpected",
   "main": "./lib/UnexpectedMarkdown.js",
   "bugs": "https://github.com/unexpectedjs/unexpected-markdown/issues",
