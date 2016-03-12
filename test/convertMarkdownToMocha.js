@@ -74,7 +74,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -123,7 +123,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -175,7 +175,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -206,7 +206,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -219,7 +219,7 @@ describe('convertMarkdownToMocha', function () {
                                 return endOfExample2(err);
                             }
                             if (isPromise(__returnValue2)) {
-                                return __returnValue2.then(function () { endOfExample2(); }, endOfExample2);
+                                return __returnValue2.then(function () { return endOfExample2(); }, endOfExample2);
                             } else {
                                 return endOfExample2();
                             }
@@ -260,7 +260,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -301,7 +301,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -345,7 +345,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -368,7 +368,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -381,7 +381,7 @@ describe('convertMarkdownToMocha', function () {
                                 return endOfExample2(err);
                             }
                             if (isPromise(__returnValue2)) {
-                                return __returnValue2.then(function () { endOfExample2(); }, endOfExample2);
+                                return __returnValue2.then(function () { return endOfExample2(); }, endOfExample2);
                             } else {
                                 return endOfExample2();
                             }
@@ -423,7 +423,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -444,7 +444,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -457,7 +457,7 @@ describe('convertMarkdownToMocha', function () {
                                 return endOfExample2(err);
                             }
                             if (isPromise(__returnValue2)) {
-                                return __returnValue2.then(function () { endOfExample2(); }, endOfExample2);
+                                return __returnValue2.then(function () { return endOfExample2(); }, endOfExample2);
                             } else {
                                 return endOfExample2();
                             }
@@ -499,7 +499,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -520,7 +520,7 @@ describe('convertMarkdownToMocha', function () {
                             return endOfExample1(err);
                         }
                         if (isPromise(__returnValue1)) {
-                            return __returnValue1.then(function () { endOfExample1(); }, endOfExample1);
+                            return __returnValue1.then(function () { return endOfExample1(); }, endOfExample1);
                         } else {
                             return endOfExample1();
                         }
@@ -534,7 +534,7 @@ describe('convertMarkdownToMocha', function () {
                                 return endOfExample2(err);
                             }
                             if (isPromise(__returnValue2)) {
-                                return __returnValue2.then(function () { endOfExample2(); }, endOfExample2);
+                                return __returnValue2.then(function () { return endOfExample2(); }, endOfExample2);
                             } else {
                                 return endOfExample2();
                             }
