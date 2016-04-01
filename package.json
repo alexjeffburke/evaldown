@@ -23,7 +23,8 @@
     "magicpen-prism": "2.2.1",
     "marked-papandreou": "0.3.3-patch3",
     "passerror": "1.1.0",
-    "source-map": "0.5.1"
+    "source-map": "0.5.1",
+    "source-map-support": "0.4.0"
   },
   "devDependencies": {
     "mocha": "2.2.5",
