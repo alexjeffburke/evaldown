@@ -1,3 +1,4 @@
+/*global describe, it, unexpected:true, setImmediate*/
 var convertMarkdownToMocha = require('../lib/convertMarkdownToMocha');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
@@ -16,7 +17,7 @@ function codeToString(obj) {
 var expect = require('unexpected').clone()
     .use(require('magicpen-prism'))
     .addAssertion('to come out as', function (expect, subject, value) {
-        expect(codeToString(convertMarkdownToMocha(subject)).replace(/    var fileName = '<inline code>'[\s\S]*$/, '}'), 'to equal', codeToString(value));
+        expect(codeToString(convertMarkdownToMocha(subject).code).replace(/    var fileName = '<inline code>'[\s\S]*$/, '}'), 'to equal', codeToString(value));
     });
 
 var synchronousSuccessfulSnippet =
@@ -39,7 +40,7 @@ var synchronousThrowingSnippet =
 
 function fences(code, language) {
     return '```' + (language || 'js') + '\n' + code + '\n```\n';
-};
+}
 
 describe('convertMarkdownToMocha', function () {
     it('should convert a returning snippet expected to be successful', function () {
