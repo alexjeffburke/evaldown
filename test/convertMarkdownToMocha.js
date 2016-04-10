@@ -6,7 +6,7 @@ var escodegen = require('escodegen');
 function codeToString(obj) {
     var ast;
     if (typeof obj === 'function') {
-        obj = '('+ obj.toString() + '());';
+        obj = '(' + obj.toString() + '());';
     } else {
         obj = '(function () {' + obj + '}());';
     }
@@ -113,7 +113,7 @@ describe('convertMarkdownToMocha', function () {
                             var blah = 'abc';
                             if (blah === 'abc') {
                                 __returnValue1 = expect.promise(function (resolve, reject) {
-                                      setImmediate(resolve);
+                                    setImmediate(resolve);
                                 });
                                 break example1;
                             } else {
