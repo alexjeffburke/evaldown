@@ -13,6 +13,9 @@
     "unexpected",
     "documentation"
   ],
+  "scripts": {
+    "test": "mocha"
+  },
   "peerDependencies": {
     "unexpected": "*"
   },
