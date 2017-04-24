@@ -18,8 +18,7 @@
     "test": "mocha && npm run lint"
   },
   "peerDependencies": {
-    "magicpen-prism": "^2.2.1",
-    "unexpected": "*"
+    "magicpen-prism": "^2.2.1"
   },
   "dependencies": {
     "async": "1.4.0",
