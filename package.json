@@ -28,7 +28,7 @@
     "marked-papandreou": "0.3.3-patch3",
     "passerror": "1.1.0",
     "source-map": "0.5.1",
-    "source-map-support": "0.4.0"
+    "source-map-support": "0.5.9"
   },
   "devDependencies": {
     "eslint": "2.13.1",
