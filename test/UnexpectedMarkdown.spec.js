@@ -5,26 +5,26 @@ describe('UnexpectedMarkdown', function () {
     var markdown;
     beforeEach(function () {
         markdown = new UnexpectedMarkdown([
-            "Asserts deep equality.",
-            "",
-            "```javascript",
+            'Asserts deep equality.',
+            '',
+            '```javascript',
             "expect({ a: 'b' }, 'to equal', { a: 'b' });",
-            "var now = new Date();",
+            'var now = new Date();',
             "expect(now, 'to equal', now);",
             "expect(now, 'to equal', new Date(now.getTime()));",
             "expect({ now: now }, 'to equal', { now: now });",
-            "```",
-            "",
-            "For a lot of types a failing equality test results in a nice",
-            "diff. Below you can see an object diff.",
-            "",
-            "```javascript",
+            '```',
+            '',
+            'For a lot of types a failing equality test results in a nice',
+            'diff. Below you can see an object diff.',
+            '',
+            '```javascript',
             "expect({ text: 'foo!' }, 'to equal', { text: 'f00!' });",
-            "```",
-            "",
-            "```output",
-            "Missing output",
-            "```"
+            '```',
+            '',
+            '```output',
+            'Missing output',
+            '```'
         ].join('\n'));
     });
 
@@ -44,12 +44,12 @@ describe('UnexpectedMarkdown', function () {
 
         it('syntax highlight examples', function () {
             return expect(htmlPromise, 'when fulfilled',
-                          'to contain', '<span style="color: #000000">expect</span>');
+                'to contain', '<span style="color: #000000">expect</span>');
         });
 
         it('outputs evaluated examples', function () {
             return expect(htmlPromise, 'when fulfilled',
-                          'to contain', '<span style="background-color: green; color: white">f00</span>');
+                'to contain', '<span style="background-color: green; color: white">f00</span>');
         });
     });
 
@@ -69,16 +69,16 @@ describe('UnexpectedMarkdown', function () {
 
         it('produces a markdown where the examples has been updated', function () {
             return expect(updatedMarkdownPromise, 'when fulfilled', 'to contain', [
-                "```output",
+                '```output',
                 "expected { text: 'foo!' } to equal { text: 'f00!' }",
-                "",
-                "{",
+                '',
+                '{',
                 "  text: 'foo!' // should equal 'f00!'",
-                "               //",
-                "               // -foo!",
-                "               // +f00!",
-                "}",
-                "```"
+                '               //',
+                '               // -foo!',
+                '               // +f00!',
+                '}',
+                '```'
             ].join('\n'));
         });
     });

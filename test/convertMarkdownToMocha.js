@@ -27,12 +27,12 @@ var synchronousSuccessfulSnippet =
 var returningSuccessfulSnippet =
     "var blah = 'abc';\n" +
     "if (blah === 'abc') {\n" +
-    "  return expect.promise(function (resolve, reject) {\n" +
-    "    setImmediate(resolve);\n" +
-    "  });\n" +
-    "} else {\n" +
-    "  return 456;\n" +
-    "}\n";
+    '  return expect.promise(function (resolve, reject) {\n' +
+    '    setImmediate(resolve);\n' +
+    '  });\n' +
+    '} else {\n' +
+    '  return 456;\n' +
+    '}\n';
 
 var synchronousThrowingSnippet =
     "var bar = 'abc';\n" +
