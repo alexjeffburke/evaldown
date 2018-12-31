@@ -74,6 +74,7 @@ describe('UnexpectedMarkdown', function () {
                 "",
                 "{",
                 "  text: 'foo!' // should equal 'f00!'",
+                "               //",
                 "               // -foo!",
                 "               // +f00!",
                 "}",
