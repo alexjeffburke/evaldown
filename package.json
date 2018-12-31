@@ -33,7 +33,7 @@
   "devDependencies": {
     "eslint": "^2.13.1",
     "eslint-config-onelint": "^1.2.0",
-    "mocha": "^2.2.5",
+    "mocha": "^5.2.0",
     "unexpected": "^10.40.0"
   },
   "author": "Sune Simonsen",
