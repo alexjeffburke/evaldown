@@ -21,14 +21,14 @@
     "magicpen-prism": "^2.2.1"
   },
   "dependencies": {
-    "async": "2.6.1",
-    "escodegen": "1.11.0",
-    "esprima": "4.0.1",
+    "async": "^2.6.1",
+    "escodegen": "^1.11.0",
+    "esprima": "^4.0.1",
     "magicpen-prism": "^2.2.1",
-    "marked-papandreou": "0.3.3-patch3",
-    "passerror": "1.1.1",
-    "source-map": "0.5.1",
-    "source-map-support": "0.5.9"
+    "marked-papandreou": "^0.3.3-patch3",
+    "passerror": "^1.1.1",
+    "source-map": "^0.5.1",
+    "source-map-support": "^0.5.9"
   },
   "devDependencies": {
     "eslint": "^2.13.1",
