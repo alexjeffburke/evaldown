@@ -1,4 +1,5 @@
 /*global describe, it, unexpected:true, setImmediate*/
+/* eslint-disable no-labels */
 var convertMarkdownToMocha = require('../lib/convertMarkdownToMocha');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
