@@ -27,12 +27,12 @@ var synchronousSuccessfulSnippet =
 var returningSuccessfulSnippet =
     "var blah = 'abc';\n" +
     "if (blah === 'abc') {\n" +
-    "  return expect.promise(function (resolve, reject) {\n" +
-    "    setImmediate(resolve);\n" +
-    "  });\n" +
-    "} else {\n" +
-    "  return 456;\n" +
-    "}\n";
+    '  return expect.promise(function (resolve, reject) {\n' +
+    '    setImmediate(resolve);\n' +
+    '  });\n' +
+    '} else {\n' +
+    '  return 456;\n' +
+    '}\n';
 
 var synchronousThrowingSnippet =
     "var bar = 'abc';\n" +
@@ -211,6 +211,7 @@ describe('convertMarkdownToMocha', function () {
                         } else {
                             return endOfExample1();
                         }
+                        // eslint-disable-next-line handle-callback-err
                         function endOfExample1(err) {
                             var __returnValue2;
                             example2: try {
@@ -373,6 +374,7 @@ describe('convertMarkdownToMocha', function () {
                         } else {
                             return endOfExample1();
                         }
+                        // eslint-disable-next-line handle-callback-err
                         function endOfExample1(err) {
                             var __returnValue2;
                             example2: try {
@@ -449,6 +451,7 @@ describe('convertMarkdownToMocha', function () {
                         } else {
                             return endOfExample1();
                         }
+                        // eslint-disable-next-line handle-callback-err
                         function endOfExample1(err) {
                             var __returnValue2;
                             example2: try {
@@ -525,6 +528,7 @@ describe('convertMarkdownToMocha', function () {
                         } else {
                             return endOfExample1();
                         }
+                        // eslint-disable-next-line handle-callback-err
                         function endOfExample1(err) {
                             expect = unexpected.clone();
                             var __returnValue2;
