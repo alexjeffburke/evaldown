@@ -32,8 +32,10 @@
   },
   "devDependencies": {
     "eslint": "^5.11.1",
-    "eslint-config-onelint": "^4.0.0",
+    "eslint-config-pretty-standard": "^2.0.0",
+    "eslint-plugin-prettier": "^3.0.1",
     "mocha": "^5.2.0",
+    "prettier": "^1.15.3",
     "unexpected": "^10.40.0"
   },
   "author": "Sune Simonsen",
