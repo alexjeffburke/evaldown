@@ -86,6 +86,16 @@ describe('extractSnippets', function() {
     );
   });
 
+  it('should extract flags from multiple preceding HTML comments', function() {
+    expect(
+      extractSnippets(
+        '<!-- foo:true -->\n<!-- bar:true -->\n<!-- quux:true -->\n```js\nalert("Hello!");\n```\n'
+      ),
+      'to satisfy',
+      [{ flags: { foo: true, bar: true, quux: true } }]
+    );
+  });
+
   it('should tolerate whitespace between the flags and commans in the preceding HTML comment', function() {
     expect(
       extractSnippets(
