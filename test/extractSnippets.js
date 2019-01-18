@@ -45,7 +45,7 @@ describe('extractSnippets', function() {
   it('should allow changing evaluate to false via a preceding HTML comment', function() {
     expect(
       extractSnippets(
-        '<!-- evaluate:false -->\n```js\nalert("Hello!");\n```\n'
+        '<!-- unexpected-markdown evaluate:false -->\n```js\nalert("Hello!");\n```\n'
       ),
       'to satisfy',
       [{ flags: { evaluate: false } }]
@@ -70,7 +70,9 @@ describe('extractSnippets', function() {
 
   it('should extract a flag from a preceding HTML comment', function() {
     expect(
-      extractSnippets('<!-- foo:true -->\n```js\nalert("Hello!");\n```\n'),
+      extractSnippets(
+        '<!-- unexpected-markdown foo:true -->\n```js\nalert("Hello!");\n```\n'
+      ),
       'to satisfy',
       [{ flags: { foo: true } }]
     );
@@ -79,17 +81,37 @@ describe('extractSnippets', function() {
   it('should extract multiple comma-separated flags from a preceding HTML comment', function() {
     expect(
       extractSnippets(
-        '<!-- foo:true,bar:false -->\n```js\nalert("Hello!");\n```\n'
+        '<!-- unexpected-markdown foo:true,bar:false -->\n```js\nalert("Hello!");\n```\n'
       ),
       'to satisfy',
       [{ flags: { foo: true, bar: false } }]
     );
   });
 
+  it('should extract flags from multiple preceding HTML comments', function() {
+    expect(
+      extractSnippets(
+        '<!-- unexpected-markdown foo:true -->\n<!-- unexpected-markdown bar:true -->\n<!-- unexpected-markdown quux:true -->\n```js\nalert("Hello!");\n```\n'
+      ),
+      'to satisfy',
+      [{ flags: { foo: true, bar: true, quux: true } }]
+    );
+  });
+
+  it('should not extract flags from preceding HTML comments that do not start with the unexpected-markdown marker', function() {
+    expect(
+      extractSnippets(
+        '<!-- unexpected-markdown foo:true -->\n<!-- bar:true -->\n<!-- quux:true -->\n```js\nalert("Hello!");\n```\n'
+      ),
+      'to satisfy',
+      [{ flags: { foo: true, bar: undefined, quux: undefined } }]
+    );
+  });
+
   it('should tolerate whitespace between the flags and commans in the preceding HTML comment', function() {
     expect(
       extractSnippets(
-        '<!-- foo : true , bar : false -->\n```js\nalert("Hello!");\n```\n'
+        '<!-- unexpected-markdown foo : true , bar : false -->\n```js\nalert("Hello!");\n```\n'
       ),
       'to satisfy',
       [{ flags: { foo: true, bar: false } }]
@@ -99,7 +121,7 @@ describe('extractSnippets', function() {
   it('should extract flags from both a preceding HTML command and after the language specifier and #', function() {
     expect(
       extractSnippets(
-        '<!-- foo:true -->\n```js#bar:false\nalert("Hello!");\n```\n'
+        '<!-- unexpected-markdown foo:true -->\n```js#bar:false\nalert("Hello!");\n```\n'
       ),
       'to satisfy',
       [{ flags: { foo: true, bar: false } }]
