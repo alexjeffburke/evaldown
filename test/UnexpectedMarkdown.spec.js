@@ -49,7 +49,7 @@ describe('UnexpectedMarkdown', function() {
         htmlPromise,
         'when fulfilled',
         'to contain',
-        '<span style="color: #000000">expect</span>'
+        '<span style="color: #DD4A68">expect</span>'
       );
     });
 
