@@ -21,7 +21,7 @@
     "magicpen-prism": "^2.2.1"
   },
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^3.0.0",
     "escodegen": "^1.11.0",
     "esprima": "^4.0.1",
     "magicpen-prism": "^3.0.1",
