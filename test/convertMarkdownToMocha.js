@@ -1,4 +1,4 @@
-/*global unexpected:true*/
+/* global unexpected:true */
 /* eslint-disable no-labels, mocha/no-nested-tests, mocha/no-identical-title */
 
 var convertMarkdownToMocha = require('../lib/convertMarkdownToMocha');
@@ -8,9 +8,9 @@ var escodegen = require('escodegen');
 function codeToString(obj) {
   var ast;
   if (typeof obj === 'function') {
-    obj = '(' + obj.toString() + '());';
+    obj = `(${obj.toString()}());`;
   } else {
-    obj = '(function () {' + obj + '}());';
+    obj = `(function () {${obj}}());`;
   }
   ast = esprima.parse(obj).body[0].expression.callee.body;
   return escodegen.generate(ast);
@@ -22,7 +22,7 @@ var expect = require('unexpected')
   .addAssertion('to come out as', function(expect, subject, value) {
     expect(
       codeToString(convertMarkdownToMocha(subject).code).replace(
-        /    var fileName = '<inline code>'[\s\S]*$/,
+        / {4}var fileName = '<inline code>'[\s\S]*$/,
         '}'
       ),
       'to equal',
@@ -47,7 +47,7 @@ var synchronousThrowingSnippet =
   "var bar = 'abc';\n" + "expect(bar, 'to equal', 'def');\n";
 
 function fences(code, language) {
-  return '```' + (language || 'js') + '\n' + code + '\n```\n';
+  return `\`\`\`${language || 'js'}\n${code}\n\`\`\`\n`;
 }
 
 describe('convertMarkdownToMocha', function() {
@@ -98,9 +98,10 @@ describe('convertMarkdownToMocha', function() {
 
   it('should convert a returning snippet expected to fail', function() {
     expect(
-      fences(returningSuccessfulSnippet) +
-        '\n' +
-        fences('theErrorMessage', 'output'),
+      `${fences(returningSuccessfulSnippet)}\n${fences(
+        'theErrorMessage',
+        'output'
+      )}`,
       'to come out as',
       function() {
         function isPromise(obj) {
@@ -152,11 +153,10 @@ describe('convertMarkdownToMocha', function() {
 
   it('should convert a returning snippet expected to fail followed by another one', function() {
     expect(
-      fences(returningSuccessfulSnippet) +
-        '\n' +
-        fences('theErrorMessage', 'output') +
-        '\n' +
-        fences(synchronousSuccessfulSnippet),
+      `${fences(returningSuccessfulSnippet)}\n${fences(
+        'theErrorMessage',
+        'output'
+      )}\n${fences(synchronousSuccessfulSnippet)}`,
       'to come out as',
       function() {
         function isPromise(obj) {
@@ -294,9 +294,10 @@ describe('convertMarkdownToMocha', function() {
 
   it('should convert a non-returning snippet expected to fail', function() {
     expect(
-      fences(synchronousThrowingSnippet) +
-        '\n' +
-        fences('theErrorMessage', 'output'),
+      `${fences(synchronousThrowingSnippet)}\n${fences(
+        'theErrorMessage',
+        'output'
+      )}`,
       'to come out as',
       function() {
         function isPromise(obj) {
@@ -340,11 +341,10 @@ describe('convertMarkdownToMocha', function() {
 
   it('should convert a non-returning snippet expected to fail followed by another one', function() {
     expect(
-      fences(synchronousThrowingSnippet) +
-        '\n' +
-        fences('theErrorMessage', 'output') +
-        '\n' +
-        fences(synchronousSuccessfulSnippet),
+      `${fences(synchronousThrowingSnippet)}\n${fences(
+        'theErrorMessage',
+        'output'
+      )}\n${fences(synchronousSuccessfulSnippet)}`,
       'to come out as',
       function() {
         function isPromise(obj) {
@@ -428,9 +428,9 @@ describe('convertMarkdownToMocha', function() {
 
   it('should convert a synchronously succeeding snippet followed by another one', function() {
     expect(
-      fences(synchronousSuccessfulSnippet) +
-        '\n' +
-        fences(synchronousThrowingSnippet),
+      `${fences(synchronousSuccessfulSnippet)}\n${fences(
+        synchronousThrowingSnippet
+      )}`,
       'to come out as',
       function() {
         function isPromise(obj) {
@@ -512,9 +512,10 @@ describe('convertMarkdownToMocha', function() {
 
   it('should inject a fresh unexpected clone before a snippet with #freshExpect:true', function() {
     expect(
-      fences(synchronousSuccessfulSnippet) +
-        '\n' +
-        fences(synchronousThrowingSnippet, 'javascript#freshExpect:true'),
+      `${fences(synchronousSuccessfulSnippet)}\n${fences(
+        synchronousThrowingSnippet,
+        'javascript#freshExpect:true'
+      )}`,
       'to come out as',
       function() {
         function isPromise(obj) {
