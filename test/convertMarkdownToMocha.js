@@ -1,5 +1,6 @@
 /*global unexpected:true*/
-/* eslint-disable no-labels */
+/* eslint-disable no-labels, mocha/no-nested-tests, mocha/no-identical-title */
+
 var convertMarkdownToMocha = require('../lib/convertMarkdownToMocha');
 var esprima = require('esprima');
 var escodegen = require('escodegen');
