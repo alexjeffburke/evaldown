@@ -19,7 +19,11 @@ function codeToString(obj) {
 var expect = require('unexpected')
   .clone()
   .use(require('magicpen-prism'))
-  .addAssertion('to come out as', function(expect, subject, value) {
+  .addAssertion('<string> to come out as <function|string>', function(
+    expect,
+    subject,
+    value
+  ) {
     expect(
       codeToString(convertMarkdownToMocha(subject).code).replace(
         / {4}var fileName = '<inline code>'[\s\S]*$/,
