@@ -155,4 +155,14 @@ describe('extractSnippets', function() {
       [{ index: 25 }]
     );
   });
+
+  it('captures flag before output blocks', function() {
+    expect(
+      extractSnippets(
+        '```js\nalert("Hello!");\n```\n\n<!-- unexpected-markdown foo:true -->\n```output\nthe output\n```\n'
+      ),
+      'to satisfy',
+      [{ lang: 'javascript' }, { lang: 'output', flags: { foo: true } }]
+    );
+  });
 });

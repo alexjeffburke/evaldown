@@ -144,9 +144,95 @@ describe('convertMarkdownToMocha', function() {
             }
             function endOfExample1(err) {
               if (err) {
-                expect(err, 'to have message', 'theErrorMessage');
+                var message = err.isUnexpected
+                  ? err.getErrorMessage('text').toString()
+                  : err.message;
+                expect(message, 'to equal', 'theErrorMessage');
               } else {
-                throw new Error('expected example 1 to fail');
+                throw new Error('expected example to fail');
+              }
+            }
+          });
+        });
+      }
+    );
+  });
+
+  it('should convert a snippet where the output block has cleanStackTrace:true', function() {
+    expect(
+      `${fences(
+        returningSuccessfulSnippet
+      )}\n<!-- unexpected-markdown cleanStackTrace:true -->\n${fences(
+        'theErrorMessage',
+        'output'
+      )}`,
+      'to come out as',
+      function() {
+        function isPromise(obj) {
+          return obj && typeof obj.then === 'function';
+        }
+
+        if (typeof unexpected === 'undefined') {
+          unexpected = require('unexpected');
+          unexpected.output.preferredWidth = 80;
+        }
+
+        describe('<inline code>', function() {
+          it('example #1 (<inline code>:2:1) should fail with the correct error message', function() {
+            var expect = unexpected.clone();
+            var __returnValue1;
+            example1: try {
+              var blah = 'abc';
+              if (blah === 'abc') {
+                __returnValue1 = expect.promise(function(resolve, reject) {
+                  setImmediate(resolve);
+                });
+                break example1;
+              } else {
+                __returnValue1 = 456;
+                break example1;
+              }
+            } catch (err) {
+              return endOfExample1(err);
+            }
+            if (isPromise(__returnValue1)) {
+              return __returnValue1.then(function() {
+                return endOfExample1();
+              }, endOfExample1);
+            } else {
+              return endOfExample1();
+            }
+            function endOfExample1(err) {
+              function cleanStackTrace(stack) {
+                var lines = stack.split('\n');
+                let numStackLines = 0;
+                for (var i = 0; i < lines.length; i += 1) {
+                  const matchStackLine = lines[i].match(
+                    /^( +at \w+) \([^)]+\)/
+                  );
+                  if (matchStackLine) {
+                    numStackLines += 1;
+                    if (numStackLines <= 2) {
+                      // eslint-disable-next-line prefer-template
+                      lines[i] = matchStackLine[1] + ' (/path/to/file.js:x:y)';
+                    } else {
+                      lines.splice(i, 1);
+                      i -= 1;
+                    }
+                  } else {
+                    numStackLines = 0;
+                  }
+                }
+                return lines.join('\n');
+              }
+              if (err) {
+                var message = err.isUnexpected
+                  ? err.getErrorMessage('text').toString()
+                  : err.message;
+                message = cleanStackTrace(message);
+                expect(message, 'to equal', 'theErrorMessage');
+              } else {
+                throw new Error('expected example to fail');
               }
             }
           });
@@ -199,9 +285,12 @@ describe('convertMarkdownToMocha', function() {
             }
             function endOfExample1(err) {
               if (err) {
-                expect(err, 'to have message', 'theErrorMessage');
+                var message = err.isUnexpected
+                  ? err.getErrorMessage('text').toString()
+                  : err.message;
+                expect(message, 'to equal', 'theErrorMessage');
               } else {
-                throw new Error('expected example 1 to fail');
+                throw new Error('expected example to fail');
               }
             }
           });
@@ -332,9 +421,12 @@ describe('convertMarkdownToMocha', function() {
             }
             function endOfExample1(err) {
               if (err) {
-                expect(err, 'to have message', 'theErrorMessage');
+                var message = err.isUnexpected
+                  ? err.getErrorMessage('text').toString()
+                  : err.message;
+                expect(message, 'to equal', 'theErrorMessage');
               } else {
-                throw new Error('expected example 1 to fail');
+                throw new Error('expected example to fail');
               }
             }
           });
@@ -379,9 +471,12 @@ describe('convertMarkdownToMocha', function() {
             }
             function endOfExample1(err) {
               if (err) {
-                expect(err, 'to have message', 'theErrorMessage');
+                var message = err.isUnexpected
+                  ? err.getErrorMessage('text').toString()
+                  : err.message;
+                expect(message, 'to equal', 'theErrorMessage');
               } else {
-                throw new Error('expected example 1 to fail');
+                throw new Error('expected example to fail');
               }
             }
           });

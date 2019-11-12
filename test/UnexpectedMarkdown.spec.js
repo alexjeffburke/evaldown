@@ -64,22 +64,17 @@ describe('UnexpectedMarkdown', function() {
   });
 
   describe('withUpdatedExamples', function() {
-    var updatedMarkdownPromise;
-    beforeEach(function() {
-      updatedMarkdownPromise = expect.promise(function(resolve, reject) {
-        markdown.withUpdatedExamples({}, function(err, markdown) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(markdown.toString());
-          }
-        });
-      });
-    });
-
     it('produces a markdown where the examples has been updated', function() {
       return expect(
-        updatedMarkdownPromise,
+        expect.promise(function(resolve, reject) {
+          markdown.withUpdatedExamples({}, function(err, markdown) {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(markdown.toString());
+            }
+          });
+        }),
         'when fulfilled',
         'to contain',
         [
@@ -96,5 +91,44 @@ describe('UnexpectedMarkdown', function() {
         ].join('\n')
       );
     });
+  });
+
+  it('produces a markdown where the examples has been updated', function() {
+    const markdown = new UnexpectedMarkdown(
+      [
+        'Asserts deep equality.',
+        '',
+        '```javascript',
+        'throw new Error("foo\\n  at bar (/somewhere.js:1:2)\\n  at quux (/blah.js:3:4)\\n  at baz (/yadda.js:5:6)")',
+        '```',
+        '',
+        '<!-- unexpected-markdown cleanStackTrace:true -->',
+        '```output',
+        'Missing output',
+        '```'
+      ].join('\n')
+    );
+
+    return expect(
+      expect.promise(function(resolve, reject) {
+        markdown.withUpdatedExamples({}, function(err, markdown) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(markdown.toString());
+          }
+        });
+      }),
+      'when fulfilled',
+      'to contain',
+      [
+        '<!-- unexpected-markdown cleanStackTrace:true -->',
+        '```output',
+        'foo',
+        '  at bar (/path/to/file.js:x:y)',
+        '  at quux (/path/to/file.js:x:y)',
+        '```'
+      ].join('\n')
+    );
   });
 });
