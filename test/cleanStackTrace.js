@@ -10,6 +10,22 @@ describe('cleanStackTrace', function() {
     );
   });
 
+  it('should handle a stack trace with evalmachine.<anonymous>', function() {
+    expect(
+      cleanStackTrace('foo\n  at bar (evalmachine.<anonymous>:3:4)'),
+      'to equal',
+      'foo\n  at bar (/path/to/file.js:x:y)'
+    );
+  });
+
+  it('should handle a stack trace with just a path', function() {
+    expect(
+      cleanStackTrace('foo\n  at /foo/bar.js:3:4'),
+      'to equal',
+      'foo\n  at /path/to/file.js:x:y'
+    );
+  });
+
   it('should only preserve 2 stack locations per trace', function() {
     expect(
       cleanStackTrace(

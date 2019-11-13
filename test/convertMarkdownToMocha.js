@@ -208,13 +208,15 @@ describe('convertMarkdownToMocha', function() {
                 let numStackLines = 0;
                 for (var i = 0; i < lines.length; i += 1) {
                   const matchStackLine = lines[i].match(
-                    /^( +at \w+) \([^)]+\)/
+                    /^( +at (?:[\w<>]+ \()?)[^)]+(\)?)$/
                   );
                   if (matchStackLine) {
                     numStackLines += 1;
                     if (numStackLines <= 2) {
-                      // eslint-disable-next-line prefer-template
-                      lines[i] = matchStackLine[1] + ' (/path/to/file.js:x:y)';
+                      lines[i] = // eslint-disable-next-line prefer-template
+                        matchStackLine[1] +
+                        '/path/to/file.js:x:y' +
+                        matchStackLine[2];
                     } else {
                       lines.splice(i, 1);
                       i -= 1;
