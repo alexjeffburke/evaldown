@@ -9,7 +9,7 @@ describe('UnexpectedMarkdown', function() {
         'Asserts deep equality.',
         '',
         '```javascript',
-        "expect({ a: 'b' }, 'to equal', { a: 'b' });",
+        "expect({ a: 'b' }, 'to equal', { a: 1234 });",
         'var now = new Date();',
         "expect(now, 'to equal', now);",
         "expect(now, 'to equal', new Date(now.getTime()));",
@@ -31,10 +31,9 @@ describe('UnexpectedMarkdown', function() {
   });
 
   describe('toHtml', function() {
-    var htmlPromise;
-    beforeEach(function() {
-      htmlPromise = expect.promise(function(resolve, reject) {
-        markdown.toHtml({}, function(err, html) {
+    function createHtml(theme) {
+      return expect.promise(function(resolve, reject) {
+        markdown.toHtml({ theme }, function(err, html) {
           if (err) {
             reject(err);
           } else {
@@ -42,20 +41,20 @@ describe('UnexpectedMarkdown', function() {
           }
         });
       });
-    });
+    }
 
-    it('syntax highlight examples', function() {
+    it('syntax highlight examples (dark)', function() {
       return expect(
-        htmlPromise,
+        createHtml('dark'),
         'when fulfilled',
         'to contain',
-        '<span style="color: #DD4A68">expect</span>'
+        '<span style="color: #66D9EF; font-weight: bold">1234</span>'
       );
     });
 
-    it('outputs evaluated examples', function() {
+    it('outputs highlight examples (light)', function() {
       return expect(
-        htmlPromise,
+        createHtml('light'),
         'when fulfilled',
         'to contain',
         '<span style="background-color: green; color: white">f00</span>'
