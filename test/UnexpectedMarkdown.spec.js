@@ -75,6 +75,29 @@ describe('UnexpectedMarkdown', function() {
         )
       );
     });
+
+    it('should work correctly with async snippets that reject', async () => {
+      const markdown = new UnexpectedMarkdown(
+        [
+          '<!-- unexpected-markdown async:true -->',
+          '```javascript',
+          "return Promise.reject(new Error('boom'));",
+          '```',
+          '',
+          '```output',
+          'Missing output',
+          '```'
+        ].join('\n')
+      );
+
+      const updatedMarkdown = await markdown.withUpdatedExamples({});
+
+      expect(
+        updatedMarkdown.content,
+        'to contain',
+        ['```output', 'boom', '```'].join('\n')
+      );
+    });
   });
 
   it('produces a markdown where the examples has been updated', function() {
