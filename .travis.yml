@@ -16,4 +16,5 @@ matrix:
       node_js: '8'
       env:
         - TARGET=coverage
-  script: npm run $TARGET
+script: npm run $TARGET
+after_success: "<coverage/lcov.info ./node_modules/coveralls/bin/coveralls.js"

@@ -27,6 +27,7 @@
     "source-map-support": "^0.5.9"
   },
   "devDependencies": {
+    "coveralls": "^3.0.9",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-standard": "^14.0.0",
