@@ -12,4 +12,8 @@ matrix:
       node_js: '8'
       env:
         - TARGET=lint
+    - name: Coverage
+      node_js: '8'
+      env:
+        - TARGET=coverage
   script: npm run $TARGET

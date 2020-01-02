@@ -159,6 +159,8 @@ describe('convertMarkdownToMocha', function() {
   });
 
   it('should convert a snippet where the output block has cleanStackTrace:true', function() {
+    if (process.env.NODE_ENV === 'coverage') return this.skip();
+
     expect(
       `${fences(
         returningSuccessfulSnippet
