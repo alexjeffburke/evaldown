@@ -31,21 +31,9 @@ describe('UnexpectedMarkdown', function() {
   });
 
   describe('toHtml', function() {
-    function createHtml(theme) {
-      return expect.promise(function(resolve, reject) {
-        markdown.toHtml({ theme }, function(err, html) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(html);
-          }
-        });
-      });
-    }
-
     it('syntax highlight examples (dark)', function() {
       return expect(
-        createHtml('dark'),
+        markdown.toHtml({ theme: 'dark' }),
         'when fulfilled',
         'to contain',
         '<span style="color: #66D9EF; font-weight: bold">1234</span>'
@@ -54,7 +42,7 @@ describe('UnexpectedMarkdown', function() {
 
     it('outputs highlight examples (light)', function() {
       return expect(
-        createHtml('light'),
+        markdown.toHtml({ theme: 'light' }),
         'when fulfilled',
         'to contain',
         '<span style="background-color: green; color: white">f00</span>'
@@ -65,29 +53,26 @@ describe('UnexpectedMarkdown', function() {
   describe('withUpdatedExamples', function() {
     it('produces a markdown where the examples has been updated', function() {
       return expect(
-        expect.promise(function(resolve, reject) {
-          markdown.withUpdatedExamples({}, function(err, markdown) {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(markdown.toString());
-            }
-          });
-        }),
+        markdown.withUpdatedExamples({}),
         'when fulfilled',
-        'to contain',
-        [
-          '```output',
-          "expected { text: 'foo!' } to equal { text: 'f00!' }",
-          '',
-          '{',
-          "  text: 'foo!' // should equal 'f00!'",
-          '               //',
-          '               // -foo!',
-          '               // +f00!',
-          '}',
-          '```'
-        ].join('\n')
+        expect.it(markdown =>
+          expect(
+            markdown.toString(),
+            'to contain',
+            [
+              '```output',
+              "expected { text: 'foo!' } to equal { text: 'f00!' }",
+              '',
+              '{',
+              "  text: 'foo!' // should equal 'f00!'",
+              '               //',
+              '               // -foo!',
+              '               // +f00!',
+              '}',
+              '```'
+            ].join('\n')
+          )
+        )
       );
     });
   });
@@ -109,25 +94,22 @@ describe('UnexpectedMarkdown', function() {
     );
 
     return expect(
-      expect.promise(function(resolve, reject) {
-        markdown.withUpdatedExamples({}, function(err, markdown) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(markdown.toString());
-          }
-        });
-      }),
+      markdown.withUpdatedExamples({}),
       'when fulfilled',
-      'to contain',
-      [
-        '<!-- unexpected-markdown cleanStackTrace:true -->',
-        '```output',
-        'foo',
-        '  at bar (/path/to/file.js:x:y)',
-        '  at quux (/path/to/file.js:x:y)',
-        '```'
-      ].join('\n')
+      expect.it(markdown =>
+        expect(
+          markdown.toString(),
+          'to contain',
+          [
+            '<!-- unexpected-markdown cleanStackTrace:true -->',
+            '```output',
+            'foo',
+            '  at bar (/path/to/file.js:x:y)',
+            '  at quux (/path/to/file.js:x:y)',
+            '```'
+          ].join('\n')
+        )
+      )
     );
   });
 });

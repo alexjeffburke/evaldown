@@ -18,12 +18,10 @@
     "test": "mocha && npm run lint"
   },
   "dependencies": {
-    "async": "^3.0.0",
     "escodegen": "^1.11.0",
     "esprima": "^4.0.1",
     "magicpen-prism": "^4.0.0",
     "marked-papandreou": "^0.3.3-patch3",
-    "passerror": "^1.1.1",
     "source-map": "^0.5.1",
     "source-map-support": "^0.5.9"
   },
