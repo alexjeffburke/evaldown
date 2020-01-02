@@ -45,7 +45,8 @@ describe('extractSnippets', () => {
       await evaluateSnippets(snippets);
 
       expect(snippets[0], 'to satisfy', {
-        htmlErrorMessage: '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">boom</span></div></div>',
+        htmlErrorMessage:
+          '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">boom</span></div></div>',
         errorMessage: 'boom'
       });
     });
@@ -56,15 +57,17 @@ describe('extractSnippets', () => {
           lang: 'javascript',
           flags: { async: true, evaluate: true },
           index: 40,
-          code: "Promise.resolve();"
+          code: 'Promise.resolve();'
         }
       ];
 
       await evaluateSnippets(snippets);
 
       expect(snippets[0], 'to satisfy', {
-        htmlErrorMessage: '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">Async&nbsp;code&nbsp;block&nbsp;did&nbsp;not&nbsp;return&nbsp;a&nbsp;promise&nbsp;or&nbsp;throw</span></div><div><span style="color: red; font-weight: bold">Promise.resolve();</span></div></div>',
-        errorMessage: 'Async code block did not return a promise or throw\nPromise.resolve();'
+        htmlErrorMessage:
+          '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">Async&nbsp;code&nbsp;block&nbsp;did&nbsp;not&nbsp;return&nbsp;a&nbsp;promise&nbsp;or&nbsp;throw</span></div><div><span style="color: red; font-weight: bold">Promise.resolve();</span></div></div>',
+        errorMessage:
+          'Async code block did not return a promise or throw\nPromise.resolve();'
       });
     });
   });
