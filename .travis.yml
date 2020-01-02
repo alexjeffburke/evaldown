@@ -1,5 +1,13 @@
 language: node_js
+env:
+  - TARGET=test
 node_js:
   - '8'
   - '10'
-  - 'node'
+matrix:
+  include:
+    - name: Lint
+      node_js: '8'
+      env:
+        - TARGET=lint
+  script: npm run $TARGET

@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "lint": "eslint . && prettier --check '**/*.js'",
-    "test": "mocha && npm run lint"
+    "test": "mocha"
   },
   "dependencies": {
     "escodegen": "^1.11.0",
