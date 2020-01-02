@@ -1,6 +1,11 @@
 This module uses the markdown parser [marked](https://github.com/chjj/marked) to
-generate html output from markdown files. In addition to what marked already
-offers, this module uses
+generate html output from markdown files.
+
+[![NPM version](https://img.shields.io/npm/v/unexpected-markdown.svg)](https://www.npmjs.com/package/unexpected-markdown)
+[![Build Status](https://img.shields.io/travis/unexpectedjs/unexpected-markdown/master.svg)](https://travis-ci.org/unexpectedjs/unexpected-markdown)
+[![Coverage Status](https://img.shields.io/coveralls/unexpectedjs/unexpected-markdown/master.svg)](https://coveralls.io/r/unexpectedjs/unexpected-markdown?branch=master)
+
+In addition to what marked already offers, this module uses
 [magicpen-prism](https://github.com/unexpectedjs/magicpen-prism) to syntax
 highlight code blocks and uses [unexpected](http://unexpectedjs.github.io/) to
 evaluate JavaScript code examples.
