@@ -71,4 +71,46 @@ describe('extractSnippets', () => {
       });
     });
   });
+
+  it('should clone the output from the right expect when rendering the error message', async () => {
+    const unexpected = expect.clone().use(expect => {
+      expect = expect.child();
+      expect.addStyle('fancyQuotes', function(str) {
+        this.red('>>')
+          .text(str)
+          .red('<<');
+      });
+
+      expect.exportAssertion('<any> to foo', (expect, subject) => {
+        expect.subjectOutput = function() {
+          // Used to fail with TypeError: this.fancyQuotes is not a function
+          this.fancyQuotes(subject);
+        };
+        expect(subject, 'to equal', 'foo');
+      });
+    });
+
+    const snippets = [
+      {
+        lang: 'javascript',
+        flags: { evaluate: true },
+        index: 24,
+        code: "expect('bar', 'to foo');"
+      },
+      {
+        lang: 'output',
+        flags: { cleanStackTrace: true, evaluate: true },
+        index: 198,
+        code: 'expected >>bar<< foo'
+      }
+    ];
+
+    await evaluateSnippets(snippets, { unexpected });
+
+    expect(snippets[0], 'to satisfy', {
+      htmlErrorMessage:
+        '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: red">&gt;&gt;</span>bar<span style="color: red">&lt;&lt;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;foo</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">bar</span></div><div><span style="background-color: green; color: white">foo</span></div></div>',
+      errorMessage: 'expected >>bar<< to foo\n\n-bar\n+foo'
+    });
+  });
 });
