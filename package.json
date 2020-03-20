@@ -1,0 +1,28 @@
+{
+  "name": "evaldown",
+  "version": "0.0.0",
+  "description": "",
+  "main": "lib/evaldown.js",
+  "scripts": {
+    "coverage": "nyc --reporter=lcov --reporter=text mocha",
+    "lint": "eslint . && prettier --check '**/*.js'",
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "Alex J Burke <alex@alexjeffburke.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-mocha": "^6.3.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0",
+    "prettier": "^1.19.1",
+    "unexpected": "^11.13.0"
+  }
+}
