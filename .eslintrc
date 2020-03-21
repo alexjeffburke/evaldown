@@ -11,5 +11,13 @@
     "mocha/no-exclusive-tests": "error",
     "mocha/no-nested-tests": "error",
     "mocha/no-identical-title": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.spec.js"],
+      "rules": {
+        "no-new": "off"
+      }
+    }
+  ]
 }
