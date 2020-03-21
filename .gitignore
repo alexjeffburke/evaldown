@@ -2,5 +2,8 @@
 /.nyc_output
 /coverage
 
+# Test
+/testdata/output
+
 # VS Code User Specific Settings
 /.vscode/settings.json
