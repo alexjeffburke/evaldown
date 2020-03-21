@@ -80,4 +80,32 @@ describe("Evaldown", () => {
       );
     });
   });
+
+  describe("when operating in update mode", function() {
+    it("should glob for the supplied extension", async function() {
+      const sourceFile = "expect.md";
+      const sourceFilePath = path.join(TESTDATA_PATH, "example", sourceFile);
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+      await new Evaldown({
+        update: true,
+        sourcePath: path.dirname(sourceFilePath),
+        targetPath: TESTDATA_OUTPUT_PATH
+      }).processFile(sourceFile);
+
+      try {
+        const updatedSource = await fsExtra.readFile(sourceFilePath, "utf8");
+        expect.withError(
+          () => {
+            expect(updatedSource, "not to equal", originalSource);
+          },
+          () => {
+            expect.fail({ message: "The source file was not updated." });
+          }
+        );
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+  });
 });
