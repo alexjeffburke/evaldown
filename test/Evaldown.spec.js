@@ -12,6 +12,10 @@ describe("Evaldown", () => {
     await fsExtra.ensureDir(TESTDATA_OUTPUT_PATH);
   });
 
+  beforeEach(async () => {
+    await fsExtra.emptyDir(TESTDATA_OUTPUT_PATH);
+  });
+
   it("should be a function", () => {
     expect(Evaldown, "to be a function");
   });
@@ -21,10 +25,6 @@ describe("Evaldown", () => {
   });
 
   describe("processFiles()", function() {
-    beforeEach(async () => {
-      await fsExtra.emptyDir(TESTDATA_OUTPUT_PATH);
-    });
-
     it("should generate files", async function() {
       const evaldown = new Evaldown({
         sourcePath: path.join(TESTDATA_PATH, "example"),
@@ -35,6 +35,44 @@ describe("Evaldown", () => {
 
       // check the file was created
       const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "expect.html");
+      await expect(
+        () => fsExtra.pathExists(expectedOutputFile),
+        "to be fulfilled with",
+        true
+      );
+    });
+  });
+
+  describe("with customised extensions", function() {
+    it("should glob for the supplied extension", async function() {
+      const evaldown = new Evaldown({
+        sourcePath: path.join(TESTDATA_PATH, "extensions"),
+        sourceExtension: ".markdown",
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "expect.html");
+      await expect(
+        () => fsExtra.pathExists(expectedOutputFile),
+        "to be fulfilled with",
+        true
+      );
+    });
+
+    it("should output the supplied target extension", async function() {
+      const evaldown = new Evaldown({
+        sourcePath: path.join(TESTDATA_PATH, "example"),
+        targetPath: TESTDATA_OUTPUT_PATH,
+        targetExtension: ".ko"
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "expect.ko");
       await expect(
         () => fsExtra.pathExists(expectedOutputFile),
         "to be fulfilled with",
