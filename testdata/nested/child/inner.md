@@ -1,7 +1,12 @@
 Testing inner output.
 
 ```javascript
-"inner files work too!";
+function doSomething() {
+  return { foo: "bar" };
+}
+
+// objects are inspected too
+return doSomething();
 ```
 
 ```output
