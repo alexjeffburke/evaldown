@@ -69,6 +69,36 @@ describe("Evaldown", () => {
     });
   });
 
+  describe("with output format selection", function() {
+    it("should throw on an invalid format", () => {
+      expect(
+        () => {
+          new Evaldown({ outputFormat: "foobar" });
+        },
+        "to throw",
+        'Evaldown: Unsupported output format "foobar"'
+      );
+    });
+
+    it('should allow outputting "markdown"', async function() {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "example"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "expect.md");
+      await expect(
+        () => fsExtra.pathExists(expectedOutputFile),
+        "to be fulfilled with",
+        true
+      );
+    });
+  });
+
   describe("with customised extensions", function() {
     it("should glob for the supplied extension", async function() {
       const evaldown = new Evaldown({
