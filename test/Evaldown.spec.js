@@ -1,6 +1,9 @@
-const expect = require("unexpected");
+const expect = require("unexpected")
+  .clone()
+  .use(require("unexpected-sinon"));
 const fsExtra = require("fs-extra");
 const path = require("path");
+const sinon = require("sinon");
 
 const Evaldown = require("../lib/Evaldown");
 
@@ -78,6 +81,51 @@ describe("Evaldown", () => {
         "to be fulfilled with",
         true
       );
+    });
+  });
+
+  describe("with customised template", function() {
+    it("should include the template function result in the output", async function() {
+      const evaldown = new Evaldown({
+        template: output => `<!-- SILLY OLD MARKER -->\n${output}`,
+        sourcePath: path.join(TESTDATA_PATH, "example"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      const targetFilePath = path.join(TESTDATA_OUTPUT_PATH, "expect.html");
+      const targetSource = await fsExtra.readFile(targetFilePath, "utf8");
+      expect.withError(
+        () => {
+          expect(targetSource, "to start with", "<!-- SILLY OLD MARKER -->");
+        },
+        () => {
+          expect.fail({
+            message: "The updated output was not in the target file."
+          });
+        }
+      );
+    });
+
+    it("should call the template function passing output and context", async function() {
+      const evaldown = new Evaldown({
+        sourcePath: path.join(TESTDATA_PATH, "example"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+      sinon.spy(evaldown, "template");
+
+      await evaldown.processFiles();
+
+      expect(evaldown.template, "to have calls satisfying", [
+        [
+          expect.it("to be a string"),
+          {
+            sourceFile: "expect.md",
+            targetFile: "expect.html"
+          }
+        ]
+      ]);
     });
   });
 

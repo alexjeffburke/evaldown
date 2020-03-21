@@ -25,7 +25,9 @@
     "mocha": "^7.1.1",
     "nyc": "^15.0.0",
     "prettier": "^1.19.1",
-    "unexpected": "^11.13.0"
+    "sinon": "^9.0.1",
+    "unexpected": "^11.13.0",
+    "unexpected-sinon": "^10.11.2"
   },
   "dependencies": {
     "fast-glob": "^3.2.2"
