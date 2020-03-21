@@ -46,6 +46,29 @@ describe("Evaldown", () => {
     });
   });
 
+  describe("with nested folders", () => {
+    it("should generate the tree", async function() {
+      const evaldown = new Evaldown({
+        sourcePath: path.join(TESTDATA_PATH, "nested"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(
+        TESTDATA_OUTPUT_PATH,
+        "child",
+        "inner.html"
+      );
+      await expect(
+        () => fsExtra.pathExists(expectedOutputFile),
+        "to be fulfilled with",
+        true
+      );
+    });
+  });
+
   describe("with customised extensions", function() {
     it("should glob for the supplied extension", async function() {
       const evaldown = new Evaldown({
