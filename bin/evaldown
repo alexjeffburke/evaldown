@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+
+const yargs = require("yargs");
+
+const cli = require("../lib/cli");
+const options = require("../lib/options");
+
+function exitWithError(err) {
+  if (process.env.DEBUG) {
+    console.error(err.stack);
+  } else if (err.customOutput) {
+    console.error(err.customOutput);
+  } else {
+    console.error(err);
+  }
+
+  if (typeof err.exitCode === "number") {
+    process.exit(err.exitCode);
+  }
+
+  process.exit(1);
+}
+
+const processArgv = opts =>
+  yargs
+    .usage("$0 [args]")
+    .config(opts)
+    .option("config", {
+      demandOption: true,
+      describe: "Path to the config file.",
+      type: "string"
+    })
+    .help().argv;
+
+const processArgsAndExecute = (cwd, argv) => {
+  const { pwd, opts } = options.loadOptions(cwd, argv);
+  const args = processArgv(opts);
+  return cli.files(pwd || cwd, { ...opts, ...args });
+};
+
+(async () => {
+  try {
+    await processArgsAndExecute(process.cwd(), process.argv.slice(2));
+  } catch (e) {
+    exitWithError(e);
+  }
+})();

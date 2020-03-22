@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "main": "lib/evaldown.js",
+  "bin": {
+    "evaldown": "./bin/evaldown"
+  },
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . && prettier --check '**/*.js'",
@@ -31,6 +34,7 @@
   "dependencies": {
     "debug": "^4.1.1",
     "fast-glob": "^3.2.2",
-    "fs-extra": "^9.0.0"
+    "fs-extra": "^9.0.0",
+    "yargs": "^15.3.1"
   }
 }
