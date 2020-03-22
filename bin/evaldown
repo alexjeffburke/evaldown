@@ -30,6 +30,10 @@ const processArgv = opts =>
       describe: "Path to the config file.",
       type: "string"
     })
+    .option("update", {
+      describe: 'Update "output" blocks in the markdown source files.',
+      type: "boolean"
+    })
     .help().argv;
 
 const processArgsAndExecute = (cwd, argv) => {
