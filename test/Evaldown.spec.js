@@ -193,10 +193,10 @@ describe("Evaldown", () => {
     });
   });
 
-  describe("with customised template", function() {
+  describe("with customised output wrapper", function() {
     it("should include the template function result in the output", async function() {
       const evaldown = new Evaldown({
-        template: output => `<!-- SILLY OLD MARKER -->\n${output}`,
+        outputWrapper: output => `<!-- SILLY OLD MARKER -->\n${output}`,
         sourcePath: path.join(TESTDATA_PATH, "example"),
         targetPath: TESTDATA_OUTPUT_PATH
       });
@@ -222,11 +222,11 @@ describe("Evaldown", () => {
         sourcePath: path.join(TESTDATA_PATH, "example"),
         targetPath: TESTDATA_OUTPUT_PATH
       });
-      sinon.spy(evaldown, "template");
+      sinon.spy(evaldown, "wrapper");
 
       await evaldown.processFiles();
 
-      expect(evaldown.template, "to have calls satisfying", [
+      expect(evaldown.wrapper, "to have calls satisfying", [
         [
           expect.it("to be a string"),
           {
