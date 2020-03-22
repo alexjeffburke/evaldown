@@ -69,6 +69,62 @@ describe("Evaldown", () => {
     });
   });
 
+  describe("with capture type selection", function() {
+    it("should throw on an invalid format", () => {
+      expect(
+        () => {
+          new Evaldown({ outputCapture: "foobar" });
+        },
+        "to throw",
+        'Evaldown: Unsupported capture type "foobar"'
+      );
+    });
+
+    it('should allow capturing "output"', async function() {
+      const evaldown = new Evaldown({
+        outputCapture: "output",
+        sourcePath: path.join(TESTDATA_PATH, "capture-output"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(
+        TESTDATA_OUTPUT_PATH,
+        "captured.html"
+      );
+      await expect(
+        () => fsExtra.pathExists(expectedOutputFile),
+        "to be fulfilled with",
+        true
+      );
+    });
+
+    it('should allow capturing "console"', async function() {
+      const evaldown = new Evaldown({
+        outputCapture: "console",
+        sourcePath: path.join(TESTDATA_PATH, "capture-console"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        () =>
+          fsExtra.pathExists(path.join(TESTDATA_OUTPUT_PATH, "strings.html")),
+        "to be fulfilled with",
+        true
+      );
+      await expect(
+        () =>
+          fsExtra.pathExists(path.join(TESTDATA_OUTPUT_PATH, "objects.html")),
+        "to be fulfilled with",
+        true
+      );
+    });
+  });
+
   describe("with output format selection", function() {
     it("should throw on an invalid format", () => {
       expect(
