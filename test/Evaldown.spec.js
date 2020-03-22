@@ -80,6 +80,12 @@ describe("Evaldown", () => {
       );
     });
 
+    it('should default to "output"', () => {
+      const evaldown = new Evaldown({});
+
+      expect(evaldown.capture, "to equal", "output");
+    });
+
     it('should allow capturing "output"', async function() {
       const evaldown = new Evaldown({
         outputCapture: "output",
@@ -119,6 +125,27 @@ describe("Evaldown", () => {
       await expect(
         () =>
           fsExtra.pathExists(path.join(TESTDATA_OUTPUT_PATH, "objects.html")),
+        "to be fulfilled with",
+        true
+      );
+    });
+
+    it('should allow capturing "expect"', async function() {
+      const evaldown = new Evaldown({
+        outputCapture: "expect",
+        sourcePath: path.join(TESTDATA_PATH, "capture-expect"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(
+        TESTDATA_OUTPUT_PATH,
+        "nothing.html"
+      );
+      await expect(
+        () => fsExtra.pathExists(expectedOutputFile),
         "to be fulfilled with",
         true
       );
