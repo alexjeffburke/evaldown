@@ -22,7 +22,7 @@ describe("cli", () => {
 
   it("should use the config file", async () => {
     const pwd = path.join(TESTDATA_PATH, "config");
-    const opts = usingOpts(pwd, "valid-basic.js");
+    const opts = usingOpts(pwd, "evaldown.valid-basic.js");
 
     await cli.files(pwd, opts);
 
@@ -51,7 +51,7 @@ describe("cli", () => {
 
     it("should throw on inaccessible", async () => {
       const pwd = path.join(TESTDATA_PATH, "config");
-      const opts = usingOpts(pwd, "inaccessible-sourcePath.js");
+      const opts = usingOpts(pwd, "evaldown.inaccessible-sourcePath.js");
 
       await expect(
         () => cli.files(pwd, opts),
@@ -62,7 +62,7 @@ describe("cli", () => {
 
     it("should throw on invalid", async () => {
       const pwd = path.join(TESTDATA_PATH, "config");
-      const opts = usingOpts(pwd, "invalid-sourcePath.js");
+      const opts = usingOpts(pwd, "evaldown.invalid-sourcePath.js");
 
       await expect(
         () => cli.files(pwd, opts),

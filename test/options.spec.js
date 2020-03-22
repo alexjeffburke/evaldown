@@ -8,31 +8,60 @@ const TESTDATA_PATH = path.join(__dirname, "..", "testdata");
 const TESTDATA_CONFIG_PATH = path.join(TESTDATA_PATH, "config");
 
 describe("options", () => {
-  it("should load and return options", async () => {
-    const opts = options.loadOptions(TESTDATA_CONFIG_PATH, [
-      "--config",
-      "valid-basic.js"
-    ]);
-
-    await expect(opts, "to equal", {
-      opts: { sourcePath: "./files", targetPath: "../output" },
-      pwd: "/Users/alex/Documents/projects/evaldown/testdata/config"
-    });
-  });
-
-  it("should throw on missing file", async () => {
-    const configFile = path.join(TESTDATA_CONFIG_PATH, "nonexistent.js");
+  it("should throw on bad extension", async () => {
+    const configFile = "nonexistent.txt";
 
     await expect(
       () =>
-        options.loadOptions(TESTDATA_CONFIG_PATH, [
+        options.loadOptions(path.join(TESTDATA_CONFIG_PATH, configFile), [
           "--config",
-          "nonexistent.js"
+          configFile
         ]),
       "to throw",
       expect
         .it("to be an", errors.ConfigFileError)
-        .and("to have message", `Cannot find module '${configFile}'`)
+        .and("to have message", 'config file must have extension "js"')
     );
+  });
+
+  it("should throw on bad prefix", async () => {
+    const configFile = "nonexistent.js";
+
+    await expect(
+      () =>
+        options.loadOptions(path.join(TESTDATA_CONFIG_PATH, configFile), [
+          "--config",
+          configFile
+        ]),
+      "to throw",
+      expect
+        .it("to be an", errors.ConfigFileError)
+        .and("to have message", 'config file must start with "evaldown."')
+    );
+  });
+
+  it("should throw on missing file", async () => {
+    const configFile = "evaldown.nonexistent.js";
+    const configFilePath = path.join(TESTDATA_CONFIG_PATH, configFile);
+
+    await expect(
+      () => options.loadOptions(TESTDATA_CONFIG_PATH, ["--config", configFile]),
+      "to throw",
+      expect
+        .it("to be an", errors.ConfigFileError)
+        .and("to have message", `Cannot find module '${configFilePath}'`)
+    );
+  });
+
+  it("should load and return options", async () => {
+    const opts = options.loadOptions(TESTDATA_CONFIG_PATH, [
+      "--config",
+      "evaldown.valid-basic.js"
+    ]);
+
+    await expect(opts, "to equal", {
+      opts: { sourcePath: "./files", targetPath: "../output" },
+      pwd: TESTDATA_CONFIG_PATH
+    });
   });
 });
