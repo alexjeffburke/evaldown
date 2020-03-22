@@ -45,8 +45,12 @@ By default, value returned from the code block is what will be captured
 and displayed in the
 
 <pre>
+```javascript
+return { foo: 'bar' }
 ```
-sss
+
+```output
+
 ```
 </pre>
 
