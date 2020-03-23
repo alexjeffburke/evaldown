@@ -223,7 +223,7 @@ describe("Evaldown", () => {
   describe("with customised output wrapper", function() {
     it("should include the template function result in the output", async function() {
       const evaldown = new Evaldown({
-        outputWrapper: output => `<!-- SILLY OLD MARKER -->\n${output}`,
+        wrapOutput: output => `<!-- SILLY OLD MARKER -->\n${output}`,
         sourcePath: path.join(TESTDATA_PATH, "example"),
         targetPath: TESTDATA_OUTPUT_PATH
       });
