@@ -2,6 +2,10 @@
 
 Evalute JavaScript snippets in markdown files and output static HTML.
 
+[![NPM version](https://img.shields.io/npm/v/evaldown.svg)](https://www.npmjs.com/package/evaldown)
+[![Build Status](https://img.shields.io/travis/alexjeffburke/evaldown/master.svg)](https://travis-ci.org/alexjeffburke/evaldown)
+[![Coverage Status](https://img.shields.io/coveralls/alexjeffburke/evaldown/master.svg)](https://coveralls.io/r/alexjeffburke/evaldown?branch=master)
+
 This project will recursively traverse a folder structure searching
 for markdown files. Once found, it will extract any javascript blocks
 
