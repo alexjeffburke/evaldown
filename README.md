@@ -1,6 +1,6 @@
 # Evaldown
 
-Evalute JavaScript snippets in markdown files and output static HTML.
+Evalute JavaScript snippets in markdown files and output static pages.
 
 [![NPM version](https://img.shields.io/npm/v/evaldown.svg)](https://www.npmjs.com/package/evaldown)
 [![Build Status](https://img.shields.io/travis/alexjeffburke/evaldown/master.svg)](https://travis-ci.org/alexjeffburke/evaldown)
