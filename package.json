@@ -30,6 +30,7 @@
     "unexpected-sinon": "^10.11.2"
   },
   "dependencies": {
+    "@alexjeffburke/unexpected-markdown": "^5.0.1-patch1",
     "createerror": "^1.3.0",
     "debug": "^4.1.1",
     "fast-glob": "^3.2.2",
