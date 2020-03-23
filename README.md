@@ -38,6 +38,22 @@ module.exports = {
 };
 ```
 
+### Output format and extension
+
+Currently the rendering process will produce HTML files as standard with
+their usual `.html` extentionsion. The tool can however be requested to
+output markdown files to the output directory - with the output blocks
+populated - meaning the tool can be used to pre-process output snippets
+in markdown files before they are passed to another template engine:
+
+```javascript
+module.exports = {
+  outputFormat: 'markdown',
+  sourcePath: "./input",
+  targetPath: "./output"
+};
+```
+
 ### Capturing evaluation results from the "console"
 
 By default, the JavaScript code blocks in markdown files - which we
