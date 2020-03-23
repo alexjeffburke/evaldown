@@ -38,12 +38,36 @@ module.exports = {
 };
 ```
 
+### Capturing evaluation results from the "console"
+
+By default, the JavaScript code blocks in markdown files - which we
+refer to as `"snippets"` - are allowed to use return statements. The
+returned values will be rendered as an "output" block - an example of
+this is shown in the [authoring](#Authoring) section below.
+
+In some cases, rather than capture the result you may wish to capture the
+stdout/stderr of a block - perhaps for a command that logs output when it
+finished or just an example that uses the console.
+
+Capturing from the console can be configured by adding a "outputCapture"
+key to the configuration object:
+
+```javascript
+module.exports = {
+  outputCapture: "console",
+  sourcePath: "./input",
+  targetPath: "./output"
+};
+```
+
+> Note: changing output capturing affects all markdown files
+> currently but will be configurable made per-snippet in future
+
 ## Authoring
 
 Inside the input folder, you can make add markdown files that contain
 "javascript" code blocks. In order to have any output shown these need
-to be
-followed by "output" blocks.
+to be followed by "output" snippets.
 
 By default, value returned from the code block is what will be captured
 and displayed in the
