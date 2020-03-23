@@ -6,6 +6,10 @@
   "bin": {
     "evaldown": "./bin/evaldown"
   },
+  "files": [
+    "bin",
+    "lib"
+  ],
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text mocha",
     "lint": "eslint . && prettier --check '**/*.js'",
