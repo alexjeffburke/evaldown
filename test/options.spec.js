@@ -49,7 +49,13 @@ describe("options", () => {
       "to throw",
       expect
         .it("to be an", errors.ConfigFileError)
-        .and("to have message", `Cannot find module '${configFilePath}'`)
+        .and(error =>
+          expect(
+            error.message,
+            "to start with",
+            `Cannot find module '${configFilePath}'`
+          )
+        )
     );
   });
 
