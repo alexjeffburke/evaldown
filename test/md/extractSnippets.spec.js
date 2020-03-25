@@ -2,17 +2,33 @@ const extractSnippets = require("../../lib/md/extractSnippets");
 const expect = require("unexpected");
 
 describe("extractSnippets", function() {
+  it("should extract a snippet", function() {
+    expect(
+      extractSnippets('```javascript\nalert("Hello!");\n```'),
+      "to satisfy",
+      [{ lang: "javascript", code: 'alert("Hello!");', index: 0 }]
+    );
+  });
+
   it("should extract a snippet between some markdown sections", function() {
     expect(
       extractSnippets(
         '# foo\n\n```javascript\nalert("Hello!");\n```\n\n# bar\n'
       ),
       "to satisfy",
-      [{ code: 'alert("Hello!");' }]
+      [{ lang: "javascript", code: 'alert("Hello!");' }]
     );
   });
 
-  it("should multiple snippets", function() {
+  it("should extract a snippet and normalize js to javascript", function() {
+    expect(
+      extractSnippets('# foo\n\n```js\nalert("Hello!");\n```\n\n# bar\n'),
+      "to satisfy",
+      [{ lang: "javascript", code: 'alert("Hello!");' }]
+    );
+  });
+
+  it("should extract multiple snippets", function() {
     expect(
       extractSnippets(
         '```js\nalert("Hello!");\n```\n\n```js\nalert("world!");\n```\n'
@@ -20,12 +36,6 @@ describe("extractSnippets", function() {
       "to satisfy",
       [{ code: 'alert("Hello!");' }, { code: 'alert("world!");' }]
     );
-  });
-
-  it("should normalize js to javascript", function() {
-    expect(extractSnippets('```js\nalert("Hello!");\n```\n'), "to satisfy", [
-      { lang: "javascript", code: 'alert("Hello!");' }
-    ]);
   });
 
   it("should default to evaluate:true", function() {
@@ -131,7 +141,7 @@ describe("extractSnippets", function() {
   it("should let the flags after the language specifier win when the same flag is provided in both places", function() {
     expect(
       extractSnippets(
-        '<!-- foo:true -->\n```js#foo:false\nalert("Hello!");\n```\n'
+        '<!-- unexpected-markdown foo:true -->\n```js#foo:false\nalert("Hello!");\n```\n'
       ),
       "to satisfy",
       [{ flags: { foo: false } }]
