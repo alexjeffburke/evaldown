@@ -1,6 +1,6 @@
 const expect = require('unexpected');
 
-const evaluateSnippets = require('../lib/evaluateSnippets');
+const evaluateSnippets = require('../../lib/md/evaluateSnippets');
 
 describe('extractSnippets', () => {
   it('should evaluate javascript snippets', async () => {

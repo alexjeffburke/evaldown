@@ -1,4 +1,4 @@
-const extractSnippets = require('../lib/extractSnippets');
+const extractSnippets = require('../../lib/md/extractSnippets');
 const expect = require('unexpected');
 
 describe('extractSnippets', function() {

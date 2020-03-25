@@ -1,6 +1,6 @@
 const expect = require('unexpected');
 
-const Snippets = require('../lib/Snippets');
+const Snippets = require('../../lib/md/Snippets');
 
 describe('Snippets', () => {
   describe('#getTests()', () => {

@@ -1,5 +1,5 @@
 const expect = require('unexpected');
-const cleanStackTrace = require('../lib/cleanStackTrace');
+const cleanStackTrace = require('../../lib/md/cleanStackTrace');
 
 describe('cleanStackTrace', function() {
   it('should turn line numbers into :x:y', function() {

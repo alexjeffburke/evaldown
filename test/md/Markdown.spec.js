@@ -1,7 +1,7 @@
 var expect = require('unexpected');
-var UnexpectedMarkdown = require('../lib/UnexpectedMarkdown');
+var UnexpectedMarkdown = require('../../lib/md/Markdown');
 
-describe('UnexpectedMarkdown', function() {
+describe('Markdown', function() {
   var markdown;
   beforeEach(function() {
     markdown = new UnexpectedMarkdown(
@@ -31,21 +31,12 @@ describe('UnexpectedMarkdown', function() {
   });
 
   describe('toHtml', function() {
-    it('syntax highlight examples (dark)', function() {
+    it('syntax highlight examples', function() {
       return expect(
-        markdown.toHtml({ theme: 'dark' }),
+        markdown.toHtml(),
         'when fulfilled',
         'to contain',
-        '<span style="color: #66D9EF; font-weight: bold">1234</span>'
-      );
-    });
-
-    it('outputs highlight examples (light)', function() {
-      return expect(
-        markdown.toHtml({ theme: 'light' }),
-        'when fulfilled',
-        'to contain',
-        '<span style="background-color: green; color: white">f00</span>'
+        '<span style="color: #905">1234</span>'
       );
     });
   });
