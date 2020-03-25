@@ -326,6 +326,7 @@ describe("Evaldown", () => {
 
       await new Evaldown({
         update: true,
+        outputCapture: "expect",
         sourcePath: path.dirname(sourceFilePath),
         targetPath: TESTDATA_OUTPUT_PATH
       }).processFile(sourceFile);

@@ -34,6 +34,14 @@ function locateAndReturnOutputBlock(output) {
   return output.slice(blockIndex);
 }
 
+function locateAndReturnOutputHtml(output) {
+  const blockIndex = output.indexOf('<div class="output">');
+  if (blockIndex === -1) {
+    throw new Error("unable to locate output block");
+  }
+  return output.slice(blockIndex);
+}
+
 describe("Markdown", function() {
   describe("toHtml", function() {
     it("should render a syntax highlighted code block", function() {
@@ -107,13 +115,25 @@ describe("Markdown", function() {
         )
       );
     });
+
+    it("should produce updated html for an unexpected diff", async function() {
+      const markdown = await new Markdown(codeBlockWithSkipped, {
+        globals: { expect }
+      }).toHtml({});
+
+      expect(
+        locateAndReturnOutputHtml(markdown.toString()),
+        "to equal snapshot",
+        '<div class="output"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;{&nbsp;<span style="color: #555">text</span>:&nbsp;<span style="color: #df5000">&#39;foo!&#39;</span>&nbsp;}&nbsp;<span style="color: red; font-weight: bold">to&nbsp;equal</span>&nbsp;{&nbsp;<span style="color: #555">text</span>:&nbsp;<span style="color: #df5000">&#39;f00!&#39;</span>&nbsp;}</div><div>&nbsp;</div><div>{</div><div>&nbsp;&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: #555">text</span>:&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: #df5000">&#39;foo!&#39;</span></div></div>&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: red; font-weight: bold">//</span></div><div><span style="color: red; font-weight: bold">//</span></div><div><span style="color: red; font-weight: bold">//</span></div><div><span style="color: red; font-weight: bold">//</span></div></div>&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: red; font-weight: bold">should&nbsp;equal</span>&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: #df5000">&#39;f00!&#39;</span></div></div></div><div>&nbsp;</div><div><span style="background-color: red; color: white">foo</span><span style="color: red">!</span></div><div><span style="background-color: green; color: white">f00</span><span style="color: green">!</span></div></div></div></div></div><div>}</div></div>'
+      );
+    });
   });
 
   describe("withUpdatedExamples", function() {
     it("should produce updated markdown for an unexpected diff", async function() {
-      const markdown = await new Markdown(
-        codeBlockWithSkipped
-      ).withUpdatedExamples({});
+      const markdown = await new Markdown(codeBlockWithSkipped, {
+        globals: { expect }
+      }).withUpdatedExamples({});
 
       expect(
         locateAndReturnOutputBlock(markdown.toString()),

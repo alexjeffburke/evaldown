@@ -21,7 +21,11 @@ describe("extractSnippets", () => {
       }
     ];
 
-    await evaluateSnippets(snippets);
+    await evaluateSnippets(snippets, {
+      globals: {
+        expect
+      }
+    });
 
     expect(snippets[0], "to satisfy", {
       htmlErrorMessage:
@@ -42,7 +46,11 @@ describe("extractSnippets", () => {
         }
       ];
 
-      await evaluateSnippets(snippets);
+      await evaluateSnippets(snippets, {
+        globals: {
+          expect
+        }
+      });
 
       expect(snippets[0], "to satisfy", {
         htmlErrorMessage:
@@ -61,7 +69,11 @@ describe("extractSnippets", () => {
         }
       ];
 
-      await evaluateSnippets(snippets);
+      await evaluateSnippets(snippets, {
+        globals: {
+          expect
+        }
+      });
 
       expect(snippets[0], "to satisfy", {
         htmlErrorMessage:
@@ -73,7 +85,7 @@ describe("extractSnippets", () => {
   });
 
   it("should clone the output from the right expect when rendering the error message", async () => {
-    const unexpected = expect.clone().use(expect => {
+    const clonedExpect = expect.clone().use(expect => {
       expect = expect.child();
       expect.addStyle("fancyQuotes", function(str) {
         this.red(">>")
@@ -105,7 +117,11 @@ describe("extractSnippets", () => {
       }
     ];
 
-    await evaluateSnippets(snippets, { unexpected });
+    await evaluateSnippets(snippets, {
+      globals: {
+        expect: clonedExpect
+      }
+    });
 
     expect(snippets[0], "to satisfy", {
       htmlErrorMessage:
