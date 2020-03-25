@@ -1,10 +1,10 @@
 var expect = require("unexpected");
-var UnexpectedMarkdown = require("../../lib/md/Markdown");
+var Markdown = require("../../lib/md/Markdown");
 
 describe("Markdown", function() {
   var markdown;
   beforeEach(function() {
-    markdown = new UnexpectedMarkdown(
+    markdown = new Markdown(
       [
         "Asserts deep equality.",
         "",
@@ -68,7 +68,7 @@ describe("Markdown", function() {
     });
 
     it("should work correctly with async snippets that reject", async () => {
-      const markdown = new UnexpectedMarkdown(
+      const markdown = new Markdown(
         [
           "<!-- unexpected-markdown async:true -->",
           "```javascript",
@@ -92,7 +92,7 @@ describe("Markdown", function() {
   });
 
   it("produces a markdown where the examples has been updated", function() {
-    const markdown = new UnexpectedMarkdown(
+    const markdown = new Markdown(
       [
         "Asserts deep equality.",
         "",
