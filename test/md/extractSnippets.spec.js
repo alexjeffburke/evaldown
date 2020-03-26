@@ -38,6 +38,12 @@ describe("extractSnippets", function() {
     );
   });
 
+  it("should extract an empty snippet", function() {
+    expect(extractSnippets("```javascript\n```"), "to satisfy", [
+      { lang: "javascript", code: "" }
+    ]);
+  });
+
   it("should default to evaluate:true", function() {
     expect(extractSnippets('```js\nalert("Hello!");\n```\n'), "to satisfy", [
       { flags: { evaluate: true } }
