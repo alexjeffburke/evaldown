@@ -48,6 +48,10 @@ describe("Evaldown", () => {
     expect(Evaldown, "to be a function");
   });
 
+  it("should export Markdown", () => {
+    expect(Evaldown.Markdown, "to be a function");
+  });
+
   it("should allow creating an instance", () => {
     expect(new Evaldown(), "to be an", Evaldown);
   });
