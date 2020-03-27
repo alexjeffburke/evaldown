@@ -84,7 +84,7 @@ describe("evaluateSnippets", () => {
     });
   });
 
-  it("should clone the output from the right expect when rendering the error message", async () => {
+  describe("with a customised expect", () => {
     const clonedExpect = expect.clone().use(expect => {
       expect = expect.child();
       expect.addStyle("fancyQuotes", function(str) {
@@ -102,31 +102,64 @@ describe("evaluateSnippets", () => {
       });
     });
 
-    const snippets = [
-      {
-        lang: "javascript",
-        flags: { evaluate: true },
-        index: 24,
-        code: "expect('bar', 'to foo');"
-      },
-      {
-        lang: "output",
-        flags: { cleanStackTrace: true, evaluate: true },
-        index: 198,
-        code: "expected >>bar<< foo"
-      }
-    ];
+    it("should clone from the right expect when rendering for output capture", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          index: 24,
+          code:
+            "try  { expect('bar', 'to foo'); } catch (e) { return { message: e.getErrorMessage('text').toString() }; }"
+        },
+        {
+          lang: "output",
+          flags: { cleanStackTrace: true, evaluate: true },
+          index: 198,
+          code: "expected >>bar<< foo"
+        }
+      ];
 
-    await evaluateSnippets(snippets, {
-      globals: {
-        expect: clonedExpect
-      }
+      await evaluateSnippets(snippets, {
+        captureOutput: true,
+        globals: {
+          expect: clonedExpect
+        }
+      });
+
+      expect(snippets[0], "to satisfy", {
+        htmlOutput:
+          '<div style="font-family: monospace; white-space: nowrap"><div>{&nbsp;<span style="color: #555">message</span>:&nbsp;<span style="color: #df5000">\'expected&nbsp;&gt;&gt;bar&lt;&lt;&nbsp;to&nbsp;foo\\n\\n-bar\\n+foo\'</span>&nbsp;}</div></div>',
+        output: "{ message: 'expected >>bar<< to foo\\n\\n-bar\\n+foo' }"
+      });
     });
 
-    expect(snippets[0], "to satisfy", {
-      htmlErrorMessage:
-        '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: red">&gt;&gt;</span>bar<span style="color: red">&lt;&lt;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;foo</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">bar</span></div><div><span style="background-color: green; color: white">foo</span></div></div>',
-      errorMessage: "expected >>bar<< to foo\n\n-bar\n+foo"
+    it("should clone the output from the right expect for error capture", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          index: 24,
+          code: "expect('bar', 'to foo');"
+        },
+        {
+          lang: "output",
+          flags: { cleanStackTrace: true, evaluate: true },
+          index: 198,
+          code: "expected >>bar<< foo"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        globals: {
+          expect: clonedExpect
+        }
+      });
+
+      expect(snippets[0], "to satisfy", {
+        htmlErrorMessage:
+          '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: red">&gt;&gt;</span>bar<span style="color: red">&lt;&lt;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;foo</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">bar</span></div><div><span style="background-color: green; color: white">foo</span></div></div>',
+        errorMessage: "expected >>bar<< to foo\n\n-bar\n+foo"
+      });
     });
   });
 });
