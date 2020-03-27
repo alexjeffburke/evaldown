@@ -2,7 +2,7 @@ const expect = require("unexpected");
 
 const evaluateSnippets = require("../../lib/md/evaluateSnippets");
 
-describe("extractSnippets", () => {
+describe("evaluateSnippets", () => {
   it("should evaluate javascript snippets", async () => {
     const snippets = [
       {
