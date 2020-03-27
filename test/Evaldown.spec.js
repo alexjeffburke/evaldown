@@ -131,7 +131,10 @@ describe("Evaldown", () => {
         "to equal snapshot",
         expect.unindent`
           <p>Testing output capturing.</p>
-          <div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div><div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">'bar'</span>&nbsp;}</div></div>
+          <div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div>
+
+          <div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">&#39;bar&#39;</span>&nbsp;}</div></div>
+
         `
       );
     });
@@ -173,7 +176,10 @@ describe("Evaldown", () => {
         "to equal snapshot",
         expect.unindent`
           <p>Testing output capturing.</p>
-          <div class="code lang-javascript"><div><span style="color: #DD4A68">expect</span><span style="color: #999">(</span><span style="color: #690">&quot;f00&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;foo&quot;</span><span style="color: #999">);</span></div></div><div class="output"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: #df5000">'f00'</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;equal</span>&nbsp;<span style="color: #df5000">'foo'</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">f00</span></div><div><span style="background-color: green; color: white">foo</span></div></div>
+          <div class="code lang-javascript"><div><span style="color: #DD4A68">expect</span><span style="color: #999">(</span><span style="color: #690">&quot;f00&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;foo&quot;</span><span style="color: #999">);</span></div></div>
+
+          <div class="output"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: #df5000">&#39;f00&#39;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;equal</span>&nbsp;<span style="color: #df5000">&#39;foo&#39;</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">f00</span></div><div><span style="background-color: green; color: white">foo</span></div></div>
+
         `
       );
     });
