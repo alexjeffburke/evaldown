@@ -204,5 +204,30 @@ describe("Markdown", function() {
         `
       );
     });
+
+    it("should produces updated markdown for sync return", async function() {
+      const markdown = await new Markdown(
+        [
+          "```javascript",
+          "return { foo: 'bar' }",
+          "```",
+          "```output",
+          "```"
+        ].join("\n"),
+        {
+          captureOutput: true
+        }
+      ).withUpdatedExamples({});
+
+      expect(
+        locateAndReturnOutputBlock(markdown.toString()),
+        "to equal snapshot",
+        expect.unindent`
+          \`\`\`output
+          { foo: 'bar' }
+          \`\`\`
+        `
+      );
+    });
   });
 });
