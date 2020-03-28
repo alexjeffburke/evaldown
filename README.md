@@ -43,8 +43,26 @@ module.exports = {
 Currently the rendering process will produce HTML files as standard with
 their usual `.html` extentionsion. The tool can however be requested to
 output markdown files to the output directory - with the output blocks
-populated - meaning the tool can be used to pre-process output snippets
-in markdown files before they are passed to another template engine:
+populated - allowing its use to pre-process markdown files before they
+are passed to another template engine.
+
+#### `"inlined"`
+
+This option will write markdown files with the code and output blocks
+replaced with static HTML that inlines all the colouring information.
+
+```javascript
+module.exports = {
+  outputFormat: 'inlined',
+  sourcePath: "./input",
+  targetPath: "./output"
+};
+```
+
+#### `"markdown"`
+
+This option will write markdown files with the code and output blocks
+replaced with text (for use in a case external highlighting is desired).
 
 ```javascript
 module.exports = {

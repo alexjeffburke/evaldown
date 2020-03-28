@@ -200,6 +200,37 @@ describe("Evaldown", () => {
       );
     });
 
+    it('should allow outputting "inlined"', async function() {
+      const evaldown = new Evaldown({
+        outputFormat: "inlined",
+        sourcePath: path.join(TESTDATA_PATH, "example"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "expect.md");
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          Asserts deep equality.
+
+          <div class="code lang-javascript"><div><span style="color: #DD4A68">expect</span><span style="color: #999">({</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;b&quot;</span>&nbsp;<span style="color: #999">},</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #999">{</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #905">1234</span>&nbsp;<span style="color: #999">});</span></div><div><span style="color: #07a">var</span>&nbsp;now&nbsp;<span style="color: #a67f59">=</span>&nbsp;<span style="color: #07a">new</span>&nbsp;Date<span style="color: #999">();</span></div><div><span style="color: #DD4A68">expect</span><span style="color: #999">(</span>now<span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;now<span style="color: #999">);</span></div><div><span style="color: #DD4A68">expect</span><span style="color: #999">(</span>now<span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #07a">new</span>&nbsp;Date<span style="color: #999">(</span>now<span style="color: #999">.</span><span style="color: #DD4A68">getTime</span><span style="color: #999">()));</span></div><div><span style="color: #DD4A68">expect</span><span style="color: #999">({</span>&nbsp;now<span style="color: #a67f59">:</span>&nbsp;now&nbsp;<span style="color: #999">},</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #999">{</span>&nbsp;now<span style="color: #a67f59">:</span>&nbsp;now&nbsp;<span style="color: #999">});</span></div></div>
+
+          For a lot of types a failing equality test results in a nice
+          diff. Below you can see an object diff.
+
+          <div class="code lang-javascript"><div><span style="color: #DD4A68">expect</span><span style="color: #999">({</span>&nbsp;text<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;foo!&quot;</span>&nbsp;<span style="color: #999">},</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #999">{</span>&nbsp;text<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;f00!&quot;</span>&nbsp;<span style="color: #999">});</span></div></div>
+
+          <div class="output"><div><span style="color: red; font-weight: bold">expect&nbsp;is&nbsp;not&nbsp;defined</span></div></div>
+
+        `
+      );
+    });
+
     it('should allow outputting "markdown"', async function() {
       const evaldown = new Evaldown({
         outputFormat: "markdown",
