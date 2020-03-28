@@ -42,6 +42,23 @@ describe("Snippets", () => {
         }
       ]);
     });
+
+    it("should throw if output black was not matched with a source block", () => {
+      const snippets = new Snippets([
+        {
+          code: "I've been orphaned!",
+          lang: "output"
+        }
+      ]);
+
+      expect(
+        () => {
+          snippets.getTests();
+        },
+        "to throw",
+        `No matching javascript block for output:\nI've been orphaned!`
+      );
+    });
   });
 
   describe("Snippets.fromMarkdown()", () => {
