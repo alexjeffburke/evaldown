@@ -43,26 +43,25 @@ function locateAndReturnOutputHtml(output) {
 }
 
 describe("Markdown", function() {
-  describe("toHtml", function() {
-    it("should render a syntax highlighted code block", function() {
-      const markdown = new Markdown(
+  describe("withInlinedExamples", function() {
+    it("should render a syntax highlighted code block", async function() {
+      const markdown = await new Markdown(
         [
           "```javascript",
           "expect({ a: 'b' }, 'to equal', { a: 1234 });",
           "```"
         ].join("\n")
-      );
+      ).withInlinedExamples();
 
       return expect(
         markdown.toHtml(),
-        "when fulfilled",
         "to equal snapshot",
         '<div class="code lang-javascript"><div><span style="color: #DD4A68">expect</span><span style="color: #999">({</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&#39;b&#39;</span>&nbsp;<span style="color: #999">},</span>&nbsp;<span style="color: #690">&#39;to&nbsp;equal&#39;</span><span style="color: #999">,</span>&nbsp;<span style="color: #999">{</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #905">1234</span>&nbsp;<span style="color: #999">});</span></div></div>'
       );
     });
 
-    it("should evaluate and render a syntax highlighted output block", function() {
-      const markdown = new Markdown(
+    it("should evaluate and render a syntax highlighted output block", async function() {
+      const markdown = await new Markdown(
         [
           "```javascript",
           "expect({ a: 'b' }, 'to equal', { a: 1234 });",
@@ -72,11 +71,11 @@ describe("Markdown", function() {
           "Missing output",
           "```"
         ].join("\n")
-      );
+      ).withInlinedExamples();
 
       return expect(
         markdown.toHtml(),
-        "when fulfilled",
+        "to satisfy",
         expect
           .it("not to contain", "Missing output")
           .and("to contain", '<div class="output">')
@@ -84,12 +83,12 @@ describe("Markdown", function() {
     });
 
     it("should ignore paired empty paired blocks", async function() {
-      const markdown = new Markdown(
+      const markdown = await new Markdown(
         ["```javascript", "```", "```output", "```"].join("\n")
-      );
+      ).withInlinedExamples();
 
       expect(
-        await markdown.toHtml(),
+        markdown.toHtml(),
         "to equal snapshot",
         expect.unindent`
           <div class="code lang-javascript"><div>&nbsp;</div></div>
@@ -104,7 +103,7 @@ describe("Markdown", function() {
       );
 
       return expect(
-        () => markdown.toHtml(),
+        () => markdown.withInlinedExamples(),
         "to be rejected with",
         expect.it(error =>
           expect(
@@ -116,13 +115,13 @@ describe("Markdown", function() {
       );
     });
 
-    it("should produce updated html for an unexpected diff", async function() {
+    it('should produce update for an unexpected diff when "html"', async function() {
       const markdown = await new Markdown(codeBlockWithSkipped, {
         globals: { expect }
-      }).toHtml({});
+      }).withInlinedExamples({});
 
       expect(
-        locateAndReturnOutputHtml(markdown.toString()),
+        locateAndReturnOutputHtml(markdown.toHtml()),
         "to equal snapshot",
         '<div class="output"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;{&nbsp;<span style="color: #555">text</span>:&nbsp;<span style="color: #df5000">&#39;foo!&#39;</span>&nbsp;}&nbsp;<span style="color: red; font-weight: bold">to&nbsp;equal</span>&nbsp;{&nbsp;<span style="color: #555">text</span>:&nbsp;<span style="color: #df5000">&#39;f00!&#39;</span>&nbsp;}</div><div>&nbsp;</div><div>{</div><div>&nbsp;&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: #555">text</span>:&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: #df5000">&#39;foo!&#39;</span></div></div>&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: red; font-weight: bold">//</span></div><div><span style="color: red; font-weight: bold">//</span></div><div><span style="color: red; font-weight: bold">//</span></div><div><span style="color: red; font-weight: bold">//</span></div></div>&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: red; font-weight: bold">should&nbsp;equal</span>&nbsp;<div style="display: inline-block; vertical-align: top"><div><span style="color: #df5000">&#39;f00!&#39;</span></div></div></div><div>&nbsp;</div><div><span style="background-color: red; color: white">foo</span><span style="color: red">!</span></div><div><span style="background-color: green; color: white">f00</span><span style="color: green">!</span></div></div></div></div></div><div>}</div></div>'
       );
