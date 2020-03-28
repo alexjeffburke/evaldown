@@ -228,5 +228,38 @@ describe("Markdown", function() {
         `
       );
     });
+
+    describe("with legacy flags on the code block", () => {
+      it("should produces updated markdown for async rejection", async function() {
+        const markdown = await new Markdown(
+          [
+            "```javascript#async:true",
+            "return Promise.resolve('ahoy');",
+            "```",
+            "",
+            "```output",
+            "```"
+          ].join("\n"),
+          {
+            captureOutput: true
+          }
+        ).withUpdatedExamples({});
+
+        expect(
+          markdown.toString(),
+          "to equal snapshot",
+          expect.unindent`
+            <-- unexpected-markdown async:true -->
+            \`\`\`javascript
+            return Promise.resolve('ahoy');
+            \`\`\`
+
+            \`\`\`output
+            ahoy
+            \`\`\`
+          `
+        );
+      });
+    });
   });
 });
