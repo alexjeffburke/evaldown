@@ -6,7 +6,7 @@ describe("extractSnippets", function() {
     expect(
       extractSnippets('```javascript\nalert("Hello!");\n```'),
       "to satisfy",
-      [{ lang: "javascript", code: 'alert("Hello!");', index: 0 }]
+      [{ lang: "javascript", code: 'alert("Hello!");' }]
     );
   });
 
@@ -58,16 +58,6 @@ describe("extractSnippets", function() {
     );
   });
 
-  it("should allow changing evaluate to false via a preceding HTML comment", function() {
-    expect(
-      extractSnippets(
-        '<!-- unexpected-markdown evaluate:false -->\n```js\nalert("Hello!");\n```\n'
-      ),
-      "to satisfy",
-      [{ flags: { evaluate: false } }]
-    );
-  });
-
   it("should extract a flag after the language specifier and #", function() {
     expect(
       extractSnippets('```js#foo:true\nalert("Hello!");\n```\n'),
@@ -84,13 +74,33 @@ describe("extractSnippets", function() {
     );
   });
 
-  it("should extract a flag from a preceding HTML comment", function() {
+  it("should extract a relevant preceding HTML comment", function() {
+    expect(
+      extractSnippets(
+        '<!--unexpected-markdown-->\n```js\nalert("Hello!");\n```\n'
+      ),
+      "to satisfy",
+      [{ flags: expect.it("to equal", { evaluate: true }) }]
+    );
+  });
+
+  it("should extract flags from a preceding HTML comment", function() {
     expect(
       extractSnippets(
         '<!-- unexpected-markdown foo:true -->\n```js\nalert("Hello!");\n```\n'
       ),
       "to satisfy",
       [{ flags: { foo: true } }]
+    );
+  });
+
+  it("should allow changing evaluate to false via a preceding HTML comment", function() {
+    expect(
+      extractSnippets(
+        '<!-- unexpected-markdown evaluate:false -->\n```js\nalert("Hello!");\n```\n'
+      ),
+      "to satisfy",
+      [{ flags: { evaluate: false } }]
     );
   });
 
@@ -154,21 +164,37 @@ describe("extractSnippets", function() {
     );
   });
 
-  it("provides the index of the block", function() {
+  it("should attach the start and end index of the entire block", function() {
     expect(
-      extractSnippets('foobar\n```js#foo:false\nalert("Hello!");\n```\n'),
+      extractSnippets('foobar\n```js\nalert("Hello!");\n```\n'),
       "to satisfy",
-      [{ index: 7 }]
+      [{ index: 7, indexEnd: 33 }]
     );
   });
 
-  it("skips past a preceding HTML comment when providing the index", function() {
+  it("should attach the start and end index of code within the block", function() {
+    expect(
+      extractSnippets('foobar\n```js\nalert("Hello!");\n```\n'),
+      "to satisfy",
+      [{ codeIndex: 12, codeIndexEnd: 29 }]
+    );
+  });
+
+  it("should account the length of the flags when calculating the index", function() {
+    expect(
+      extractSnippets('foobar\n```js#foo:false\nalert("Hello!");\n```\n'),
+      "to satisfy",
+      [{ index: 7, indexEnd: 43, codeIndex: 22, codeIndexEnd: 39 }]
+    );
+  });
+
+  it("should account for a preceeding HTML comment when calculating the index", function() {
     expect(
       extractSnippets(
         'foobar\n<!-- foo: bar -->\n```js#foo:false\nalert("Hello!");\n```\n'
       ),
       "to satisfy",
-      [{ index: 25 }]
+      [{ index: 25, indexEnd: 61, codeIndex: 47, codeIndexEnd: 57 }]
     );
   });
 
