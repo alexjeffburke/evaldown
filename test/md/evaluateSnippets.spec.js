@@ -1,5 +1,6 @@
 const expect = require("unexpected");
 
+const errors = require("../../lib/errors");
 const evaluateSnippets = require("../../lib/md/evaluateSnippets");
 
 describe("evaluateSnippets", () => {
@@ -160,6 +161,29 @@ describe("evaluateSnippets", () => {
           '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: red">&gt;&gt;</span>bar<span style="color: red">&lt;&lt;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;foo</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">bar</span></div><div><span style="background-color: green; color: white">foo</span></div></div>',
         errorMessage: "expected >>bar<< to foo\n\n-bar\n+foo"
       });
+    });
+  });
+
+  describe("with an error during evaluation", () => {
+    it("should reject evaluation on a reference error", () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code: "expect('f00', 'to equal', 'foo')"
+        },
+        {
+          lang: "output"
+        }
+      ];
+
+      return expect(
+        () => evaluateSnippets(snippets),
+        "to be rejected with",
+        expect
+          .it("to be an", errors.EvaluationError)
+          .and("to have message", "expect is not defined")
+      );
     });
   });
 });
