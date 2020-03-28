@@ -194,7 +194,7 @@ describe("extractSnippets", function() {
         'foobar\n<!-- foo: bar -->\n```js#foo:false\nalert("Hello!");\n```\n'
       ),
       "to satisfy",
-      [{ index: 25, indexEnd: 61, codeIndex: 47, codeIndexEnd: 57 }]
+      [{ index: 25, indexEnd: 61, codeIndex: 40, codeIndexEnd: 57 }]
     );
   });
 
