@@ -176,15 +176,22 @@ describe("extractSnippets", function() {
     expect(
       extractSnippets('foobar\n```js\nalert("Hello!");\n```\n'),
       "to satisfy",
-      [{ codeIndex: 12, codeIndexEnd: 29 }]
+      [{ codeIndex: 13, codeIndexEnd: 29 }]
     );
+  });
+
+  it("should return the saved code chunk when using the start and end index", function() {
+    const mdSrc = 'foobar\n```js\nalert("Hello!");\n```\n';
+    const { code, codeIndex, codeIndexEnd } = extractSnippets(mdSrc)[0];
+
+    expect(mdSrc.slice(codeIndex, codeIndexEnd), "to equal", code);
   });
 
   it("should account the length of the flags when calculating the index", function() {
     expect(
       extractSnippets('foobar\n```js#foo:false\nalert("Hello!");\n```\n'),
       "to satisfy",
-      [{ index: 7, indexEnd: 43, codeIndex: 22, codeIndexEnd: 39 }]
+      [{ index: 7, indexEnd: 43, codeIndex: 23, codeIndexEnd: 39 }]
     );
   });
 
@@ -194,7 +201,7 @@ describe("extractSnippets", function() {
         'foobar\n<!-- foo: bar -->\n```js#foo:false\nalert("Hello!");\n```\n'
       ),
       "to satisfy",
-      [{ index: 25, indexEnd: 61, codeIndex: 40, codeIndexEnd: 57 }]
+      [{ index: 25, indexEnd: 61, codeIndex: 41, codeIndexEnd: 57 }]
     );
   });
 
@@ -206,5 +213,13 @@ describe("extractSnippets", function() {
       "to satisfy",
       [{ lang: "javascript" }, { lang: "output", flags: { foo: true } }]
     );
+  });
+
+  describe("with an empty code block", function() {
+    it("should extract a snippet", function() {
+      expect(extractSnippets("```javascript\n```"), "to satisfy", [
+        { lang: "javascript", code: "", codeIndex: 14, codeIndexEnd: 14 }
+      ]);
+    });
   });
 });
