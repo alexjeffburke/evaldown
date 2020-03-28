@@ -84,6 +84,16 @@ describe("extractSnippets", function() {
     );
   });
 
+  it("should extract a comment ignoring extra newlines", function() {
+    expect(
+      extractSnippets(
+        '<!--unexpected-markdown async:true-->\n\n\n```js\nalert("Hello!");\n```\n'
+      ),
+      "to satisfy",
+      [{ flags: { async: true } }]
+    );
+  });
+
   it("should extract flags from a preceding HTML comment", function() {
     expect(
       extractSnippets(
