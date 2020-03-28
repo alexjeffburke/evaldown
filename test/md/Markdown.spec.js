@@ -48,17 +48,19 @@ describe("Markdown", function() {
       const markdown = await new Markdown(
         [
           "```javascript",
-          "const expect = require('unexpected');",
-          "",
           "expect({ a: 'b' }, 'to equal', { a: 1234 });",
           "```"
         ].join("\n")
-      ).withInlinedExamples();
+      ).withInlinedExamples({
+        globals: {
+          expect
+        }
+      });
 
       return expect(
         markdown.toHtml(),
         "to equal snapshot",
-        '<div class="code lang-javascript"><div><span style="color: #07a">const</span>&nbsp;expect&nbsp;<span style="color: #a67f59">=</span>&nbsp;<span style="color: #DD4A68">require</span><span style="color: #999">(</span><span style="color: #690">&#39;unexpected&#39;</span><span style="color: #999">);</span></div><div>&nbsp;</div><div><span style="color: #DD4A68">expect</span><span style="color: #999">({</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&#39;b&#39;</span>&nbsp;<span style="color: #999">},</span>&nbsp;<span style="color: #690">&#39;to&nbsp;equal&#39;</span><span style="color: #999">,</span>&nbsp;<span style="color: #999">{</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #905">1234</span>&nbsp;<span style="color: #999">});</span></div></div>'
+        '<div class="code lang-javascript"><div>expect({&nbsp;a:&nbsp;&#39;b&#39;&nbsp;},&nbsp;&#39;to&nbsp;equal&#39;,&nbsp;{&nbsp;a:&nbsp;1234&nbsp;});</div></div>'
       );
     });
 
@@ -73,7 +75,11 @@ describe("Markdown", function() {
           "Missing output",
           "```"
         ].join("\n")
-      ).withInlinedExamples();
+      ).withInlinedExamples({
+        globals: {
+          expect
+        }
+      });
 
       return expect(
         markdown.toHtml(),
@@ -120,7 +126,7 @@ describe("Markdown", function() {
     it('should produce update for an unexpected diff when "html"', async function() {
       const markdown = await new Markdown(codeBlockWithSkipped, {
         globals: { expect }
-      }).withInlinedExamples({});
+      }).withInlinedExamples();
 
       expect(
         locateAndReturnOutputHtml(markdown.toHtml()),
