@@ -75,6 +75,20 @@ describe("Evaldown", () => {
     });
   });
 
+  it("should record success in the returned stats", async function() {
+    const evaldown = new Evaldown({
+      sourcePath: path.join(TESTDATA_PATH, "example"),
+      targetPath: TESTDATA_OUTPUT_PATH
+    });
+
+    const stats = await evaldown.processFiles();
+
+    expect(stats, "to equal", {
+      succeeded: 1,
+      errored: 0
+    });
+  });
+
   describe("with nested folders", () => {
     it("should generate the tree", async function() {
       const evaldown = new Evaldown({
@@ -463,6 +477,21 @@ describe("Evaldown", () => {
         "example.html"
       );
       await expect(expectedOutputFile, "not to be present on disk");
+    });
+
+    it("should record the error in the returned stats", async () => {
+      const evaldown = new Evaldown({
+        outputCapture: "console",
+        sourcePath: path.join(TESTDATA_PATH, "some-errors"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      const stats = await evaldown.processFiles();
+
+      expect(stats, "to equal", {
+        succeeded: 0,
+        errored: 1
+      });
     });
   });
 });
