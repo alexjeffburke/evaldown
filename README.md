@@ -72,19 +72,19 @@ module.exports = {
 };
 ```
 
-### Capturing evaluation results from the "console"
+### Capturing evaluation results from the console
 
-By default, the JavaScript code blocks in markdown files - which we
-refer to as `"snippets"` - are allowed to use return statements. The
-returned values will be rendered as an "output" block - an example of
-this is shown in the [authoring](#Authoring) section below.
+By default, JavaScript code blocks found in markdown files - which
+we refer to as _snippets_ - are allowed to use `return` statements.
+The returned values will be rendered as an output block - an example
+of this is shown in the [authoring](#Authoring) section below.
 
 In some cases, rather than capture the result you may wish to capture the
-stdout/stderr of a block - perhaps for a command that logs output when it
+logging output of a command, perhaps for code that emits messages when it
 finished or just an example that uses the console.
 
-Capturing from the console can be configured by adding a "outputCapture"
-key to the configuration object:
+Capturing from the console can be configured by adding an outputCapture
+key with a value of `"console"` to the configuration object:
 
 ```javascript
 module.exports = {

@@ -123,16 +123,16 @@ describe("Evaldown", () => {
       );
     });
 
-    it('should default to "output"', () => {
+    it('should default to "return"', () => {
       const evaldown = new Evaldown({});
 
-      expect(evaldown.capture, "to equal", "output");
+      expect(evaldown.capture, "to equal", "return");
     });
 
-    it('should allow capturing "output"', async function() {
+    it('should allow capturing "return"', async function() {
       const evaldown = new Evaldown({
-        outputCapture: "output",
-        sourcePath: path.join(TESTDATA_PATH, "capture-output"),
+        outputCapture: "return",
+        sourcePath: path.join(TESTDATA_PATH, "capture-return"),
         targetPath: TESTDATA_OUTPUT_PATH
       });
 
