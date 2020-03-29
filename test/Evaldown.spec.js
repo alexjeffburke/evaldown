@@ -156,7 +156,13 @@ describe("Evaldown", () => {
         path.join(TESTDATA_OUTPUT_PATH, "strings.html"),
         "to be present on disk with content satisfying",
         "to equal snapshot",
-        '<div style="font-family: monospace; white-space: nowrap"><div>hello,&nbsp;world!</div><div><span style="color: red; font-weight: bold">foobar</span></div></div>'
+        expect.unindent`
+          <p>Testing console capturing.</p>
+          <div class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&quot;hello,&nbsp;world!&quot;</span><span style="color: #999">);</span></div><div>console<span style="color: #999">.</span><span style="color: #DD4A68">error</span><span style="color: #999">(</span><span style="color: #690">&quot;foobar&quot;</span><span style="color: #999">);</span></div></div>
+
+          <div class="output"><div>hello,&nbsp;world!</div><div><span style="color: red; font-weight: bold">foobar</span></div></div>
+
+        `
       );
     });
 
