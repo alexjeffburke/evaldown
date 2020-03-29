@@ -23,6 +23,10 @@
     "unexpected"
   ],
   "author": "Alex J Burke <alex@alexjeffburke.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexjeffburke/evaldown.git"
+  },
   "license": "MIT",
   "devDependencies": {
     "coveralls": "^3.0.11",
