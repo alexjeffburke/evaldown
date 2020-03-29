@@ -7,25 +7,28 @@ Evalute JavaScript snippets in markdown files and output static pages.
 [![Coverage Status](https://img.shields.io/coveralls/alexjeffburke/evaldown/master.svg)](https://coveralls.io/r/alexjeffburke/evaldown?branch=master)
 
 This project will recursively traverse a folder structure searching
-for markdown files. Once found, it will extract any javascript blocks
+for markdown files. Once found, it will extract javascript code blocks,
+evaluate them and serialise their pretty-printed output for rendering.
+
+The tool can even automatically capture the output of your examples.
+See the [updating](#Updating-examples) section for more details.
 
 ## Use
 
 Once the tool is installed and configured, you can point it at a
-config file and it will automatically generate output files for
-each of the mardown files it finds. The tool is invoked by:
+config file and it will scan the specified source path and write
+output for matching files to a target path. The tool is invoked by:
 
 ```
 ./node_modules/.bin/evaldown --config <path_to_config>
 ```
 
-The sections below discuss configuring and creating your files.
-Captung javascript uses an additional `--update` option which
-is discussed in the [updating](#Updating) section below.
+The sections below discuss configuring the the tool and
+authoring you first example files.
 
 ## Configuration
 
-The package must first be installed and then a config file written
+After the package is installed, a small config file is needed
 which will indicate where it should read source files and target
 for writing output.
 
@@ -41,7 +44,7 @@ module.exports = {
 ### Output format and extension
 
 Currently the rendering process will produce HTML files as standard with
-their usual `.html` extentionsion. The tool can however be requested to
+their usual `.html` file extension. The tool can however be requested to
 output markdown files to the output directory - with the output blocks
 populated - allowing its use to pre-process markdown files before they
 are passed to another template engine.
@@ -62,7 +65,7 @@ module.exports = {
 #### `"markdown"`
 
 This option will write markdown files with the code and output blocks
-replaced with text (for use in a case external highlighting is desired).
+replaced with text (for use when external highlighting is desired).
 
 ```javascript
 module.exports = {
@@ -108,23 +111,44 @@ and displayed in the
 
 <pre>
 ```javascript
-return { foo: 'bar' }
+function doSomething() {
+  return { foo: "bar" };
+}
+
+// objects are inspected too
+return doSomething();
 ```
 
 ```output
-
 ```
 </pre>
 
-### Updating
+When they are rendered, the output will look something like:
 
-Automatically executing the provided code snippets and injecting them
-into the "output" placeholder blocks means that you can always keep
-the code snippets up to date.
+<div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div>
 
-This is considered a primary use-case and is activated by supplying an
-additional option on the command line:
+<div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">&#39;bar&#39;</span>&nbsp;}</div></div>
+
+## Updating examples
+
+Rather than be forced to write the output by hand, we can automatially
+execute the provided code snippets and inject their results into the
+source markdown files. This is done using the `"update"` option.
+
+As you change your examples, updating means you can always keep the
+output up-to-date. This mode is considered a _primary use-case_ and
+can be activated by supplying an additional command line option:
 
 ```
 ./node_modules/.bin/evaldown --config <path_to_config> --update
+```
+
+It can also be placed within the configuration file:
+
+```js
+module.exports = {
+  update: true,
+  sourcePath: "./input",
+  targetPath: "./output"
+};
 ```
