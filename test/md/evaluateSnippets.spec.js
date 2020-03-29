@@ -28,10 +28,10 @@ describe("evaluateSnippets", () => {
       }
     });
 
-    expect(snippets[0], "to satisfy", {
-      htmlErrorMessage:
+    expect(snippets[0].output, "to satisfy", {
+      html:
         '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">foo</span></div><div><span style="color: red; font-weight: bold">&nbsp;&nbsp;at&nbsp;bar&nbsp;(/somewhere.js:1:2)</span></div><div><span style="color: red; font-weight: bold">&nbsp;&nbsp;at&nbsp;quux&nbsp;(/blah.js:3:4)</span></div><div><span style="color: red; font-weight: bold">&nbsp;&nbsp;at&nbsp;baz&nbsp;(/yadda.js:5:6)</span></div></div>',
-      errorMessage:
+      text:
         "foo\n  at bar (/somewhere.js:1:2)\n  at quux (/blah.js:3:4)\n  at baz (/yadda.js:5:6)"
     });
   });
@@ -53,10 +53,10 @@ describe("evaluateSnippets", () => {
         }
       });
 
-      expect(snippets[0], "to satisfy", {
-        htmlErrorMessage:
+      expect(snippets[0].output, "to satisfy", {
+        html:
           '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">boom</span></div></div>',
-        errorMessage: "boom"
+        text: "boom"
       });
     });
 
@@ -76,10 +76,10 @@ describe("evaluateSnippets", () => {
         }
       });
 
-      expect(snippets[0], "to satisfy", {
-        htmlErrorMessage:
+      expect(snippets[0].output, "to satisfy", {
+        html:
           '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">Async&nbsp;code&nbsp;block&nbsp;did&nbsp;not&nbsp;return&nbsp;a&nbsp;promise&nbsp;or&nbsp;throw</span></div><div><span style="color: red; font-weight: bold">Promise.resolve();</span></div></div>',
-        errorMessage:
+        text:
           "Async code block did not return a promise or throw\nPromise.resolve();"
       });
     });
@@ -127,10 +127,10 @@ describe("evaluateSnippets", () => {
         }
       });
 
-      expect(snippets[0], "to satisfy", {
-        htmlOutput:
+      expect(snippets[0].output, "to satisfy", {
+        html:
           '<div style="font-family: monospace; white-space: nowrap"><div>{&nbsp;<span style="color: #555">message</span>:&nbsp;<span style="color: #df5000">\'expected&nbsp;&gt;&gt;bar&lt;&lt;&nbsp;to&nbsp;foo\\n\\n-bar\\n+foo\'</span>&nbsp;}</div></div>',
-        output: "{ message: 'expected >>bar<< to foo\\n\\n-bar\\n+foo' }"
+        text: "{ message: 'expected >>bar<< to foo\\n\\n-bar\\n+foo' }"
       });
     });
 
@@ -156,10 +156,10 @@ describe("evaluateSnippets", () => {
         }
       });
 
-      expect(snippets[0], "to satisfy", {
-        htmlErrorMessage:
+      expect(snippets[0].output, "to satisfy", {
+        html:
           '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: red">&gt;&gt;</span>bar<span style="color: red">&lt;&lt;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;foo</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">bar</span></div><div><span style="background-color: green; color: white">foo</span></div></div>',
-        errorMessage: "expected >>bar<< to foo\n\n-bar\n+foo"
+        text: "expected >>bar<< to foo\n\n-bar\n+foo"
       });
     });
   });
