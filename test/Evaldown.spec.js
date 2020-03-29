@@ -13,12 +13,12 @@ const TESTDATA_OUTPUT_PATH = path.join(TESTDATA_PATH, "output");
 
 describe("Evaldown", () => {
   expect.addAssertion(
-    "<string> to be present on disk",
+    "<string> [not] to be present on disk",
     async (expect, subject) => {
       await expect(
         () => fsExtra.pathExists(subject),
         "to be fulfilled with",
-        true
+        !expect.flags.not
       );
     }
   );
@@ -445,6 +445,24 @@ describe("Evaldown", () => {
       } finally {
         await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
       }
+    });
+  });
+
+  describe("when a file contains erroring snippets", () => {
+    it("should not write out the file", async () => {
+      const evaldown = new Evaldown({
+        outputCapture: "console",
+        sourcePath: path.join(TESTDATA_PATH, "some-errors"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      const expectedOutputFile = path.join(
+        TESTDATA_OUTPUT_PATH,
+        "example.html"
+      );
+      await expect(expectedOutputFile, "not to be present on disk");
     });
   });
 });

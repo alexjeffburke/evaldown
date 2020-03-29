@@ -181,8 +181,17 @@ describe("evaluateSnippets", () => {
         () => evaluateSnippets(snippets),
         "to be rejected with",
         expect
-          .it("to be an", errors.EvaluationError)
-          .and("to have message", "expect is not defined")
+          .it("to be an", errors.FileEvaluationError)
+          .and("to have message", "")
+          .and("to satisfy", {
+            data: {
+              errors: {
+                0: expect
+                  .it("to be an", errors.SnippetEvaluationError)
+                  .and("to have message", "expect is not defined")
+              }
+            }
+          })
       );
     });
   });
