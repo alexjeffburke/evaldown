@@ -250,6 +250,30 @@ describe("Evaldown", () => {
     });
   });
 
+  describe("with file globals", () => {
+    it("should make the global available", async () => {
+      function fileGlobalFunction() {
+        return "woop woop";
+      }
+
+      const evaldown = new Evaldown({
+        sourcePath: path.join(TESTDATA_PATH, "file-globals"),
+        targetPath: TESTDATA_OUTPUT_PATH,
+        fileGlobals: {
+          fileGlobalFunction: () => fileGlobalFunction
+        }
+      });
+
+      await evaldown.processFiles();
+
+      const expectedOutputFile = path.join(
+        TESTDATA_OUTPUT_PATH,
+        "example.html"
+      );
+      await expect(expectedOutputFile, "to be present on disk");
+    });
+  });
+
   describe("with customised extensions", function() {
     it("should glob for the supplied extension", async function() {
       const evaldown = new Evaldown({
