@@ -23,15 +23,26 @@ function exitWithError(err) {
 
 const processArgv = opts =>
   yargs
-    .usage("$0 [args]")
+    .usage("$0 [file]")
     .config(opts)
+    .check(argv => {
+      const hasConfig = typeof argv.config === "string";
+      if (hasConfig && argv.config.length === 0) {
+        throw new Error('the "config" option requires a config file path');
+      }
+      const hasPositional = argv._.length > 0;
+      if (!(hasConfig || hasPositional)) {
+        throw new Error('either "config" or a source file path is required');
+      }
+      return true;
+    })
     .option("config", {
-      demandOption: true,
       describe: "Path to the config file.",
       type: "string"
     })
-    .option("update", {
-      describe: 'Update "output" blocks in the markdown source files.',
+    .option("inplace", {
+      alias: "update",
+      describe: 'Update "output" blocks in the input markdown inplace.',
       type: "boolean"
     })
     .help().argv;
@@ -39,7 +50,9 @@ const processArgv = opts =>
 const processArgsAndExecute = (cwd, argv) => {
   const { pwd, opts } = options.loadOptions(cwd, argv);
   const args = processArgv(opts);
-  return cli.files(pwd || cwd, { ...opts, ...args });
+  const cmd = args._.length > 0 ? "file" : "files";
+
+  return cli[cmd](pwd || cwd, { ...opts, ...args });
 };
 
 (async () => {
