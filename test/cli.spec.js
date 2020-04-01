@@ -7,6 +7,7 @@ const path = require("path");
 const sinon = require("sinon");
 
 const cli = require("../lib/cli");
+const errors = require("../lib/errors");
 
 const TESTDATA_PATH = path.join(__dirname, "..", "testdata");
 const TESTDATA_OUTPUT_PATH = path.join(TESTDATA_PATH, "output");
@@ -153,6 +154,23 @@ describe("cli", () => {
       } finally {
         await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
       }
+    });
+
+    it("should pass through a rejection to ensure it is logged later", async () => {
+      const pwd = path.join(TESTDATA_PATH, "some-errors");
+      const cons = {
+        error: sinon.stub().named("error")
+      };
+
+      await expect(
+        () =>
+          cli.file(pwd, {
+            _cons: cons,
+            _: ["example.md"]
+          }),
+        "to be rejected with",
+        expect.it("to be an", errors.FileEvaluationError)
+      );
     });
   });
 });

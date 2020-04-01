@@ -3,15 +3,14 @@
 const yargs = require("yargs");
 
 const cli = require("../lib/cli");
+const errors = require("../lib/errors");
 const options = require("../lib/options");
 
 function exitWithError(err) {
-  if (process.env.DEBUG) {
-    console.error(err.stack);
-  } else if (err.customOutput) {
+  if (err.customOutput) {
     console.error(err.customOutput);
   } else {
-    console.error(err);
+    console.error(errors.errorToInfo(err));
   }
 
   if (typeof err.exitCode === "number") {
