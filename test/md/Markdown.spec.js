@@ -279,7 +279,7 @@ describe("Markdown", function() {
           markdown.toString(),
           "to equal snapshot",
           expect.unindent`
-            <-- unexpected-markdown async:true -->
+            <-- evaldown async:true -->
             \`\`\`javascript
             return Promise.resolve('ahoy');
             \`\`\`
