@@ -122,7 +122,7 @@ describe("evaluateSnippets", () => {
       ];
 
       await evaluateSnippets(snippets, {
-        captureOutput: true,
+        capture: "return",
         globals: {
           expect: clonedExpect
         }
@@ -271,7 +271,7 @@ describe("evaluateSnippets", () => {
 
       const snippets = [{ ...testSnippet }];
       await evaluateSnippets(snippets, {
-        captureOutput: true,
+        capture: "return",
         globals: {
           expect
         },

@@ -243,7 +243,7 @@ describe("Markdown", function() {
         ].join("\n"),
         {
           marker: "evaldown",
-          captureOutput: true
+          capture: "return"
         }
       ).withUpdatedExamples({});
 
@@ -271,7 +271,7 @@ describe("Markdown", function() {
           ].join("\n"),
           {
             marker: "evaldown",
-            captureOutput: true
+            capture: "return"
           }
         ).withUpdatedExamples({});
 
