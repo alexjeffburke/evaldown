@@ -73,19 +73,19 @@ describe("Evaldown", () => {
         true
       );
     });
-  });
 
-  it("should record success in the returned stats", async function() {
-    const evaldown = new Evaldown({
-      sourcePath: path.join(TESTDATA_PATH, "example"),
-      targetPath: TESTDATA_OUTPUT_PATH
-    });
+    it("should record success in the returned stats", async function() {
+      const evaldown = new Evaldown({
+        sourcePath: path.join(TESTDATA_PATH, "example"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
 
-    const stats = await evaldown.processFiles();
+      const stats = await evaldown.processFiles();
 
-    expect(stats, "to equal", {
-      succeeded: 1,
-      errored: 0
+      expect(stats, "to equal", {
+        succeeded: 1,
+        errored: 0
+      });
     });
   });
 

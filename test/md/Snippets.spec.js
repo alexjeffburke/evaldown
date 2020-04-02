@@ -13,7 +13,7 @@ const testSnippets = [
   {
     lang: "output",
     flags: { cleanStackTrace: true, evaluate: true },
-    index: 198,
+    index: 187,
     code:
       "foo\n  at bar (/path/to/file.js:x:y)\n  at quux (/path/to/file.js:x:y)"
   }
@@ -71,13 +71,14 @@ describe("Snippets", () => {
           'throw new Error("foo\\n  at bar (/somewhere.js:1:2)\\n  at quux (/blah.js:3:4)\\n  at baz (/yadda.js:5:6)")',
           "```",
           "",
-          "<!-- unexpected-markdown cleanStackTrace:true -->",
+          "<!-- evaldown cleanStackTrace:true -->",
           "```output",
           "foo",
           "  at bar (/path/to/file.js:x:y)",
           "  at quux (/path/to/file.js:x:y)",
           "```"
-        ].join("\n")
+        ].join("\n"),
+        { marker: "evaldown" }
       );
 
       expect(snippets.items, "to satisfy", testSnippets);

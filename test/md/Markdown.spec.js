@@ -50,7 +50,10 @@ describe("Markdown", function() {
           "```javascript",
           "expect({ a: 'b' }, 'to equal', { a: 1234 });",
           "```"
-        ].join("\n")
+        ].join("\n"),
+        {
+          marker: "evaldown"
+        }
       ).withInlinedExamples({
         globals: {
           expect
@@ -74,7 +77,10 @@ describe("Markdown", function() {
           "```output",
           "Missing output",
           "```"
-        ].join("\n")
+        ].join("\n"),
+        {
+          marker: "evaldown"
+        }
       ).withInlinedExamples({
         globals: {
           expect
@@ -92,7 +98,10 @@ describe("Markdown", function() {
 
     it("should ignore paired empty paired blocks", async function() {
       const markdown = await new Markdown(
-        ["```javascript", "```", "```output", "```"].join("\n")
+        ["```javascript", "```", "```output", "```"].join("\n"),
+        {
+          marker: "evaldown"
+        }
       ).withInlinedExamples();
 
       expect(
@@ -107,7 +116,10 @@ describe("Markdown", function() {
 
     it("should throw if an output block occurrs with no code block", function() {
       const markdown = new Markdown(
-        ["```output", "Missing output", "```"].join("\n")
+        ["```output", "Missing output", "```"].join("\n"),
+        {
+          marker: "evaldown"
+        }
       );
 
       return expect(
@@ -125,6 +137,7 @@ describe("Markdown", function() {
 
     it('should produce update for an unexpected diff when "html"', async function() {
       const markdown = await new Markdown(codeBlockWithSkipped, {
+        marker: "evaldown",
         globals: { expect }
       }).withInlinedExamples();
 
@@ -139,6 +152,7 @@ describe("Markdown", function() {
   describe("withUpdatedExamples", function() {
     it("should produce updated markdown for an unexpected diff", async function() {
       const markdown = await new Markdown(codeBlockWithSkipped, {
+        marker: "evaldown",
         globals: { expect }
       }).withUpdatedExamples({});
 
@@ -163,7 +177,7 @@ describe("Markdown", function() {
     it("should produces updated markdown for async rejection", async function() {
       const markdown = await new Markdown(
         [
-          "<!-- unexpected-markdown async:true -->",
+          "<!-- evaldown async:true -->",
           "```javascript",
           "return Promise.reject(new Error('boom'));",
           "```",
@@ -171,7 +185,10 @@ describe("Markdown", function() {
           "```output",
           "Missing output",
           "```"
-        ].join("\n")
+        ].join("\n"),
+        {
+          marker: "evaldown"
+        }
       ).withUpdatedExamples({});
 
       expect(
@@ -196,7 +213,10 @@ describe("Markdown", function() {
           "```output",
           "Missing output",
           "```"
-        ].join("\n")
+        ].join("\n"),
+        {
+          marker: "unexpected-markdown"
+        }
       ).withUpdatedExamples({});
 
       expect(
@@ -222,6 +242,7 @@ describe("Markdown", function() {
           "```"
         ].join("\n"),
         {
+          marker: "evaldown",
           captureOutput: true
         }
       ).withUpdatedExamples({});
@@ -249,6 +270,7 @@ describe("Markdown", function() {
             "```"
           ].join("\n"),
           {
+            marker: "evaldown",
             captureOutput: true
           }
         ).withUpdatedExamples({});
