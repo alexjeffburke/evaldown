@@ -2,6 +2,7 @@ const buble = require("buble");
 const expect = require("unexpected")
   .clone()
   .use(require("unexpected-snapshot"));
+const expectNoSnapshot = require("unexpected");
 
 const errors = require("../../lib/errors");
 const evaluateSnippets = require("../../lib/md/evaluateSnippets");
@@ -91,7 +92,7 @@ describe("evaluateSnippets", () => {
   });
 
   describe("with a customised expect", () => {
-    const clonedExpect = expect.clone().use(expect => {
+    const clonedExpect = expectNoSnapshot.clone().use(expect => {
       expect = expect.child();
       expect.addStyle("fancyQuotes", function(str) {
         this.red(">>")
