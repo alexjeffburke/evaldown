@@ -207,6 +207,44 @@ describe("Evaldown", () => {
         `
       );
     });
+
+    describe("when the selection is done per-snippet", () => {
+      it("should capture each type specifided", async () => {
+        const evaldown = new Evaldown({
+          outputCapture: "expect",
+          sourcePath: path.join(TESTDATA_PATH, "mixed-captures"),
+          targetPath: TESTDATA_OUTPUT_PATH
+        });
+
+        await evaldown.processFiles();
+
+        // check the file was created
+        const expectedOutputFile = path.join(
+          TESTDATA_OUTPUT_PATH,
+          "example.html"
+        );
+        await expect(
+          expectedOutputFile,
+          "to be present on disk with content satisfying",
+          "to equal snapshot",
+          expect.unindent`
+            <p>Mixed capturing.</p>
+            <p>First there is a return value:</p>
+            <!-- evaldown return:true -->
+            <div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div>
+
+            <div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">&#39;bar&#39;</span>&nbsp;}</div></div>
+
+            <p>Then we try logging to the console:</p>
+            <!-- evaldown console:true -->
+            <div class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&#39;foo&nbsp;bar&nbsp;baz&#39;</span><span style="color: #999">);</span></div><div>console<span style="color: #999">.</span><span style="color: #DD4A68">warn</span><span style="color: #999">(</span><span style="color: #690">&#39;..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing&#39;</span><span style="color: #999">);</span></div></div>
+
+            <div class="output"><div>foo&nbsp;bar&nbsp;baz</div><div><span style="color: red; font-weight: bold">..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing</span></div></div>
+
+          `
+        );
+      });
+    });
   });
 
   describe("with output format selection", function() {

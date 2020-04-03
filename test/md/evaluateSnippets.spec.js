@@ -6,6 +6,14 @@ const expect = require("unexpected")
 const errors = require("../../lib/errors");
 const evaluateSnippets = require("../../lib/md/evaluateSnippets");
 
+function createFakeMarkdown() {
+  return {
+    getExpect() {
+      return expect;
+    }
+  };
+}
+
 describe("evaluateSnippets", () => {
   it("should evaluate javascript snippets", async () => {
     const snippets = [
@@ -26,7 +34,7 @@ describe("evaluateSnippets", () => {
     ];
 
     await evaluateSnippets(snippets, {
-      baseExpect: expect
+      markdown: createFakeMarkdown()
     });
 
     expect(snippets[0].output, "to satisfy", {
@@ -49,9 +57,7 @@ describe("evaluateSnippets", () => {
       ];
 
       await evaluateSnippets(snippets, {
-        globals: {
-          expect
-        }
+        markdown: createFakeMarkdown()
       });
 
       expect(snippets[0].output, "to satisfy", {
@@ -72,9 +78,7 @@ describe("evaluateSnippets", () => {
       ];
 
       await evaluateSnippets(snippets, {
-        globals: {
-          expect
-        }
+        markdown: createFakeMarkdown()
       });
 
       expect(snippets[0].output, "to satisfy", {
@@ -122,6 +126,7 @@ describe("evaluateSnippets", () => {
       ];
 
       await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
         capture: "return",
         globals: {
           expect: clonedExpect
@@ -152,6 +157,7 @@ describe("evaluateSnippets", () => {
       ];
 
       await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
         globals: {
           expect: clonedExpect
         }
@@ -179,7 +185,7 @@ describe("evaluateSnippets", () => {
       ];
 
       return expect(
-        () => evaluateSnippets(snippets),
+        () => evaluateSnippets(snippets, { markdown: createFakeMarkdown() }),
         "to be rejected with",
         expect
           .it("to be an", errors.FileEvaluationError)
@@ -271,10 +277,8 @@ describe("evaluateSnippets", () => {
 
       const snippets = [{ ...testSnippet }];
       await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
         capture: "return",
-        globals: {
-          expect
-        },
         transpileFn
       });
 
