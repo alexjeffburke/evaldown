@@ -180,38 +180,37 @@ describe("Evaldown", () => {
       );
     });
 
-    it('should allow capturing "expect"', async function() {
+    it('should allow capturing "nowrap"', async function() {
       const evaldown = new Evaldown({
-        outputCapture: "expect",
-        sourcePath: path.join(TESTDATA_PATH, "capture-expect"),
+        outputCapture: "nowrap",
+        sourcePath: path.join(TESTDATA_PATH, "capture-nowrap"),
         targetPath: TESTDATA_OUTPUT_PATH
       });
 
       await evaldown.processFiles();
 
       // check the file was created
-      const expectedOutputFile = path.join(
-        TESTDATA_OUTPUT_PATH,
-        "nothing.html"
-      );
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "scope.html");
       await expect(
         expectedOutputFile,
         "to be present on disk with content satisfying",
         "to equal snapshot",
         expect.unindent`
           <p>Testing output capturing.</p>
-          <div class="code lang-javascript"><div><span style="color: #DD4A68">expect</span><span style="color: #999">(</span><span style="color: #690">&quot;f00&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;to&nbsp;equal&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;foo&quot;</span><span style="color: #999">);</span></div></div>
+          <div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">fooer</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #690">&quot;f00&quot;</span><span style="color: #999">;</span></div><div><span style="color: #999">}</span></div></div>
 
-          <div class="output"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: #df5000">&#39;f00&#39;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;equal</span>&nbsp;<span style="color: #df5000">&#39;foo&#39;</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">f00</span></div><div><span style="background-color: green; color: white">foo</span></div></div>
+          <div class="code lang-javascript"><div><span style="color: #07a">const</span>&nbsp;assert&nbsp;<span style="color: #a67f59">=</span>&nbsp;<span style="color: #DD4A68">require</span><span style="color: #999">(</span><span style="color: #690">&quot;assert&quot;</span><span style="color: #999">);</span></div><div>process<span style="color: #999">.</span>env<span style="color: #999">.</span><span style="color: #905">NODE_DISABLE_COLORS</span>&nbsp;<span style="color: #a67f59">=</span>&nbsp;<span style="color: #690">&#39;1&#39;</span><span style="color: #999">;</span></div><div>&nbsp;</div><div>assert<span style="color: #999">.</span><span style="color: #DD4A68">strictEqual</span><span style="color: #999">(</span><span style="color: #DD4A68">fooer</span><span style="color: #999">(),</span>&nbsp;<span style="color: #690">&quot;foo&quot;</span><span style="color: #999">);</span></div></div>
+
+          <div class="output"><div><span style="color: red; font-weight: bold">Input&nbsp;A&nbsp;expected&nbsp;to&nbsp;strictly&nbsp;equal&nbsp;input&nbsp;B:</span></div><div><span style="color: red; font-weight: bold">+&nbsp;expected&nbsp;-&nbsp;actual</span></div><div>&nbsp;</div><div><span style="color: red; font-weight: bold">-&nbsp;&#39;f00&#39;</span></div><div><span style="color: red; font-weight: bold">+&nbsp;&#39;foo&#39;</span></div></div>
 
         `
       );
     });
 
     describe("when the selection is done per-snippet", () => {
-      it("should capture each type specifided", async () => {
+      it("should capture each type specified", async () => {
         const evaldown = new Evaldown({
-          outputCapture: "expect",
+          outputCapture: "nowrap",
           sourcePath: path.join(TESTDATA_PATH, "mixed-captures"),
           targetPath: TESTDATA_OUTPUT_PATH
         });
@@ -449,7 +448,6 @@ describe("Evaldown", () => {
 
       await new Evaldown({
         update: true,
-        outputCapture: "expect",
         sourcePath: path.dirname(sourceFilePath),
         targetPath: TESTDATA_OUTPUT_PATH
       }).processFile(sourceFile);
