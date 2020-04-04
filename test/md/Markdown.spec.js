@@ -1,6 +1,9 @@
 var expect = require("unexpected")
   .clone()
+  .use(require("unexpected-sinon"))
   .use(require("unexpected-snapshot"));
+var sinon = require("sinon");
+
 var Markdown = require("../../lib/md/Markdown");
 
 const codeBlockWithSkipped = [
@@ -43,6 +46,55 @@ function locateAndReturnOutputHtml(output) {
 }
 
 describe("Markdown", function() {
+  describe("with metadata", () => {
+    const markdownWithMetadata = `---
+template: default.ejs
+theme: dark
+title: Unexpected
+repository: https://github.com/unexpectedjs/unexpected
+---
+
+# Here is my title
+`;
+
+    it("should parse the file options", () => {
+      const markdown = new Markdown(markdownWithMetadata, { marker: "abc" });
+
+      expect(markdown.metadata, "to equal", {
+        template: "default.ejs",
+        theme: "dark",
+        title: "Unexpected",
+        repository: "https://github.com/unexpectedjs/unexpected"
+      });
+    });
+
+    it("should make the file options available to file globals", async () => {
+      const createSomeGlobal = sinon
+        .stub()
+        .returns(() => ({ foo: true, bar: 1 }));
+      const markdown = new Markdown(markdownWithMetadata, {
+        marker: "abc"
+      });
+
+      markdown._prepareGlobals({
+        customGlobals: {
+          someGlobal: createSomeGlobal
+        }
+      });
+
+      expect(createSomeGlobal, "to have a call satisfying", [
+        {
+          metadata: {
+            template: "default.ejs",
+            theme: "dark",
+            title: "Unexpected",
+            repository: "https://github.com/unexpectedjs/unexpected"
+          }
+        }
+      ]);
+    });
+  });
+
   describe("withInlinedExamples", function() {
     it("should render a syntax highlighted code block", async function() {
       const markdown = await new Markdown(
