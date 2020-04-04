@@ -77,7 +77,7 @@ repository: https://github.com/unexpectedjs/unexpected
       });
 
       markdown._prepareGlobals({
-        customGlobals: {
+        fileGlobals: {
           someGlobal: createSomeGlobal
         }
       });
