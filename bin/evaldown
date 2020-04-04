@@ -39,9 +39,9 @@ const processArgv = opts =>
       describe: "Path to the config file.",
       type: "string"
     })
-    .option("inplace", {
-      alias: "update",
-      describe: 'Update "output" blocks in the input markdown inplace.',
+    .option("update", {
+      alias: "inplace",
+      describe: 'Update "output" blocks within the source markdown.',
       type: "boolean"
     })
     .help().argv;
