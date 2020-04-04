@@ -25,7 +25,11 @@ describe("cli", () => {
     await fsExtra.emptyDir(TESTDATA_OUTPUT_PATH);
   });
 
-  it("should use the config file", async () => {
+  afterEach(() => {
+    sinon.reset();
+  });
+
+  it("should output markdown to the target path", async () => {
     const pwd = path.join(TESTDATA_PATH, "config");
     const opts = usingOpts(pwd, "evaldown.valid-basic.js");
 
@@ -40,6 +44,34 @@ describe("cli", () => {
       () => fsExtra.pathExists(expectedOutputFile),
       "to be fulfilled with",
       true
+    );
+  });
+
+  it('should output to the source place when "inplace"', async () => {
+    const testFile = path.join(TESTDATA_PATH, "capture-return", "captured.md");
+    const scratchFile = path.join(TESTDATA_OUTPUT_PATH, "something.md");
+    await fsExtra.copyFile(testFile, scratchFile);
+
+    const pwd = TESTDATA_OUTPUT_PATH;
+    const opts = {
+      inplace: true,
+      sourcePath: "."
+    };
+
+    await cli.files(pwd, opts);
+  });
+
+  it("should error on an invalid target path", async () => {
+    const pwd = path.join(TESTDATA_PATH, "config");
+    const opts = {
+      sourcePath: "./files",
+      targetPath: "./missing_parent/output"
+    };
+
+    await expect(
+      () => cli.files(pwd, opts),
+      "to be rejected with",
+      'Inaccessible "targetPath"'
     );
   });
 
@@ -116,14 +148,37 @@ describe("cli", () => {
       ]);
     });
 
-    it('should write an update the file when "inplace"', async () => {
+    it("should allow switching the format to output to stdout", async () => {
+      const pwd = path.join(TESTDATA_PATH, "extensions");
+      const sourceFilePath = path.join(pwd, "expect.markdown");
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+      const cons = {
+        log: sinon.stub().named("log")
+      };
+
+      try {
+        await cli.file(pwd, {
+          _cons: cons,
+          format: "html",
+          _: ["expect.markdown"]
+        });
+
+        expect(cons.log, "to have a call satisfying", [
+          expect.it("to contain", "<div")
+        ]);
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+
+    it('should write to the source file when "inplace"', async () => {
       const pwd = path.join(TESTDATA_PATH, "extensions");
       const sourceFilePath = path.join(pwd, "expect.markdown");
       const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
 
       try {
         await cli.file(pwd, {
-          update: true,
+          inplace: true,
           _: ["expect.markdown"]
         });
 
@@ -156,6 +211,49 @@ describe("cli", () => {
       }
     });
 
+    it('should override any format to "markdown" when "inplace"', async () => {
+      const pwd = path.join(TESTDATA_PATH, "extensions");
+      const sourceFilePath = path.join(pwd, "expect.markdown");
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+      try {
+        await cli.file(pwd, {
+          format: "html",
+          inplace: true,
+          _: ["expect.markdown"]
+        });
+
+        await expect(
+          await fsExtra.readFile(sourceFilePath, "utf8"),
+          "not to contain",
+          "<div"
+        );
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+
+    it('should write to the source file and output to stdout when "update"', async () => {
+      const pwd = path.join(TESTDATA_PATH, "extensions");
+      const sourceFilePath = path.join(pwd, "expect.markdown");
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+      const cons = {
+        log: sinon.stub().named("log")
+      };
+
+      try {
+        await cli.file(pwd, {
+          _cons: cons,
+          update: true,
+          _: ["expect.markdown"]
+        });
+
+        await expect(cons.log, "was called");
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+
     it("should pass through a rejection to ensure it is logged later", async () => {
       const pwd = path.join(TESTDATA_PATH, "some-errors");
       const cons = {
@@ -170,6 +268,61 @@ describe("cli", () => {
           }),
         "to be rejected with",
         expect.it("to be an", errors.FileEvaluationError)
+      );
+    });
+
+    it("should throw on inaccessible", async () => {
+      const pwd = path.join(TESTDATA_PATH, "example");
+      const opts = {
+        _: ["nonexistent.md"]
+      };
+
+      await expect(
+        () => cli.file(pwd, opts),
+        "to be rejected with",
+        'Inaccessible "sourceFile"'
+      );
+    });
+  });
+
+  describe("byPath()", () => {
+    it("should choose the files function for a directory", async () => {
+      const pwd = TESTDATA_PATH;
+
+      sinon.stub(cli, "files");
+
+      await cli.byPath(pwd, {
+        _: ["capture-return"]
+      });
+
+      expect(cli.files, "to have a call satisfying", [
+        pwd,
+        { sourcePath: "capture-return" }
+      ]);
+    });
+
+    it("should choose the file function for a file", async () => {
+      const pwd = path.join(TESTDATA_PATH, "capture-return");
+
+      sinon.stub(cli, "file");
+
+      await cli.byPath(pwd, {
+        _: ["captured.md"]
+      });
+
+      expect(cli.file, "to have a call satisfying", [pwd, { sourcePath: "." }]);
+    });
+
+    it("should throw on an invalid path", async () => {
+      const pwd = path.join(TESTDATA_PATH, "example");
+      const opts = {
+        _: ["nonexistent.md"]
+      };
+
+      await expect(
+        () => cli.byPath(pwd, opts),
+        "to be rejected with",
+        'Invalid "path"'
       );
     });
   });

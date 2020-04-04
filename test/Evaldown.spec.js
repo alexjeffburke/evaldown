@@ -411,14 +411,14 @@ describe("Evaldown", () => {
     });
   });
 
-  describe("when operating in update mode", function() {
+  describe("when operating in inplace mode", function() {
     it("should make changes to the source markdown", async function() {
       const sourceFile = "expect.md";
       const sourceFilePath = path.join(TESTDATA_PATH, "example", sourceFile);
       const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
 
       await new Evaldown({
-        update: true,
+        inplace: true,
         sourcePath: path.dirname(sourceFilePath),
         targetPath: TESTDATA_OUTPUT_PATH
       }).processFile(sourceFile);
@@ -438,6 +438,27 @@ describe("Evaldown", () => {
       }
     });
 
+    it("should not write an output file", async function() {
+      const sourceFile = "expect.md";
+      const sourceFilePath = path.join(TESTDATA_PATH, "example", sourceFile);
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+      await new Evaldown({
+        inplace: true,
+        sourcePath: path.dirname(sourceFilePath),
+        targetPath: TESTDATA_OUTPUT_PATH
+      }).processFile(sourceFile);
+
+      try {
+        const targetFilePath = path.join(TESTDATA_OUTPUT_PATH, "example.html");
+        expect(targetFilePath, "not to be present on disk");
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+  });
+
+  describe("when operating in update mode", function() {
     it("should output the correct updated markdown", async () => {
       const sourceFile = "expect.md";
       const sourceFilePath = path.join(TESTDATA_PATH, "example", sourceFile);

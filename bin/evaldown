@@ -22,7 +22,7 @@ function exitWithError(err) {
 
 const processArgv = opts =>
   yargs
-    .usage("$0 [file]")
+    .usage("$0 [path]")
     .config(opts)
     .check(argv => {
       const hasConfig = typeof argv.config === "string";
@@ -31,7 +31,7 @@ const processArgv = opts =>
       }
       const hasPositional = argv._.length > 0;
       if (!(hasConfig || hasPositional)) {
-        throw new Error('either "config" or a source file path is required');
+        throw new Error('either "config" or a source path is required');
       }
       return true;
     })
@@ -44,17 +44,21 @@ const processArgv = opts =>
       type: "string",
       choices: ["markdown", "inlined", "html"]
     })
-    .option("update", {
-      alias: "inplace",
-      describe: 'Update "output" blocks within the source markdown.',
+    .option("inplace", {
+      describe: 'Write to "output" blocks within source markdown only.',
       type: "boolean"
     })
+    .option("update", {
+      describe: 'Also update "output" blocks within the source markdown.',
+      type: "boolean"
+    })
+    .conflicts("inplace", ["update", "format"])
     .help().argv;
 
 const processArgsAndExecute = (cwd, argv) => {
   const { pwd, opts } = options.loadOptions(cwd, argv);
   const args = processArgv(opts);
-  const cmd = args._.length > 0 ? "file" : "files";
+  const cmd = args._.length > 0 ? "byPath" : "files";
 
   return cli[cmd](pwd || cwd, { ...opts, ...args });
 };
