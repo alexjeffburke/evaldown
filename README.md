@@ -112,9 +112,6 @@ module.exports = {
 };
 ```
 
-> Note: changing output capturing affects all markdown files
-> currently but will be configurable made per-snippet in future
-
 ## Authoring
 
 Inside the input folder, you can make add markdown files that contain
@@ -143,6 +140,43 @@ When they are rendered, the output will look something like:
 <div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div>
 
 <div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">&#39;bar&#39;</span>&nbsp;}</div></div>
+
+### Customising snippets
+
+When authoring examples you may find that you want to customise how
+individual snippets are treated - be this to allow using promises or
+to capture the console.
+
+HTML comments inserted above the code blocks allow doing just this.
+First, we look at an example that makes use of some `async` code:
+
+<pre>
+<!-- evaldown async:true -->
+```js
+return new Promise('foo');
+```
+
+```output
+foo
+```
+</pre>
+
+Comments with the `evaldown` marker will be located and the values
+afterwards, which we call _flags_, will be used as processing hints.
+
+Outputting uses of the `console` would look something like:
+
+<pre>
+<!-- evaldown console:true -->
+```js
+console.warn("whoa there!");
+```
+
+```output
+whoa, there!
+```
+</pre>
+
 
 ## Updating examples
 
