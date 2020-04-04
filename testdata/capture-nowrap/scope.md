@@ -1,22 +1,15 @@
 Testing output capturing.
 
 ```javascript
+const assert = require("assert");
+
 function fooer() {
   return "f00";
 }
-```
 
-```javascript
-const assert = require("assert");
-process.env.NODE_DISABLE_COLORS = '1';
-
-assert.strictEqual(fooer(), "foo");
+assert.strictEqual(fooer(), "foo", "Not the same :-(");
 ```
 
 ```output
-Input A expected to strictly equal input B:
-+ expected - actual
-
-- 'f00'
-+ 'foo'
+Not the same :-(
 ```
