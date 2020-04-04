@@ -15,9 +15,23 @@ See the [updating](#Updating-examples) section for more details.
 
 ## Use
 
-Once the tool is installed and configured, you can point it at a
-config file and it will scan the specified source path and write
-output for matching files to a target path. The tool is invoked by:
+Once the tool is installed and configured it can be used via the CLI.
+which supports processing a single markdown file or more typically
+a directory of files with configuration read from a file.
+
+### Process single files
+
+In single file use, the tool can be invoked as follows:
+
+```
+./node_modules/.bin/evaldown ./docs/README.md > README.md
+```
+
+### Process directories of files
+
+This mode requires a configuration file. Once written, the tool
+is invoked will read the source path, scan it for markdown files
+and write output to a target path. This mode is invoked by:
 
 ```
 ./node_modules/.bin/evaldown --config <path_to_config>
@@ -28,11 +42,12 @@ authoring you first example files.
 
 ## Configuration
 
-After the package is installed, a small config file is needed
-which will indicate where it should read source files and target
-for writing output.
+The tool ships with inbuilt support for processing directories
+of markdown files. To do this, a small config file is needed to
+indicate where the source path to read files from a target path
+to write generated output to.
 
-In its most basic form a configuration is as follows:
+A basic `evaldown.conf.js` file is as follows:
 
 ```javascript
 module.exports = {
