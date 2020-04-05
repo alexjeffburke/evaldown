@@ -208,7 +208,6 @@ describe("Evaldown", () => {
     describe("when the selection is done per-snippet", () => {
       it("should capture each type specified", async () => {
         const evaldown = new Evaldown({
-          outputCapture: "nowrap",
           sourcePath: path.join(TESTDATA_PATH, "mixed-captures"),
           targetPath: TESTDATA_OUTPUT_PATH
         });
