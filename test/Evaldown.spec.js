@@ -527,4 +527,55 @@ describe("Evaldown", () => {
       });
     });
   });
+
+  describe("when combining options", () => {
+    it('should allow per-snippet captures and outputting as "markdown"', async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "mixed-captures"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          Mixed capturing.
+
+          First there is a return value:
+
+          <!-- evaldown return:true -->
+          \`\`\`javascript
+          function doSomething() {
+            return { foo: "bar" };
+          }
+
+          // objects are inspected too
+          return doSomething();
+          \`\`\`
+
+          \`\`\`output
+          { foo: 'bar' }
+          \`\`\`
+
+          Then we try logging to the console:
+
+          <!-- evaldown console:true -->
+          \`\`\`javascript
+          console.log('foo bar baz');
+          console.warn('..as is customary when testing');
+          \`\`\`
+
+          \`\`\`output
+          foo bar baz
+          ..as is customary when testing
+          \`\`\`
+
+        `
+      );
+    });
+  });
 });
