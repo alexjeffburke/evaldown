@@ -1,44 +1,53 @@
 # Evaldown
 
-Evalute JavaScript snippets in markdown files and output static pages.
+Evaluate JavaScript snippets in markdown files.
 
 [![NPM version](https://img.shields.io/npm/v/evaldown.svg)](https://www.npmjs.com/package/evaldown)
 [![Build Status](https://img.shields.io/travis/alexjeffburke/evaldown/master.svg)](https://travis-ci.org/alexjeffburke/evaldown)
 [![Coverage Status](https://img.shields.io/coveralls/alexjeffburke/evaldown/master.svg)](https://coveralls.io/r/alexjeffburke/evaldown?branch=master)
 
-This project will recursively traverse a folder structure searching
-for markdown files. Once found, it will extract javascript code blocks,
-evaluate them and serialise their pretty-printed output for rendering.
-
-The tool can even automatically capture the output of your examples.
-See the [updating](#Updating-examples) section for more details.
+This tool provides both CLI and programmatic interfaces for
+locating JavaScript code blocks in one or more markdown files,
+extracting and evaluating these blocks and provides a range
+formats in which to serialise their pretty-printed output.
 
 ## Use
 
-Once the tool is installed and configured it can be used via the CLI.
-which supports processing a single markdown file or more typically
-a directory of files with configuration read from a file.
-
-### Process single files
-
-In single file use, the tool can be invoked as follows:
+We start by introducing an invocation for processing a single
+markdown file:
 
 ```
-./node_modules/.bin/evaldown ./docs/README.md > README.md
+./node_modules/.bin/evaldown ./docs/README.md
+```
+
+The file will be processed and the output written to stdout.
+In order to store the output within the source file, thereby
+automatically capturing it, we can use the `--inplace` option:
+
+```
+./node_modules/.bin/evaldown --inplace ./docs/README.md
 ```
 
 ### Process directories of files
 
-This mode requires a configuration file. Once written, the tool
-is invoked will read the source path, scan it for markdown files
-and write output to a target path. This mode is invoked by:
+Applying a similiar update to all files within a directory
+structure looks almost identical:
+
+```
+./node_modules/.bin/evaldown --inplace ./testdata/
+```
+
+### Beyond command line options
+
+The tool supports many additional options to alter its behaviour,
+and these can all be read directly from a configuration file:
 
 ```
 ./node_modules/.bin/evaldown --config <path_to_config>
 ```
 
-The sections below discuss configuring the the tool and
-authoring you first example files.
+The sections below discuss configuring the tool and
+authoring of examples.
 
 ## Configuration
 
@@ -112,6 +121,18 @@ module.exports = {
 };
 ```
 
+### Keeping the source up-to-date
+
+As you change your examples, updating means you can always keep the
+output up-to-date. This mode is considered a key use-case and can
+enabled by default via the configuration file:
+
+It can also be activaited on the command line on demand:
+
+```
+./node_modules/.bin/evaldown --config <path_to_config> --update
+```
+
 ## Authoring
 
 Inside the input folder, you can make add markdown files that contain
@@ -176,28 +197,3 @@ console.warn("whoa there!");
 whoa, there!
 ```
 </pre>
-
-
-## Updating examples
-
-Rather than be forced to write the output by hand, we can automatially
-execute the provided code snippets and inject their results into the
-source markdown files. This is done using the `"update"` option.
-
-As you change your examples, updating means you can always keep the
-output up-to-date. This mode is considered a _primary use-case_ and
-can be activated by supplying an additional command line option:
-
-```
-./node_modules/.bin/evaldown --config <path_to_config> --update
-```
-
-It can also be placed within the configuration file:
-
-```js
-module.exports = {
-  update: true,
-  sourcePath: "./input",
-  targetPath: "./output"
-};
-```
