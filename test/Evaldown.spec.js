@@ -297,9 +297,43 @@ describe("Evaldown", () => {
       // check the file was created
       const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "expect.md");
       await expect(
-        () => fsExtra.pathExists(expectedOutputFile),
-        "to be fulfilled with",
-        true
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          Asserts deep equality.
+
+          \`\`\`javascript
+          const expect = require('unexpected');
+
+          expect({ a: "b" }, "to equal", { a: 1234 });
+          var now = new Date();
+          expect(now, "to equal", now);
+          expect(now, "to equal", new Date(now.getTime()));
+          expect({ now: now }, "to equal", { now: now });
+          \`\`\`
+
+          For a lot of types a failing equality test results in a nice
+          diff. Below you can see an object diff.
+
+          \`\`\`javascript
+          const expect = require('unexpected');
+
+          expect({ text: "foo!" }, "to equal", { text: "f00!" });
+          \`\`\`
+
+          \`\`\`output
+          expected { text: 'foo!' } to equal { text: 'f00!' }
+
+          {
+            text: 'foo!' // should equal 'f00!'
+                         //
+                         // -foo!
+                         // +f00!
+          }
+          \`\`\`
+
+        `
       );
     });
   });
