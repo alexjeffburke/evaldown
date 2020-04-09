@@ -283,11 +283,7 @@ describe("evaluateSnippets", () => {
         transpileFn
       });
 
-      expect(snippets[0].output, "to equal snapshot", {
-        kind: "result",
-        html: "Greetings, foo",
-        text: "Greetings, foo"
-      });
+      expect(snippets[0].output, "to satisfy", { kind: "result" });
     });
   });
 });

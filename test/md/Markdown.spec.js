@@ -395,7 +395,7 @@ repository: https://github.com/unexpectedjs/unexpected
             \`\`\`
 
             \`\`\`output
-            ahoy
+            'ahoy'
             \`\`\`
           `
         );

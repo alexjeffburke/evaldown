@@ -167,7 +167,7 @@ describe("Evaldown", () => {
       await evaldown.processFiles();
 
       await expect(
-        path.join(TESTDATA_OUTPUT_PATH, "strings.html"),
+        path.join(TESTDATA_OUTPUT_PATH, "captured.html"),
         "to be present on disk with content satisfying",
         "to equal snapshot",
         expect.unindent`
@@ -547,6 +547,82 @@ describe("Evaldown", () => {
       } finally {
         await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
       }
+    });
+  });
+
+  describe("when serialising values", () => {
+    it('should inspect all values for capture mode "return"', async function() {
+      const evaldown = new Evaldown({
+        outputFormat: "inlined",
+        outputCapture: "return",
+        sourcePath: path.join(TESTDATA_PATH, "capture-return"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "types.md");
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <pre class="code lang-javascript"><div><span style="color: #07a">return</span>&nbsp;<span style="color: #690">&quot;foobar&quot;</span><span style="color: #999">;</span></div></pre>
+
+          <pre class="output"><div><span style="color: #df5000">'foobar'</span></div></pre>
+
+          <pre class="code lang-javascript"><div><span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">'bar'</span>&nbsp;<span style="color: #999">};</span></div></pre>
+
+          <pre class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">'bar'</span>&nbsp;}</div></pre>
+
+          <pre class="code lang-javascript"><div><span style="color: #07a">return</span>&nbsp;<span style="color: #07a">null</span><span style="color: #999">;</span></div></pre>
+
+          <pre class="output"><div><span style="color: #0086b3">null</span></div></pre>
+
+          <pre class="code lang-javascript"><div><span style="color: #07a">return</span>&nbsp;<span style="color: #07a">undefined</span><span style="color: #999">;</span></div></pre>
+
+          <pre class="output">&nbsp;</pre>
+
+        `
+      );
+    });
+
+    it('should inspect all values for capture mode "console"', async function() {
+      const evaldown = new Evaldown({
+        outputFormat: "inlined",
+        outputCapture: "console",
+        sourcePath: path.join(TESTDATA_PATH, "capture-console"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "types.md");
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&quot;foobar&quot;</span><span style="color: #999">);</span></div></pre>
+
+          <pre class="output"><div>foobar</div></pre>
+
+          <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">info</span><span style="color: #999">({</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">'bar'</span>&nbsp;<span style="color: #999">});</span></div></pre>
+
+          <pre class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">'bar'</span>&nbsp;}</div></pre>
+
+          <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">warn</span><span style="color: #999">(</span><span style="color: #07a">null</span><span style="color: #999">);</span></div></pre>
+
+          <pre class="output"><div>&nbsp;</div></pre>
+
+          <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">error</span><span style="color: #999">(</span><span style="color: #07a">undefined</span><span style="color: #999">);</span></div></pre>
+
+          <pre class="output"><div>&nbsp;</div></pre>
+
+        `
+      );
     });
   });
 

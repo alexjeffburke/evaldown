@@ -123,26 +123,13 @@ describe("cli", () => {
 
       await expect(cons.log, "to have a call satisfying", [
         expect.it(
-          "to equal snapshot",
+          "to start with",
           expect.unindent`
             Some string manipulations.
 
             \`\`\`javascript
             return "foobar".slice(0, 3);
             \`\`\`
-
-            \`\`\`output
-            foo
-            \`\`\`
-
-            \`\`\`javascript
-            return "foobar".slice(3, 6);
-            \`\`\`
-
-            \`\`\`output
-            bar
-            \`\`\`
-
           `
         )
       ]);
@@ -193,7 +180,7 @@ describe("cli", () => {
             \`\`\`
 
             \`\`\`output
-            foo
+            'foo'
             \`\`\`
 
             \`\`\`javascript
@@ -201,7 +188,7 @@ describe("cli", () => {
             \`\`\`
 
             \`\`\`output
-            bar
+            'bar'
             \`\`\`
 
           `
