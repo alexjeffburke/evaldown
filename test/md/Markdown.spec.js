@@ -5,6 +5,7 @@ var expect = require("unexpected")
 var sinon = require("sinon");
 
 var Markdown = require("../../lib/md/Markdown");
+var Snippets = require("../../lib/md/Snippets");
 
 const codeBlockWithSkipped = [
   "Asserts deep equality.",
@@ -46,6 +47,10 @@ function locateAndReturnOutputHtml(output) {
 }
 
 describe("Markdown", function() {
+  afterEach(() => {
+    sinon.restore();
+  });
+
   describe("with metadata", () => {
     const markdownWithMetadata = `---
 template: default.ejs
@@ -95,9 +100,56 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
+  describe("evaluate", () => {
+    it("should throw if an output block occurrs with no code block", function() {
+      const markdown = new Markdown(
+        ["```output", "Missing output", "```"].join("\n"),
+        {
+          marker: "evaldown"
+        }
+      );
+
+      return expect(
+        () => markdown.evaluate(),
+        "to be rejected with",
+        expect.it(error =>
+          expect(
+            error.message,
+            "to start with",
+            "No matching javascript block for output:\nMissing output"
+          )
+        )
+      );
+    });
+  });
+
+  describe("getSnippets", () => {
+    it("should cache the snippets", () => {
+      sinon.spy(Snippets, "fromMarkdown");
+      const markdown = new Markdown("", { marker: "evaldown" });
+
+      markdown.getSnippets();
+      markdown.getSnippets();
+
+      expect(Snippets.fromMarkdown, "was called times", 1);
+    });
+  });
+
+  describe("withExamples", () => {
+    it("should reject if called before evaluation", () => {
+      const markdown = new Markdown("", { marker: "evaldown" });
+
+      return expect(
+        () => markdown.withExamples(),
+        "to be rejected with",
+        "snippets were not evaluated"
+      );
+    });
+  });
+
   describe("withInlinedExamples", function() {
     it("should render a syntax highlighted code block", async function() {
-      const markdown = await new Markdown(
+      const maker = new Markdown(
         [
           "```javascript",
           "expect({ a: 'b' }, 'to equal', { a: 1234 });",
@@ -106,11 +158,14 @@ repository: https://github.com/unexpectedjs/unexpected
         {
           marker: "evaldown"
         }
-      ).withInlinedExamples({
+      );
+      await maker.evaluate({
         globals: {
           expect
         }
       });
+
+      const markdown = await maker.withInlinedExamples();
 
       return expect(
         markdown.toHtml(),
@@ -120,7 +175,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
 
     it("should evaluate and render a syntax highlighted output block", async function() {
-      const markdown = await new Markdown(
+      const maker = new Markdown(
         [
           "```javascript",
           "expect({ a: 'b' }, 'to equal', { a: 1234 });",
@@ -133,11 +188,14 @@ repository: https://github.com/unexpectedjs/unexpected
         {
           marker: "evaldown"
         }
-      ).withInlinedExamples({
+      );
+      await maker.evaluate({
         globals: {
           expect
         }
       });
+
+      const markdown = await maker.withInlinedExamples();
 
       return expect(
         markdown.toHtml(),
@@ -149,12 +207,15 @@ repository: https://github.com/unexpectedjs/unexpected
     });
 
     it("should ignore paired empty paired blocks", async function() {
-      const markdown = await new Markdown(
+      const maker = new Markdown(
         ["```javascript", "```", "```output", "```"].join("\n"),
         {
           marker: "evaldown"
         }
-      ).withInlinedExamples();
+      );
+      await maker.evaluate();
+
+      const markdown = await maker.withInlinedExamples();
 
       expect(
         markdown.toHtml(),
@@ -166,32 +227,14 @@ repository: https://github.com/unexpectedjs/unexpected
       );
     });
 
-    it("should throw if an output block occurrs with no code block", function() {
-      const markdown = new Markdown(
-        ["```output", "Missing output", "```"].join("\n"),
-        {
-          marker: "evaldown"
-        }
-      );
-
-      return expect(
-        () => markdown.withInlinedExamples(),
-        "to be rejected with",
-        expect.it(error =>
-          expect(
-            error.message,
-            "to start with",
-            "No matching javascript block for output:\nMissing output"
-          )
-        )
-      );
-    });
-
     it('should produce update for an unexpected diff when "html"', async function() {
-      const markdown = await new Markdown(codeBlockWithSkipped, {
+      const maker = new Markdown(codeBlockWithSkipped, {
         marker: "evaldown",
         globals: { expect }
-      }).withInlinedExamples();
+      });
+      await maker.evaluate();
+
+      const markdown = await maker.withInlinedExamples();
 
       expect(
         locateAndReturnOutputHtml(markdown.toHtml()),
@@ -203,13 +246,16 @@ repository: https://github.com/unexpectedjs/unexpected
 
   describe("withUpdatedExamples", function() {
     it("should produce updated markdown for an unexpected diff", async function() {
-      const markdown = await new Markdown(codeBlockWithSkipped, {
+      const maker = new Markdown(codeBlockWithSkipped, {
         marker: "evaldown",
         globals: { expect }
-      }).withUpdatedExamples({});
+      });
+      await maker.evaluate();
+
+      const markdown = await maker.withUpdatedExamples();
 
       expect(
-        locateAndReturnOutputBlock(markdown.toString()),
+        locateAndReturnOutputBlock(markdown.toText()),
         "to equal snapshot",
         expect.unindent`
           \`\`\`output
@@ -227,7 +273,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
 
     it("should produces updated markdown for async rejection", async function() {
-      const markdown = await new Markdown(
+      const maker = new Markdown(
         [
           "<!-- evaldown async:true -->",
           "```javascript",
@@ -241,10 +287,13 @@ repository: https://github.com/unexpectedjs/unexpected
         {
           marker: "evaldown"
         }
-      ).withUpdatedExamples({});
+      );
+      await maker.evaluate();
+
+      const markdown = await maker.withUpdatedExamples();
 
       expect(
-        locateAndReturnOutputBlock(markdown.toString()),
+        locateAndReturnOutputBlock(markdown.toText()),
         "to equal snapshot",
         expect.unindent`
           \`\`\`output
@@ -255,7 +304,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
 
     it("should produces updated markdown for sync throw", async function() {
-      const markdown = await new Markdown(
+      const maker = new Markdown(
         [
           "```javascript",
           'throw new Error("foo\\n  at bar (/somewhere.js:1:2)\\n  at quux (/blah.js:3:4)\\n  at baz (/yadda.js:5:6)")',
@@ -269,10 +318,13 @@ repository: https://github.com/unexpectedjs/unexpected
         {
           marker: "unexpected-markdown"
         }
-      ).withUpdatedExamples({});
+      );
+      await maker.evaluate();
+
+      const markdown = await maker.withUpdatedExamples();
 
       expect(
-        locateAndReturnOutputBlock(markdown.toString()),
+        locateAndReturnOutputBlock(markdown.toText()),
         "to equal snapshot",
         expect.unindent`
           \`\`\`output
@@ -285,7 +337,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
 
     it("should produces updated markdown for sync return", async function() {
-      const markdown = await new Markdown(
+      const maker = new Markdown(
         [
           "```javascript",
           "return { foo: 'bar' }",
@@ -297,10 +349,13 @@ repository: https://github.com/unexpectedjs/unexpected
           marker: "evaldown",
           capture: "return"
         }
-      ).withUpdatedExamples({});
+      );
+      await maker.evaluate();
+
+      const markdown = await maker.withUpdatedExamples();
 
       expect(
-        locateAndReturnOutputBlock(markdown.toString()),
+        locateAndReturnOutputBlock(markdown.toText()),
         "to equal snapshot",
         expect.unindent`
           \`\`\`output
@@ -312,7 +367,7 @@ repository: https://github.com/unexpectedjs/unexpected
 
     describe("with legacy flags on the code block", () => {
       it("should produces updated markdown for async rejection", async function() {
-        const markdown = await new Markdown(
+        const maker = new Markdown(
           [
             "```javascript#async:true",
             "return Promise.resolve('ahoy');",
@@ -325,10 +380,13 @@ repository: https://github.com/unexpectedjs/unexpected
             marker: "evaldown",
             capture: "return"
           }
-        ).withUpdatedExamples({});
+        );
+        await maker.evaluate();
+
+        const markdown = await maker.withUpdatedExamples();
 
         expect(
-          markdown.toString(),
+          markdown.toText(),
           "to equal snapshot",
           expect.unindent`
             <-- evaldown async:true -->

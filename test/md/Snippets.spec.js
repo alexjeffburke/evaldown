@@ -26,6 +26,19 @@ describe("Snippets", () => {
     expect(snippets.get(1), "to equal", testSnippets[1]);
   });
 
+  describe("#evaluate()", () => {
+    it("should reject if called twice", async () => {
+      const snippets = new Snippets([]);
+      await snippets.evaluate({ markdown: { getExpect: () => {} } });
+
+      await expect(
+        () => snippets.evaluate(),
+        "to be rejected with",
+        "the same snippets were evaluated twice"
+      );
+    });
+  });
+
   describe("#getTests()", () => {
     it("should combine each code/output pair", () => {
       const snippets = new Snippets(
