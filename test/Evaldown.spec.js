@@ -615,11 +615,11 @@ describe("Evaldown", () => {
 
           <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">warn</span><span style="color: #999">(</span><span style="color: #07a">null</span><span style="color: #999">);</span></div></pre>
 
-          <pre class="output"><div>&nbsp;</div></pre>
+          <pre class="output"><div><span style="color: #0086b3">null</span></div></pre>
 
           <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">error</span><span style="color: #999">(</span><span style="color: #07a">undefined</span><span style="color: #999">);</span></div></pre>
 
-          <pre class="output"><div>&nbsp;</div></pre>
+          <pre class="output"><div><span style="color: #0086b3">undefined</span></div></pre>
 
         `
       );
