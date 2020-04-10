@@ -706,5 +706,40 @@ describe("Evaldown", () => {
         `
       );
     });
+
+    it("should allow ignoring snippets", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "inlined",
+        sourcePath: path.join(TESTDATA_PATH, "flag-ignore"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <!-- evaldown ignore:true -->
+          \`\`\`javascript
+          function doSomething() {
+            return { foo: "bar" };
+          }
+
+          return doSomething();
+          \`\`\`
+
+          \`\`\`output
+          Ignore me
+          \`\`\`
+
+          <pre class="code lang-javascript"><div><span style="color: #07a">return</span>&nbsp;<span style="color: #690">'baz'</span><span style="color: #999">;</span></div></pre>
+
+          <pre class="output"><div><span style="color: #df5000">'baz'</span></div></pre>
+
+        `
+      );
+    });
   });
 });
