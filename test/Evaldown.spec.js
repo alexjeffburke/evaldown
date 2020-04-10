@@ -174,7 +174,7 @@ describe("Evaldown", () => {
           <p>Testing console capturing.</p>
           <div class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&quot;hello,&nbsp;world!&quot;</span><span style="color: #999">);</span></div><div>console<span style="color: #999">.</span><span style="color: #DD4A68">error</span><span style="color: #999">(</span><span style="color: #690">&quot;foobar&quot;</span><span style="color: #999">);</span></div></div>
 
-          <div class="output"><div>hello,&nbsp;world!</div><div><span style="color: red; font-weight: bold">foobar</span></div></div>
+          <div class="output"><div><span style="color: #df5000">&#39;hello,&nbsp;world!&#39;</span></div><div><span style="color: red; font-weight: bold">&#39;foobar&#39;</span></div></div>
 
         `
       );
@@ -570,7 +570,7 @@ describe("Evaldown", () => {
         expect.unindent`
           <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&quot;foobar&quot;</span><span style="color: #999">);</span></div></pre>
 
-          <pre class="output"><div>foobar</div></pre>
+          <pre class="output"><div><span style="color: #df5000">'foobar'</span></div></pre>
 
           <pre class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">info</span><span style="color: #999">({</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">'bar'</span>&nbsp;<span style="color: #999">});</span></div></pre>
 
@@ -652,7 +652,7 @@ describe("Evaldown", () => {
           <!-- evaldown console:true -->
           <div class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&#39;foo&nbsp;bar&nbsp;baz&#39;</span><span style="color: #999">);</span></div><div>console<span style="color: #999">.</span><span style="color: #DD4A68">warn</span><span style="color: #999">(</span><span style="color: #690">&#39;..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing&#39;</span><span style="color: #999">);</span></div></div>
 
-          <div class="output"><div>foo&nbsp;bar&nbsp;baz</div><div><span style="color: red; font-weight: bold">..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing</span></div></div>
+          <div class="output"><div><span style="color: #df5000">&#39;foo&nbsp;bar&nbsp;baz&#39;</span></div><div><span style="color: red; font-weight: bold">&#39;..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing&#39;</span></div></div>
 
         `
       );
@@ -699,8 +699,8 @@ describe("Evaldown", () => {
           \`\`\`
 
           \`\`\`output
-          foo bar baz
-          ..as is customary when testing
+          'foo bar baz'
+          '..as is customary when testing'
           \`\`\`
 
         `
