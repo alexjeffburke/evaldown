@@ -1,6 +1,15 @@
+const buble = require("buble");
 const expect = require("unexpected");
 
 const Snippets = require("../../lib/md/Snippets");
+
+function createFakeMarkdown() {
+  return {
+    getExpect() {
+      return expect;
+    }
+  };
+}
 
 const testSnippets = [
   {
@@ -29,13 +38,50 @@ describe("Snippets", () => {
   describe("#evaluate()", () => {
     it("should reject if called twice", async () => {
       const snippets = new Snippets([]);
-      await snippets.evaluate({ markdown: { getExpect: () => {} } });
+      await snippets.evaluate({
+        markdown: createFakeMarkdown()
+      });
 
       await expect(
         () => snippets.evaluate(),
         "to be rejected with",
         "the same snippets were evaluated twice"
       );
+    });
+
+    describe("when transpiled", () => {
+      it("should transpile and evaluate the code", async () => {
+        const transpileFn = content => buble.transform(content).code;
+        const snippets = new Snippets([
+          {
+            lang: "javascript",
+            flags: { evaluate: true },
+            code: `
+              class SomeClass {
+                constructor() {
+                  this.foo = true
+                }
+              }
+
+              return new SomeClass().foo ? 'yay' : 'nay'
+            `
+          }
+        ]);
+
+        await snippets.evaluate({
+          markdown: createFakeMarkdown(),
+          capture: "return",
+          transpileFn
+        });
+
+        expect(snippets.items[0], "to satisfy", {
+          transpiled: expect.it("to be a string"),
+          output: {
+            kind: "result",
+            text: "'yay'"
+          }
+        });
+      });
     });
   });
 

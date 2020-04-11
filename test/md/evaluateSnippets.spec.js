@@ -1,4 +1,3 @@
-const buble = require("buble");
 const expect = require("unexpected")
   .clone()
   .use(require("unexpected-snapshot"));
@@ -204,10 +203,34 @@ describe("evaluateSnippets", () => {
     });
   });
 
+  describe("with preamble", () => {
+    it("should evaluate javascript snippets", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true, return: true },
+          index: 40,
+          // eslint-disable-next-line no-template-curly-in-string
+          code: "return `${foo()}bar`;"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        preamble: "function foo() { return 'foo'; }"
+      });
+
+      expect(snippets[0].output, "to satisfy", {
+        text: "'foobar'"
+      });
+    });
+  });
+
   describe("with transpilation", () => {
     const testSnippet = {
       lang: "javascript",
       flags: { evaluate: true },
+      /* LEFT COMMENTED TO SHOW WHAT WAS TRANSPILED
       code: [
         "class Greeter {",
         "  constructor(name) {",
@@ -221,66 +244,25 @@ describe("evaluateSnippets", () => {
         "",
         "return new Greeter('foo').greet();"
       ].join("\n")
+      */
+      transpiled: expect.unindent`
+        var Greeter = function Greeter(name) {
+          this.name = name;
+        };
+
+        Greeter.prototype.greet = function greet () {
+          return 'Greetings, ' + this.name;
+        };
+
+        return new Greeter('foo').greet();
+      `
     };
 
-    it("should prepare tranpiled versions of snippet code blocks", () => {
-      const transpileFn = content => buble.transform(content).code;
-
-      const snippets = [{ ...testSnippet }];
-      evaluateSnippets.transpileSnippetsAndApplyUpdate(snippets, transpileFn);
-
-      expect(
-        snippets[0].transpiled,
-        "to equal snapshot",
-        expect.unindent`
-          var Greeter = function Greeter(name) {
-            this.name = name;
-          };
-
-          Greeter.prototype.greet = function greet () {
-            return 'Greetings, ' + this.name;
-          };
-
-          return new Greeter('foo').greet();
-        `
-      );
-    });
-
-    it("should leave the snippet code untouched", () => {
-      const transpileFn = content => buble.transform(content).code;
-
-      const snippets = [{ ...testSnippet }];
-      evaluateSnippets.transpileSnippetsAndApplyUpdate(snippets, transpileFn);
-    });
-
-    it("should ignore blocks with evaluate false or for output", () => {
-      const transpileFn = content => buble.transform(content).code;
-
-      const snippets = [
-        {
-          lang: "javascript",
-          flags: { evaluate: false },
-          code: "<<< blah blah invalid blah blah >>>"
-        },
-        {
-          lang: "output",
-          flags: {},
-          code: "<<< blah blah invalid blah blah >>>"
-        },
-        { ...testSnippet }
-      ];
-
-      evaluateSnippets.transpileSnippetsAndApplyUpdate(snippets, transpileFn);
-    });
-
-    it("should evaluate", async () => {
-      const transpileFn = content => buble.transform(content).code;
-
+    it("should evaluate the transpiled code", async () => {
       const snippets = [{ ...testSnippet }];
       await evaluateSnippets(snippets, {
         markdown: createFakeMarkdown(),
-        capture: "return",
-        transpileFn
+        capture: "return"
       });
 
       expect(snippets[0].output, "to satisfy", { kind: "result" });
