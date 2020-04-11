@@ -18,3 +18,14 @@ return 'baz';
 ```output
 But not me
 ```
+
+<!-- evaldown ignore:true -->
+<pre>
+```javascript
+return 'baz';
+```
+
+```output
+While still ignoring me
+```
+</pre>

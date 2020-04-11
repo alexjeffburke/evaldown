@@ -738,6 +738,17 @@ describe("Evaldown", () => {
 
           <pre class="output"><div><span style="color: #df5000">'baz'</span></div></pre>
 
+          <!-- evaldown ignore:true -->
+          <pre>
+          \`\`\`javascript
+          return 'baz';
+          \`\`\`
+
+          \`\`\`output
+          While still ignoring me
+          \`\`\`
+          </pre>
+
         `
       );
     });
