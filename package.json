@@ -12,8 +12,10 @@
   ],
   "scripts": {
     "coverage": "nyc --reporter=lcov --reporter=text mocha",
+    "docs": "./bin/evaldown --format inlined ./docs/README.md > README.md",
     "lint": "eslint . && prettier --check '**/*.js'",
-    "test": "mocha"
+    "test": "mocha",
+    "version": "npm run docs && git add README.md"
   },
   "keywords": [
     "markdown",
