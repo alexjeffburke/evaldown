@@ -17,7 +17,7 @@ We start by introducing an invocation for processing a single
 markdown file:
 
 ```
-./node_modules/.bin/evaldown ./docs/README.md
+npx evaldown ./docs/README.md > README.md
 ```
 
 The file will be processed and the output written to stdout.
@@ -25,22 +25,36 @@ In order to store the output within the source file, thereby
 automatically capturing it, we can use the `--inplace` option:
 
 ```
-./node_modules/.bin/evaldown --inplace ./docs/README.md
+npx evaldown --inplace ./docs/README.md
 ```
+
+> All the examples in this section are executable in a checkout of the
+> evaldown repository.
 
 ### Process directories of files
 
-Applying a similiar update to all files within a directory
-structure looks almost identical:
+Processing all the files in a directory looks almost identical:
 
 ```
-./node_modules/.bin/evaldown --inplace ./testdata/
+npx evaldown --target-path testdata/output testdata/example
+```
+
+As does applying an update to the source files within a directory:
+
+```
+npx evaldown --inplace ./testdata/example
 ```
 
 ### Beyond command line options
 
-The tool supports many additional options to alter its behaviour,
-and these can all be read directly from a configuration file:
+The tool supports many additional options to alter its behaviour.
+
+Typically, the tool would be installed via a dependency via npm
+and any options will be read directly from a configuration file:
+
+```
+npm install --save-dev evaldown
+```
 
 ```
 ./node_modules/.bin/evaldown --config <path_to_config>
