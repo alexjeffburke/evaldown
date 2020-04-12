@@ -75,4 +75,17 @@ describe("transpileSnippets", () => {
 
     expect(snippets[0], "not to have property", "transpiled");
   });
+
+  it("should handle newline being removed from the start of the preamble", () => {
+    const transpileFn = () => {
+      return `//---------------------preamble----------------------\nfunction foo() {}`;
+    };
+
+    const snippets = [{ ...testSnippet }];
+    transpileSnippets(snippets, transpileFn);
+
+    expect(snippets[0], "to satisfy", {
+      transpiled: "function foo() {}"
+    });
+  });
 });
