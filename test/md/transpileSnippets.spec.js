@@ -1,11 +1,17 @@
 const buble = require("buble");
 const expect = require("unexpected")
   .clone()
+  .use(require("unexpected-sinon"))
   .use(require("unexpected-snapshot"));
+const sinon = require("sinon");
 
 const transpileSnippets = require("../../lib/md/transpileSnippets");
 
 describe("transpileSnippets", () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+
   const testSnippet = {
     lang: "javascript",
     flags: { evaluate: true },
@@ -87,5 +93,25 @@ describe("transpileSnippets", () => {
     expect(snippets[0], "to satisfy", {
       transpiled: "function foo() {}"
     });
+  });
+
+  it("should wrap async snippets for transpilation", () => {
+    const transpileFn = sinon
+      .stub()
+      .named("transpileFn")
+      .returnsArg(0);
+
+    const snippets = [
+      {
+        lang: "javascript",
+        code: "Promise.resolve('foo');",
+        flags: { evaluate: true, async: true }
+      }
+    ];
+    transpileSnippets(snippets, transpileFn);
+
+    expect(transpileFn, "to have a call satisfying", [
+      "\n//---------------------preamble----------------------\n(function () {Promise.resolve('foo');})();"
+    ]);
   });
 });
