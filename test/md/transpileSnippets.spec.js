@@ -114,4 +114,24 @@ describe("transpileSnippets", () => {
       "\n//---------------------preamble----------------------\n(function () {Promise.resolve('foo');})();"
     ]);
   });
+
+  it("should wrap return snippets for transpilation", () => {
+    const transpileFn = sinon
+      .stub()
+      .named("transpileFn")
+      .returnsArg(0);
+
+    const snippets = [
+      {
+        lang: "javascript",
+        code: "return { foo: 'bar' };",
+        flags: { evaluate: true, return: true }
+      }
+    ];
+    transpileSnippets(snippets, transpileFn);
+
+    expect(transpileFn, "to have a call satisfying", [
+      "\n//---------------------preamble----------------------\n(function () {return { foo: 'bar' };})();"
+    ]);
+  });
 });
