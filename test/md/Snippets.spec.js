@@ -115,6 +115,38 @@ describe("Snippets", () => {
           }
         });
       });
+
+      describe("with typescript", () => {
+        it("should reject if a conflicting transpileFn was supplied", async function() {
+          const snippets = new Snippets([
+            {
+              lang: "typescript",
+              flags: { evaluate: true }
+            }
+          ]);
+
+          await expect(
+            () => snippets.evaluate({ transpileFn: () => {} }),
+            "to be rejected with",
+            "transpileFn cannot be specified with TypeScript snippets"
+          );
+        });
+
+        it("should reject if no tsconfig file is specified", async function() {
+          const snippets = new Snippets([
+            {
+              lang: "typescript",
+              flags: { evaluate: true }
+            }
+          ]);
+
+          await expect(
+            () => snippets.evaluate({}),
+            "to be rejected with",
+            "tsconfig must be specified with TypeScript snippets"
+          );
+        });
+      });
     });
   });
 
@@ -148,7 +180,7 @@ describe("Snippets", () => {
           snippets.getTests();
         },
         "to throw",
-        `No matching javascript block for output:\nI've been orphaned!`
+        `No matching code block for output:\nI've been orphaned!`
       );
     });
   });

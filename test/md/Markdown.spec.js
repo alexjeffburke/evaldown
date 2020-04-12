@@ -116,7 +116,7 @@ repository: https://github.com/unexpectedjs/unexpected
           expect(
             error.message,
             "to start with",
-            "No matching javascript block for output:\nMissing output"
+            "No matching code block for output:\nMissing output"
           )
         )
       );

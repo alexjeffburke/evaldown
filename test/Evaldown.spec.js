@@ -622,6 +622,42 @@ describe("Evaldown", () => {
     });
   });
 
+  describe("when using typescript", () => {
+    it("should transpile and execute", async function() {
+      const sourcePath = path.join(TESTDATA_PATH, "typescript");
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath,
+        targetPath: TESTDATA_OUTPUT_PATH,
+        tsconfigPath: path.join(sourcePath, "tsconfig.json")
+      });
+
+      await evaldown.processFiles();
+
+      // check the file was created
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "example.md");
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          \`\`\`ts
+          function greet(thing: string) {
+            return \`Greetings, \${thing}\`
+          }
+
+          return greet("foo");
+          \`\`\`
+
+          \`\`\`output
+          'Greetings, foo'
+          \`\`\`
+
+        `
+      );
+    });
+  });
+
   describe("when using per-snippet flags", () => {
     it("should allow mixed captures", async () => {
       const evaldown = new Evaldown({
