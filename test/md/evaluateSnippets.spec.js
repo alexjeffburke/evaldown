@@ -246,15 +246,17 @@ describe("evaluateSnippets", () => {
       ].join("\n")
       */
       transpiled: expect.unindent`
-        var Greeter = function Greeter(name) {
-          this.name = name;
-        };
+        (function () {
+          var Greeter = function Greeter(name) {
+            this.name = name;
+          };
 
-        Greeter.prototype.greet = function greet () {
-          return 'Greetings, ' + this.name;
-        };
+          Greeter.prototype.greet = function greet () {
+            return 'Greetings, ' + this.name;
+          };
 
-        return new Greeter('foo').greet();
+          return new Greeter('foo').greet();
+        })();
       `
     };
 

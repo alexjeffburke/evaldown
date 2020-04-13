@@ -50,7 +50,40 @@ describe("Snippets", () => {
     });
 
     describe("when transpiled", () => {
-      it("should transpile and evaluate the code", async () => {
+      it("should transpile and evaluate the code (per-snippet capture)", async () => {
+        const transpileFn = content => buble.transform(content).code;
+        const snippets = new Snippets([
+          {
+            lang: "javascript",
+            flags: { evaluate: true, return: true },
+            code: `
+              class SomeClass {
+                constructor() {
+                  this.foo = true
+                }
+              }
+
+              return new SomeClass().foo ? 'yay' : 'nay'
+            `
+          }
+        ]);
+
+        await snippets.evaluate({
+          markdown: createFakeMarkdown(),
+          capture: "console",
+          transpileFn
+        });
+
+        expect(snippets.items[0], "to satisfy", {
+          transpiled: expect.it("to start with", "(function () {"),
+          output: {
+            kind: "result",
+            text: "'yay'"
+          }
+        });
+      });
+
+      it("should transpile and evaluate the code (global capture)", async () => {
         const transpileFn = content => buble.transform(content).code;
         const snippets = new Snippets([
           {
@@ -75,7 +108,7 @@ describe("Snippets", () => {
         });
 
         expect(snippets.items[0], "to satisfy", {
-          transpiled: expect.it("to be a string"),
+          transpiled: expect.it("to start with", "(function () {"),
           output: {
             kind: "result",
             text: "'yay'"

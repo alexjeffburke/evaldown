@@ -34,7 +34,7 @@ describe("transpileSnippets", () => {
     const transpileFn = content => buble.transform(content).code;
 
     const snippets = [{ ...testSnippet }];
-    transpileSnippets(snippets, transpileFn);
+    transpileSnippets(snippets, { transpileFn });
 
     expect(
       snippets[0].transpiled,
@@ -57,7 +57,7 @@ describe("transpileSnippets", () => {
     const transpileFn = content => buble.transform(content).code;
 
     const snippets = [{ ...testSnippet }];
-    transpileSnippets(snippets, transpileFn);
+    transpileSnippets(snippets, { transpileFn });
   });
 
   it("should ignore blocks with evaluate false or for output", () => {
@@ -77,7 +77,7 @@ describe("transpileSnippets", () => {
       { ...testSnippet }
     ];
 
-    transpileSnippets(snippets, transpileFn);
+    transpileSnippets(snippets, { transpileFn });
 
     expect(snippets[0], "not to have property", "transpiled");
   });
@@ -88,7 +88,7 @@ describe("transpileSnippets", () => {
     };
 
     const snippets = [{ ...testSnippet }];
-    transpileSnippets(snippets, transpileFn);
+    transpileSnippets(snippets, { transpileFn });
 
     expect(snippets[0], "to satisfy", {
       transpiled: "function foo() {}"
@@ -108,7 +108,7 @@ describe("transpileSnippets", () => {
         flags: { evaluate: true, async: true }
       }
     ];
-    transpileSnippets(snippets, transpileFn);
+    transpileSnippets(snippets, { transpileFn });
 
     expect(transpileFn, "to have a call satisfying", [
       "\n//---------------------preamble----------------------\n(function () {Promise.resolve('foo');})();"
@@ -128,7 +128,7 @@ describe("transpileSnippets", () => {
         flags: { evaluate: true, return: true }
       }
     ];
-    transpileSnippets(snippets, transpileFn);
+    transpileSnippets(snippets, { transpileFn });
 
     expect(transpileFn, "to have a call satisfying", [
       "\n//---------------------preamble----------------------\n(function () {return { foo: 'bar' };})();"
