@@ -109,6 +109,54 @@ describe("cli", () => {
     });
   });
 
+  describe("files()", () => {
+    describe("with tsconfig", () => {
+      it("should throw on a bad tsconfig path", async () => {
+        const pwd = path.join(TESTDATA_PATH, "config");
+        const opts = usingOpts(pwd, "evaldown.invalid-tsconfig.js");
+
+        await expect(
+          () => cli.files(pwd, opts),
+          "to be rejected with",
+          'Inaccessible "tsconfigPath"'
+        );
+      });
+
+      it("should load a valid tsconfig path", async () => {
+        const pwd = path.join(TESTDATA_PATH, "config");
+        const opts = usingOpts(pwd, "evaldown.valid-tsconfig.js");
+
+        await cli.files(pwd, {
+          format: "markdown",
+          ...opts
+        });
+
+        const expectedOutputFile = path.join(
+          TESTDATA_OUTPUT_PATH,
+          "example.md"
+        );
+        await expect(
+          await fsExtra.readFile(expectedOutputFile, "utf8"),
+          "to equal snapshot",
+          expect.unindent`
+            \`\`\`ts
+            function greet(thing: string) {
+              return \`Greetings, \${thing}\`
+            }
+
+            return greet("foo");
+            \`\`\`
+
+            \`\`\`output
+            'Greetings, foo'
+            \`\`\`
+
+          `
+        );
+      });
+    });
+  });
+
   describe("file()", () => {
     it("should output markdown to stdout by default", async () => {
       const pwd = path.join(TESTDATA_PATH, "extensions");
@@ -269,6 +317,55 @@ describe("cli", () => {
         "to be rejected with",
         'Inaccessible "sourceFile"'
       );
+    });
+
+    describe("with tsconfig", () => {
+      it("should throw on a bad tsconfig path", async () => {
+        const pwd = path.join(TESTDATA_PATH, "typescript");
+
+        await expect(
+          () =>
+            cli.file(pwd, {
+              _: ["example.md"],
+              tsconfigPath: "./nonexistent/tsconfig.json"
+            }),
+          "to be rejected with",
+          'Inaccessible "tsconfigPath"'
+        );
+      });
+
+      it("should load a valid tsconfig path", async () => {
+        const pwd = path.join(TESTDATA_PATH, "typescript");
+        const cons = {
+          log: sinon.stub().named("log")
+        };
+
+        await cli.file(pwd, {
+          _cons: cons,
+          _: ["example.md"],
+          tsconfigPath: "./tsconfig.json"
+        });
+
+        expect(cons.log, "was called times", 1);
+        expect(
+          cons.log.getCall(0).args[0],
+          "to equal snapshot",
+          expect.unindent`
+          \`\`\`ts
+          function greet(thing: string) {
+            return \`Greetings, \${thing}\`
+          }
+
+          return greet("foo");
+          \`\`\`
+
+          \`\`\`output
+          'Greetings, foo'
+          \`\`\`
+
+        `
+        );
+      });
     });
   });
 

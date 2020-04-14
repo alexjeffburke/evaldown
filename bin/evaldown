@@ -56,6 +56,10 @@ const processArgv = opts =>
       describe: "Location to write output files when processing a directory.",
       type: "string"
     })
+    .option("tsconfig-path", {
+      describe: "Path to a tsconfig.json file to use for TypeScript.",
+      type: "string"
+    })
     .conflicts("inplace", ["update", "format"])
     .help().argv;
 
