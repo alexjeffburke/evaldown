@@ -39,7 +39,8 @@ describe("Snippets", () => {
     it("should reject if called twice", async () => {
       const snippets = new Snippets([]);
       await snippets.evaluate({
-        markdown: createFakeMarkdown()
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
       });
 
       await expect(
@@ -70,6 +71,7 @@ describe("Snippets", () => {
 
         await snippets.evaluate({
           markdown: createFakeMarkdown(),
+          pwdPath: __dirname,
           capture: "console",
           transpileFn
         });
@@ -103,6 +105,7 @@ describe("Snippets", () => {
 
         await snippets.evaluate({
           markdown: createFakeMarkdown(),
+          pwdPath: __dirname,
           capture: "return",
           transpileFn
         });
@@ -112,6 +115,40 @@ describe("Snippets", () => {
           output: {
             kind: "result",
             text: "'yay'"
+          }
+        });
+      });
+
+      it("should preserve a pre-existing preamble", async () => {
+        const transpileFn = content => buble.transform(content).code;
+        const snippets = new Snippets([
+          {
+            lang: "javascript",
+            flags: { evaluate: true },
+            code: `
+                class SomeClass {
+                  constructor() {
+                    this.foo = fileGlobalFunction()
+                  }
+                }
+
+                return new SomeClass().foo
+              `
+          }
+        ]);
+
+        await snippets.evaluate({
+          markdown: createFakeMarkdown(),
+          pwdPath: __dirname,
+          capture: "return",
+          preamble: "function fileGlobalFunction() { return 'foo'; }",
+          transpileFn
+        });
+
+        expect(snippets.items[0], "to satisfy", {
+          output: {
+            kind: "result",
+            text: "'foo'"
           }
         });
       });

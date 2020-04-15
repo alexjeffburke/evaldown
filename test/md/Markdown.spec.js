@@ -160,6 +160,7 @@ repository: https://github.com/unexpectedjs/unexpected
         }
       );
       await maker.evaluate({
+        pwdPath: __dirname,
         globals: {
           expect
         }
@@ -190,6 +191,7 @@ repository: https://github.com/unexpectedjs/unexpected
         }
       );
       await maker.evaluate({
+        pwdPath: __dirname,
         globals: {
           expect
         }
@@ -213,7 +215,7 @@ repository: https://github.com/unexpectedjs/unexpected
           marker: "evaldown"
         }
       );
-      await maker.evaluate();
+      await maker.evaluate({ pwdPath: __dirname });
 
       const markdown = await maker.withInlinedExamples();
 
@@ -230,6 +232,7 @@ repository: https://github.com/unexpectedjs/unexpected
     it('should produce update for an unexpected diff when "html"', async function() {
       const maker = new Markdown(codeBlockWithSkipped, {
         marker: "evaldown",
+        pwdPath: __dirname,
         globals: { expect }
       });
       await maker.evaluate();
@@ -248,6 +251,7 @@ repository: https://github.com/unexpectedjs/unexpected
     it("should produce updated markdown for an unexpected diff", async function() {
       const maker = new Markdown(codeBlockWithSkipped, {
         marker: "evaldown",
+        pwdPath: __dirname,
         globals: { expect }
       });
       await maker.evaluate();
@@ -288,7 +292,7 @@ repository: https://github.com/unexpectedjs/unexpected
           marker: "evaldown"
         }
       );
-      await maker.evaluate();
+      await maker.evaluate({ pwdPath: __dirname });
 
       const markdown = await maker.withUpdatedExamples();
 
@@ -319,7 +323,7 @@ repository: https://github.com/unexpectedjs/unexpected
           marker: "unexpected-markdown"
         }
       );
-      await maker.evaluate();
+      await maker.evaluate({ pwdPath: __dirname });
 
       const markdown = await maker.withUpdatedExamples();
 
@@ -347,6 +351,7 @@ repository: https://github.com/unexpectedjs/unexpected
         ].join("\n"),
         {
           marker: "evaldown",
+          pwdPath: __dirname,
           capture: "return"
         }
       );
@@ -378,6 +383,7 @@ repository: https://github.com/unexpectedjs/unexpected
           ].join("\n"),
           {
             marker: "evaldown",
+            pwdPath: __dirname,
             capture: "return"
           }
         );

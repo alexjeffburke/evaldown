@@ -34,7 +34,8 @@ describe("evaluateSnippets", () => {
     ];
 
     await evaluateSnippets(snippets, {
-      markdown: createFakeMarkdown()
+      markdown: createFakeMarkdown(),
+      pwdPath: __dirname
     });
 
     expect(snippets[0].output, "to satisfy", {
@@ -57,7 +58,8 @@ describe("evaluateSnippets", () => {
       ];
 
       await evaluateSnippets(snippets, {
-        markdown: createFakeMarkdown()
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
       });
 
       expect(snippets[0].output, "to satisfy", {
@@ -78,7 +80,8 @@ describe("evaluateSnippets", () => {
       ];
 
       await evaluateSnippets(snippets, {
-        markdown: createFakeMarkdown()
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
       });
 
       expect(snippets[0].output, "to satisfy", {
@@ -127,6 +130,7 @@ describe("evaluateSnippets", () => {
 
       await evaluateSnippets(snippets, {
         markdown: createFakeMarkdown(),
+        pwdPath: __dirname,
         capture: "return",
         globals: {
           expect: clonedExpect
@@ -158,6 +162,7 @@ describe("evaluateSnippets", () => {
 
       await evaluateSnippets(snippets, {
         markdown: createFakeMarkdown(),
+        pwdPath: __dirname,
         globals: {
           expect: clonedExpect
         }
@@ -185,7 +190,11 @@ describe("evaluateSnippets", () => {
       ];
 
       return expect(
-        () => evaluateSnippets(snippets, { markdown: createFakeMarkdown() }),
+        () =>
+          evaluateSnippets(snippets, {
+            markdown: createFakeMarkdown(),
+            pwdPath: __dirname
+          }),
         "to be rejected with",
         expect
           .it("to be an", errors.FileEvaluationError)
@@ -217,6 +226,7 @@ describe("evaluateSnippets", () => {
 
       await evaluateSnippets(snippets, {
         markdown: createFakeMarkdown(),
+        pwdPath: __dirname,
         preamble: "function foo() { return 'foo'; }"
       });
 
@@ -264,6 +274,7 @@ describe("evaluateSnippets", () => {
       const snippets = [{ ...testSnippet }];
       await evaluateSnippets(snippets, {
         markdown: createFakeMarkdown(),
+        pwdPath: __dirname,
         capture: "return"
       });
 

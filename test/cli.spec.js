@@ -110,6 +110,48 @@ describe("cli", () => {
   });
 
   describe("files()", () => {
+    describe("with require", () => {
+      it("should output markdown", async () => {
+        const pwd = path.join(TESTDATA_PATH, "file-globals");
+
+        await cli.files(pwd, {
+          format: "markdown",
+          sourcePath: ".",
+          targetPath: "../output",
+          require: "../require/globals"
+        });
+
+        const expectedOutputFile = path.join(
+          TESTDATA_OUTPUT_PATH,
+          "example.md"
+        );
+        expect(
+          await fsExtra.readFile(expectedOutputFile, "utf8"),
+          "to equal snapshot",
+          expect.unindent`
+            Function fun.
+
+            \`\`\`javascript
+            return fileGlobalFunction();
+            \`\`\`
+
+            \`\`\`output
+            '-=defined by require=-'
+            \`\`\`
+
+            \`\`\`javascript
+            return \`still here ..\${fileGlobalFunction()}\`;
+            \`\`\`
+
+            \`\`\`output
+            'still here ..-=defined by require=-'
+            \`\`\`
+
+          `
+        );
+      });
+    });
+
     describe("with tsconfig", () => {
       it("should throw on a bad tsconfig path", async () => {
         const pwd = path.join(TESTDATA_PATH, "config");
@@ -317,6 +359,47 @@ describe("cli", () => {
         "to be rejected with",
         'Inaccessible "sourceFile"'
       );
+    });
+
+    describe("with require", () => {
+      it("should output markdown", async () => {
+        const pwd = path.join(TESTDATA_PATH, "file-globals");
+        const cons = {
+          log: sinon.stub().named("log")
+        };
+
+        await cli.file(pwd, {
+          _cons: cons,
+          _: ["example.md"],
+          require: path.join(TESTDATA_PATH, "require", "globals")
+        });
+
+        expect(cons.log, "was called times", 1);
+        expect(
+          cons.log.getCall(0).args[0],
+          "to equal snapshot",
+          expect.unindent`
+          Function fun.
+
+          \`\`\`javascript
+          return fileGlobalFunction();
+          \`\`\`
+
+          \`\`\`output
+          '-=defined by require=-'
+          \`\`\`
+
+          \`\`\`javascript
+          return \`still here ..\${fileGlobalFunction()}\`;
+          \`\`\`
+
+          \`\`\`output
+          'still here ..-=defined by require=-'
+          \`\`\`
+
+        `
+        );
+      });
     });
 
     describe("with tsconfig", () => {

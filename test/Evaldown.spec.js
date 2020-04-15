@@ -325,6 +325,37 @@ describe("Evaldown", () => {
     });
   });
 
+  describe("with local module", () => {
+    it("should require the module", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "local-module"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "example.md");
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          \`\`\`js
+          const foobar = require('./foobar');
+
+          return foobar;
+          \`\`\`
+
+          \`\`\`output
+          { foo: 'bar' }
+          \`\`\`
+
+        `
+      );
+    });
+  });
+
   describe("with customised extensions", function() {
     it("should glob for the supplied extension", async function() {
       const evaldown = new Evaldown({

@@ -60,6 +60,10 @@ const processArgv = opts =>
       describe: "Path to a tsconfig.json file to use for TypeScript.",
       type: "string"
     })
+    .option("require", {
+      describe: "Module to prepend to every evaluated file.",
+      type: "string"
+    })
     .conflicts("inplace", ["update", "format"])
     .help().argv;
 
