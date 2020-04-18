@@ -1,13 +1,13 @@
 # Evaldown
 
-Evaluate JavaScript snippets in markdown files.
+Evaluate JavaScript and TypeScript snippets in markdown files.
 
 [![NPM version](https://img.shields.io/npm/v/evaldown.svg)](https://www.npmjs.com/package/evaldown)
 [![Build Status](https://img.shields.io/travis/alexjeffburke/evaldown/master.svg)](https://travis-ci.org/alexjeffburke/evaldown)
 [![Coverage Status](https://img.shields.io/coveralls/alexjeffburke/evaldown/master.svg)](https://coveralls.io/r/alexjeffburke/evaldown?branch=master)
 
 This tool provides both CLI and programmatic interfaces for
-locating JavaScript code blocks in one or more markdown files,
+locating JS/TS code blocks in one or more markdown files,
 extracting and evaluating these blocks and provides a range
 formats in which to serialise their pretty-printed output.
 
@@ -17,7 +17,7 @@ We start by introducing an invocation for processing a single
 markdown file:
 
 ```
-./node_modules/.bin/evaldown ./docs/README.md
+npx evaldown ./docs/README.md > README.md
 ```
 
 The file will be processed and the output written to stdout.
@@ -25,22 +25,47 @@ In order to store the output within the source file, thereby
 automatically capturing it, we can use the `--inplace` option:
 
 ```
-./node_modules/.bin/evaldown --inplace ./docs/README.md
+npx evaldown --inplace ./docs/README.md
 ```
+
+> All the examples in this section are executable in a checkout of the
+> evaldown repository.
 
 ### Process directories of files
 
-Applying a similiar update to all files within a directory
-structure looks almost identical:
+Processing all the files in a directory looks almost identical:
 
 ```
-./node_modules/.bin/evaldown --inplace ./testdata/
+npx evaldown --target-path testdata/output testdata/example
+```
+
+As does applying an update to the source files within a directory:
+
+```
+npx evaldown --inplace ./testdata/example
+```
+
+### Working with TypeScript
+
+Support is inbuilt for processing TypeScript blocks into files.
+An explicit path to the `tsconfig.json` file is required from
+which point the project specific compiler is detected and used
+to transpile snippets:
+
+```
+npx evaldown --tsconfig-path ./testdata/typescript/tsconfig.json ./testdata/typescript/example.md
 ```
 
 ### Beyond command line options
 
-The tool supports many additional options to alter its behaviour,
-and these can all be read directly from a configuration file:
+The tool supports many additional options to alter its behaviour.
+
+Typically, the tool would be installed via a dependency via npm
+and any options will be read directly from a configuration file:
+
+```
+npm install --save-dev evaldown
+```
 
 ```
 ./node_modules/.bin/evaldown --config <path_to_config>
@@ -57,6 +82,8 @@ indicate where the source path to read files from a target path
 to write generated output to.
 
 A basic `evaldown.conf.js` file is as follows:
+
+<!-- evaldown evaluate:false -->
 
 ```javascript
 module.exports = {
@@ -78,9 +105,11 @@ are passed to another template engine.
 This option will write markdown files with the code and output blocks
 replaced with static HTML that inlines all the colouring information.
 
+<!-- evaldown evaluate:false -->
+
 ```javascript
 module.exports = {
-  outputFormat: 'inlined',
+  outputFormat: "inlined",
   sourcePath: "./input",
   targetPath: "./output"
 };
@@ -91,9 +120,11 @@ module.exports = {
 This option will write markdown files with the code and output blocks
 replaced with text (for use when external highlighting is desired).
 
+<!-- evaldown evaluate:false -->
+
 ```javascript
 module.exports = {
-  outputFormat: 'markdown',
+  outputFormat: "markdown",
   sourcePath: "./input",
   targetPath: "./output"
 };
@@ -112,6 +143,8 @@ finished or just an example that uses the console.
 
 Capturing from the console can be configured by adding an outputCapture
 key with a value of `"console"` to the configuration object:
+
+<!-- evaldown evaluate:false -->
 
 ```javascript
 module.exports = {
@@ -142,6 +175,7 @@ to be followed by "output" snippets.
 By default, value returned from the code block is what will be captured
 and displayed in the
 
+<!-- evaldown ignore:true -->
 <pre>
 ```javascript
 function doSomething() {
@@ -153,14 +187,24 @@ return doSomething();
 ```
 
 ```output
+{ foo: 'bar' }
 ```
 </pre>
 
 When they are rendered, the output will look something like:
 
-<div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div>
+```javascript
+function doSomething() {
+  return { foo: "bar" };
+}
 
-<div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">&#39;bar&#39;</span>&nbsp;}</div></div>
+// objects are inspected too
+return doSomething();
+```
+
+```output
+{ foo: 'bar' }
+```
 
 ### Customising snippets
 
@@ -171,14 +215,15 @@ to capture the console.
 HTML comments inserted above the code blocks allow doing just this.
 First, we look at an example that makes use of some `async` code:
 
+<!-- evaldown ignore:true -->
 <pre>
 <!-- evaldown async:true -->
 ```js
-return new Promise('foo');
+return Promise.resolve('foo');
 ```
 
 ```output
-foo
+'foo'
 ```
 </pre>
 
@@ -187,6 +232,7 @@ afterwards, which we call _flags_, will be used as processing hints.
 
 Outputting uses of the `console` would look something like:
 
+<!-- evaldown ignore:true -->
 <pre>
 <!-- evaldown console:true -->
 ```js
@@ -194,6 +240,7 @@ console.warn("whoa there!");
 ```
 
 ```output
-whoa, there!
+'whoa there!'
 ```
 </pre>
+
