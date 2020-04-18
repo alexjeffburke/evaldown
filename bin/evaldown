@@ -64,6 +64,10 @@ const processArgv = opts =>
       describe: "Module to prepend to every evaluated file.",
       type: "string"
     })
+    .option("comment-marker", {
+      describe: "Override the comment marker used to detect snippet flags.",
+      type: "string"
+    })
     .conflicts("inplace", ["update", "format"])
     .help().argv;
 
