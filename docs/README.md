@@ -1,13 +1,13 @@
 # Evaldown
 
-Evaluate JavaScript snippets in markdown files.
+Evaluate JavaScript and TypeScript snippets in markdown files.
 
 [![NPM version](https://img.shields.io/npm/v/evaldown.svg)](https://www.npmjs.com/package/evaldown)
 [![Build Status](https://img.shields.io/travis/alexjeffburke/evaldown/master.svg)](https://travis-ci.org/alexjeffburke/evaldown)
 [![Coverage Status](https://img.shields.io/coveralls/alexjeffburke/evaldown/master.svg)](https://coveralls.io/r/alexjeffburke/evaldown?branch=master)
 
 This tool provides both CLI and programmatic interfaces for
-locating JavaScript code blocks in one or more markdown files,
+locating JS/TS code blocks in one or more markdown files,
 extracting and evaluating these blocks and provides a range
 formats in which to serialise their pretty-printed output.
 
@@ -43,6 +43,17 @@ As does applying an update to the source files within a directory:
 
 ```
 npx evaldown --inplace ./testdata/example
+```
+
+### Working with TypeScript
+
+Support is inbuilt for processing TypeScript blocks into files.
+An explicit path to the `tsconfig.json` file is required from
+which point the project specific compiler is detected and used
+to transpile snippets:
+
+```
+npx evaldown --tsconfig-path ./testdata/typescript/tsconfig.json ./testdata/typescript/example.md
 ```
 
 ### Beyond command line options
