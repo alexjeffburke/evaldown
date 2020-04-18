@@ -30,7 +30,7 @@ describe("transpileSnippets", () => {
     ].join("\n")
   };
 
-  it("should prepare tranpiled versions of snippet code blocks", () => {
+  it("should prepare tranpsiled versions of snippet code blocks", () => {
     const transpileFn = content => buble.transform(content).code;
 
     const snippets = [{ ...testSnippet }];
@@ -104,14 +104,14 @@ describe("transpileSnippets", () => {
     const snippets = [
       {
         lang: "javascript",
-        code: "Promise.resolve('foo');",
+        code: "await Promise.resolve('foo');",
         flags: { evaluate: true, async: true }
       }
     ];
     transpileSnippets(snippets, { transpileFn });
 
     expect(transpileFn, "to have a call satisfying", [
-      "\n//---------------------preamble----------------------\n(function () {Promise.resolve('foo');})();"
+      "\n//---------------------preamble----------------------\n(async function () {await Promise.resolve('foo');})();"
     ]);
   });
 

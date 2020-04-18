@@ -276,37 +276,6 @@ repository: https://github.com/unexpectedjs/unexpected
       );
     });
 
-    it("should produces updated markdown for async rejection", async function() {
-      const maker = new Markdown(
-        [
-          "<!-- evaldown async:true -->",
-          "```javascript",
-          "return Promise.reject(new Error('boom'));",
-          "```",
-          "",
-          "```output",
-          "Missing output",
-          "```"
-        ].join("\n"),
-        {
-          marker: "evaldown"
-        }
-      );
-      await maker.evaluate({ pwdPath: __dirname });
-
-      const markdown = await maker.withUpdatedExamples();
-
-      expect(
-        locateAndReturnOutputBlock(markdown.toText()),
-        "to equal snapshot",
-        expect.unindent`
-          \`\`\`output
-          boom
-          \`\`\`
-        `
-      );
-    });
-
     it("should produces updated markdown for sync throw", async function() {
       const maker = new Markdown(
         [
@@ -370,8 +339,72 @@ repository: https://github.com/unexpectedjs/unexpected
       );
     });
 
+    describe("with alternate capture modes", () => {
+      it("should produces updated markdown for nowrap", async function() {
+        const maker = new Markdown(
+          [
+            "```javascript",
+            "Promise.reject(new Error('boom'));",
+            "```",
+            "",
+            "```output",
+            "Missing output",
+            "```"
+          ].join("\n"),
+          {
+            marker: "evaldown",
+            capture: "nowrap"
+          }
+        );
+        await maker.evaluate({ pwdPath: __dirname });
+
+        const markdown = await maker.withUpdatedExamples();
+
+        expect(
+          locateAndReturnOutputBlock(markdown.toText()),
+          "to equal snapshot",
+          expect.unindent`
+            \`\`\`output
+            boom
+            \`\`\`
+          `
+        );
+      });
+
+      it("should produces updated markdown for promise rejection", async function() {
+        const maker = new Markdown(
+          [
+            "```javascript",
+            "console.log('foobar');\nPromise.resolve();",
+            "```",
+            "",
+            "```output",
+            "Missing output",
+            "```"
+          ].join("\n"),
+          {
+            marker: "evaldown",
+            capture: "console"
+          }
+        );
+        await maker.evaluate({ pwdPath: __dirname });
+
+        const markdown = await maker.withUpdatedExamples();
+
+        expect(
+          locateAndReturnOutputBlock(markdown.toText()),
+          "to equal snapshot",
+          expect.unindent`
+            \`\`\`output
+            'foobar'
+            \`\`\`
+          `
+        );
+      });
+    });
+
     describe("with legacy flags on the code block", () => {
-      it("should produces updated markdown for async rejection", async function() {
+      it("should produces updated markdown with converted flags", async function() {
         const maker = new Markdown(
           [
             "```javascript#async:true",

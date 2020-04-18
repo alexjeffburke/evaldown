@@ -46,12 +46,12 @@ describe("evaluateSnippets", () => {
     });
   });
 
-  describe("with an aync snippet", () => {
-    it("should evaluate javascript snippets", async () => {
+  describe("with result capture", () => {
+    it("should evaluate snippets with a promise rejection", async () => {
       const snippets = [
         {
           lang: "javascript",
-          flags: { async: true, evaluate: true },
+          flags: { evaluate: true },
           index: 40,
           code: "return Promise.reject(new Error('boom'));"
         }
@@ -59,7 +59,8 @@ describe("evaluateSnippets", () => {
 
       await evaluateSnippets(snippets, {
         markdown: createFakeMarkdown(),
-        pwdPath: __dirname
+        pwdPath: __dirname,
+        capture: "return"
       });
 
       expect(snippets[0].output, "to satisfy", {
@@ -68,14 +69,17 @@ describe("evaluateSnippets", () => {
         text: "boom"
       });
     });
+  });
 
-    it("should record an error string if missing a return", async () => {
+  describe("with async flag", () => {
+    it("should evaluate snippets that contain await", async () => {
       const snippets = [
         {
           lang: "javascript",
           flags: { async: true, evaluate: true },
           index: 40,
-          code: "Promise.resolve();"
+          // eslint-disable-next-line no-template-curly-in-string
+          code: "return `${await Promise.resolve('foo')}bar`"
         }
       ];
 
@@ -86,9 +90,8 @@ describe("evaluateSnippets", () => {
 
       expect(snippets[0].output, "to satisfy", {
         html:
-          '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">Async&nbsp;code&nbsp;block&nbsp;did&nbsp;not&nbsp;return&nbsp;a&nbsp;promise&nbsp;or&nbsp;throw</span></div><div><span style="color: red; font-weight: bold">Promise.resolve();</span></div></div>',
-        text:
-          "Async code block did not return a promise or throw\nPromise.resolve();"
+          '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: #df5000">\'foobar\'</span></div></div>',
+        text: "'foobar'"
       });
     });
   });
