@@ -851,5 +851,51 @@ describe("Evaldown", () => {
         `
       );
     });
+
+    it("should allow snippets receiving a fresh context", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "flag-freshContext"),
+        targetPath: TESTDATA_OUTPUT_PATH,
+        filePreamble: await fsExtra.readFile(
+          path.join(TESTDATA_PATH, "require", "expect.js"),
+          "utf8"
+        )
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          \`\`\`javascript
+          expect.addAssertion('<any> to foo', (expect, subject) => {
+            expect(Object.keys(subject), 'to contain', 'foo');
+          })
+          \`\`\`
+
+          <!-- evaldown freshContext:true -->
+
+          \`\`\`javascript
+          expect({ foo: null }, 'to foo');
+          \`\`\`
+
+          \`\`\`output
+          Unknown assertion 'to foo', did you mean: 'to be ok'
+          \`\`\`
+
+          \`\`\`javascript
+          expect({ foo: null }, 'to foo');
+          \`\`\`
+
+          \`\`\`output
+          <div style="">&nbsp;</div>
+          \`\`\`
+
+        `
+      );
+    });
   });
 });
