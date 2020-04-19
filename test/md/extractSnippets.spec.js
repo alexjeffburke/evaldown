@@ -262,7 +262,7 @@ describe("extractSnippets", function() {
           { marker: "evaldown" }
         ),
         "to satisfy",
-        [{ index: 25, indexEnd: 61, codeIndex: 41, codeIndexEnd: 57 }]
+        [{ index: 7, indexEnd: 61, codeIndex: 41, codeIndexEnd: 57 }]
       );
     });
   });

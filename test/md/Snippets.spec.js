@@ -22,7 +22,7 @@ const testSnippets = [
   {
     lang: "output",
     flags: { cleanStackTrace: true, evaluate: true },
-    index: 187,
+    index: 148,
     code:
       "foo\n  at bar (/path/to/file.js:x:y)\n  at quux (/path/to/file.js:x:y)"
   }
