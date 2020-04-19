@@ -7,6 +7,7 @@ const path = require("path");
 const sinon = require("sinon");
 
 const Evaldown = require("../lib/Evaldown");
+const Stats = require("../lib/Stats");
 
 const TESTDATA_PATH = path.join(__dirname, "..", "testdata");
 const TESTDATA_OUTPUT_PATH = path.join(TESTDATA_PATH, "output");
@@ -82,7 +83,7 @@ describe("Evaldown", () => {
 
       const stats = await evaldown.processFiles();
 
-      expect(stats, "to equal", {
+      expect(stats, "to be a", Stats).and("to satisfy", {
         succeeded: 1,
         errored: 0
       });
@@ -646,7 +647,7 @@ describe("Evaldown", () => {
 
       const stats = await evaldown.processFiles();
 
-      expect(stats, "to equal", {
+      expect(stats, "to be a", Stats).and("to satisfy", {
         succeeded: 0,
         errored: 1
       });

@@ -12,11 +12,20 @@ const errors = require("../lib/errors");
 const TESTDATA_PATH = path.join(__dirname, "..", "testdata");
 const TESTDATA_OUTPUT_PATH = path.join(TESTDATA_PATH, "output");
 
+function createFakeConsole() {
+  return {
+    log: sinon.stub().named("console.log"),
+    error: sinon.stub().named("console.error")
+  };
+}
+
 function usingOpts(pwd, optsFile) {
   return require(path.join(pwd, optsFile));
 }
 
 describe("cli", () => {
+  const cons = createFakeConsole();
+
   before(async () => {
     await fsExtra.ensureDir(TESTDATA_OUTPUT_PATH);
   });
@@ -33,7 +42,7 @@ describe("cli", () => {
     const pwd = path.join(TESTDATA_PATH, "config");
     const opts = usingOpts(pwd, "evaldown.valid-basic.js");
 
-    await cli.files(pwd, opts);
+    await cli.files(pwd, { _cons: cons, ...opts });
 
     // check the file was created
     const expectedOutputFile = path.join(
@@ -58,7 +67,7 @@ describe("cli", () => {
       sourcePath: "."
     };
 
-    await cli.files(pwd, opts);
+    await cli.files(pwd, { _cons: cons, ...opts });
   });
 
   it("should error on an invalid target path", async () => {
@@ -110,11 +119,43 @@ describe("cli", () => {
   });
 
   describe("files()", () => {
+    it("should write stats to stderr with success", async () => {
+      const pwd = path.join(TESTDATA_PATH, "config");
+      const opts = usingOpts(pwd, "evaldown.valid-basic.js");
+
+      await cli.files(pwd, { _cons: cons, ...opts });
+
+      expect(
+        cons.error.getCall(0).args[0],
+        "to equal snapshot",
+        "processed 1 file without errors"
+      );
+    });
+
+    it("should write stats to stderr with error", async () => {
+      const pwd = TESTDATA_PATH;
+      const opts = usingOpts(pwd, "config/evaldown.valid-errors.js");
+
+      await cli.files(pwd, { _cons: cons, ...opts });
+
+      expect(
+        cons.error.getCall(0).args[0],
+        "to equal snapshot",
+        expect.unindent`
+        processed 1 file with errors...
+
+        "example.md" FileEvaluationError:
+          - [0] ReferenceError: expect is not defined
+      `
+      );
+    });
+
     describe("with require", () => {
       it("should output markdown", async () => {
         const pwd = path.join(TESTDATA_PATH, "file-globals");
 
         await cli.files(pwd, {
+          _cons: cons,
           format: "markdown",
           sourcePath: ".",
           targetPath: "../output",
@@ -158,7 +199,7 @@ describe("cli", () => {
         const opts = usingOpts(pwd, "evaldown.invalid-tsconfig.js");
 
         await expect(
-          () => cli.files(pwd, opts),
+          () => cli.files(pwd, { _cons: cons, ...opts }),
           "to be rejected with",
           'Inaccessible "tsconfigPath"'
         );
@@ -169,6 +210,7 @@ describe("cli", () => {
         const opts = usingOpts(pwd, "evaldown.valid-tsconfig.js");
 
         await cli.files(pwd, {
+          _cons: cons,
           format: "markdown",
           ...opts
         });
@@ -202,9 +244,6 @@ describe("cli", () => {
   describe("file()", () => {
     it("should output markdown to stdout by default", async () => {
       const pwd = path.join(TESTDATA_PATH, "extensions");
-      const cons = {
-        log: sinon.stub().named("log")
-      };
 
       await cli.file(pwd, {
         _cons: cons,
@@ -229,9 +268,6 @@ describe("cli", () => {
       const pwd = path.join(TESTDATA_PATH, "extensions");
       const sourceFilePath = path.join(pwd, "expect.markdown");
       const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
-      const cons = {
-        log: sinon.stub().named("log")
-      };
 
       try {
         await cli.file(pwd, {
@@ -314,9 +350,6 @@ describe("cli", () => {
       const pwd = path.join(TESTDATA_PATH, "extensions");
       const sourceFilePath = path.join(pwd, "expect.markdown");
       const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
-      const cons = {
-        log: sinon.stub().named("log")
-      };
 
       try {
         await cli.file(pwd, {
@@ -333,9 +366,6 @@ describe("cli", () => {
 
     it("should pass through a rejection to ensure it is logged later", async () => {
       const pwd = path.join(TESTDATA_PATH, "some-errors");
-      const cons = {
-        error: sinon.stub().named("error")
-      };
 
       await expect(
         () =>
@@ -364,9 +394,6 @@ describe("cli", () => {
     describe("with require", () => {
       it("should output markdown", async () => {
         const pwd = path.join(TESTDATA_PATH, "file-globals");
-        const cons = {
-          log: sinon.stub().named("log")
-        };
 
         await cli.file(pwd, {
           _cons: cons,
@@ -419,9 +446,6 @@ describe("cli", () => {
 
       it("should load a valid tsconfig path", async () => {
         const pwd = path.join(TESTDATA_PATH, "typescript");
-        const cons = {
-          log: sinon.stub().named("log")
-        };
 
         await cli.file(pwd, {
           _cons: cons,

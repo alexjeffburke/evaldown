@@ -5,10 +5,10 @@ const expect = require("unexpected")
 const errors = require("../lib/errors");
 
 describe("errors", () => {
-  describe("errorToInfo()", () => {
+  describe("errorToOutput()", () => {
     it("should return a stringified error by default", () => {
       expect(
-        errors.errorToInfo(new Error("foobar")),
+        errors.errorToOutput(new Error("foobar")),
         "to equal",
         "Error: foobar"
       );
@@ -20,7 +20,7 @@ describe("errors", () => {
 
       try {
         expect(
-          errors.errorToInfo(new Error("foobar")),
+          errors.errorToOutput(new Error("foobar")),
           "to start with",
           "Error: foobar\n    at"
         );
@@ -44,7 +44,7 @@ describe("errors", () => {
       });
 
       expect(
-        errors.errorToInfo(e),
+        errors.errorToOutput(e),
         "to equal snapshot",
         expect.unindent`
         FileEvaluationError

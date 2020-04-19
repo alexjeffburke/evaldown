@@ -10,7 +10,7 @@ function exitWithError(err) {
   if (err.customOutput) {
     console.error(err.customOutput);
   } else {
-    console.error(errors.errorToInfo(err));
+    console.error(errors.errorToOutput(err));
   }
 
   if (typeof err.exitCode === "number") {
