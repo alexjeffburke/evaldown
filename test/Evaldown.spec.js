@@ -891,7 +891,7 @@ describe("Evaldown", () => {
           \`\`\`
 
           \`\`\`output
-          <div style="">&nbsp;</div>
+
           \`\`\`
 
         `
