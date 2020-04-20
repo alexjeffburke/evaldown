@@ -1,15 +1,22 @@
 const expect = require("unexpected")
   .clone()
+  .use(require("unexpected-sinon"))
   .use(require("unexpected-snapshot"));
 const expectNoSnapshot = require("unexpected");
+const sinon = require("sinon");
 
 const errors = require("../../lib/errors");
 const evaluateSnippets = require("../../lib/md/evaluateSnippets");
 
 function createFakeMarkdown() {
+  let _expect = null;
+
   return {
     getExpect() {
-      return expect;
+      return _expect || expect;
+    },
+    setExpect(value) {
+      _expect = value;
     }
   };
 }
@@ -96,7 +103,7 @@ describe("evaluateSnippets", () => {
     });
   });
 
-  describe("with a customised expect", () => {
+  describe("with file globals", () => {
     const clonedExpect = expectNoSnapshot.clone().use(expect => {
       expect = expect.child();
       expect.addStyle("fancyQuotes", function(str) {
@@ -135,8 +142,8 @@ describe("evaluateSnippets", () => {
         markdown: createFakeMarkdown(),
         pwdPath: __dirname,
         capture: "return",
-        globals: {
-          expect: clonedExpect
+        fileGlobals: {
+          expect: () => clonedExpect
         }
       });
 
@@ -166,8 +173,8 @@ describe("evaluateSnippets", () => {
       await evaluateSnippets(snippets, {
         markdown: createFakeMarkdown(),
         pwdPath: __dirname,
-        globals: {
-          expect: clonedExpect
+        fileGlobals: {
+          expect: () => clonedExpect
         }
       });
 
@@ -176,6 +183,46 @@ describe("evaluateSnippets", () => {
           '<div style="font-family: monospace; white-space: nowrap"><div><span style="color: red; font-weight: bold">expected</span>&nbsp;<span style="color: red">&gt;&gt;</span>bar<span style="color: red">&lt;&lt;</span>&nbsp;<span style="color: red; font-weight: bold">to&nbsp;foo</span></div><div>&nbsp;</div><div><span style="background-color: red; color: white">bar</span></div><div><span style="background-color: green; color: white">foo</span></div></div>',
         text: "expected >>bar<< to foo\n\n-bar\n+foo"
       });
+    });
+
+    it("should make the file options available to file globals", async () => {
+      const createSomeGlobal = sinon
+        .stub()
+        .returns(() => ({ foo: true, bar: 1 }));
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          index: 24,
+          code: "someGlobal()"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname,
+        capture: "return",
+        fileGlobals: {
+          someGlobal: createSomeGlobal
+        },
+        fileMetadata: {
+          template: "default.ejs",
+          theme: "dark",
+          title: "Unexpected",
+          repository: "https://github.com/unexpectedjs/unexpected"
+        }
+      });
+
+      expect(createSomeGlobal, "to have a call satisfying", [
+        {
+          metadata: {
+            template: "default.ejs",
+            theme: "dark",
+            title: "Unexpected",
+            repository: "https://github.com/unexpectedjs/unexpected"
+          }
+        }
+      ]);
     });
   });
 

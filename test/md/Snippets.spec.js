@@ -7,7 +7,8 @@ function createFakeMarkdown() {
   return {
     getExpect() {
       return expect;
-    }
+    },
+    setExpect() {}
   };
 }
 

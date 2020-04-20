@@ -2,6 +2,7 @@ const expect = require("unexpected")
   .clone()
   .use(require("unexpected-sinon"))
   .use(require("unexpected-snapshot"));
+const expectNoSnapshot = require("unexpected");
 const fsExtra = require("fs-extra");
 const path = require("path");
 const sinon = require("sinon");
@@ -892,6 +893,149 @@ describe("Evaldown", () => {
 
           \`\`\`output
 
+          \`\`\`
+
+        `
+      );
+    });
+
+    it("should allow mixed context with expect from require", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "mixed-context"),
+        targetPath: TESTDATA_OUTPUT_PATH,
+        filePreamble: await fsExtra.readFile(
+          path.join(TESTDATA_PATH, "require", "expect.js"),
+          "utf8"
+        )
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <!-- evaldown nowrap:true -->
+
+          \`\`\`javascript
+          class Person {
+            constructor(foo) {
+              this.foo = !!foo;
+            }
+          }
+          \`\`\`
+
+          \`\`\`javascript
+          expect.addType({
+            name: 'Person',
+            base: 'object',
+            identify: v => v instanceof Person
+          });
+
+          expect.addAssertion('<Person> to foo', (expect, subject) => {
+            expect(subject.foo, 'to be true');
+          })
+
+          expect(new Person(false), 'to foo');
+          \`\`\`
+
+          \`\`\`output
+          expected Person({ foo: false }) to foo
+          \`\`\`
+
+          <!-- evaldown freshContext:true -->
+
+          \`\`\`javascript
+          expect.addType({
+            name: 'Person',
+            base: 'object',
+            identify: v => v instanceof Person,
+            prefix: output => output.text('PERSON:'),
+            suffix: output => output.text('')
+          });
+
+          expect.addAssertion('<Person> to foo', (expect, subject) => {
+            expect(subject.foo, 'to be true');
+          })
+
+          expect(new Person(false), 'to foo');
+          \`\`\`
+
+          \`\`\`output
+          expected PERSON: foo: false to foo
+          \`\`\`
+
+        `
+      );
+    });
+
+    it("should allow mixed context with expect from fileGlobals", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "mixed-context"),
+        targetPath: TESTDATA_OUTPUT_PATH,
+        fileGlobals: {
+          expect: () => expectNoSnapshot.clone()
+        }
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <!-- evaldown nowrap:true -->
+
+          \`\`\`javascript
+          class Person {
+            constructor(foo) {
+              this.foo = !!foo;
+            }
+          }
+          \`\`\`
+
+          \`\`\`javascript
+          expect.addType({
+            name: 'Person',
+            base: 'object',
+            identify: v => v instanceof Person
+          });
+
+          expect.addAssertion('<Person> to foo', (expect, subject) => {
+            expect(subject.foo, 'to be true');
+          })
+
+          expect(new Person(false), 'to foo');
+          \`\`\`
+
+          \`\`\`output
+          expected Person({ foo: false }) to foo
+          \`\`\`
+
+          <!-- evaldown freshContext:true -->
+
+          \`\`\`javascript
+          expect.addType({
+            name: 'Person',
+            base: 'object',
+            identify: v => v instanceof Person,
+            prefix: output => output.text('PERSON:'),
+            suffix: output => output.text('')
+          });
+
+          expect.addAssertion('<Person> to foo', (expect, subject) => {
+            expect(subject.foo, 'to be true');
+          })
+
+          expect(new Person(false), 'to foo');
+          \`\`\`
+
+          \`\`\`output
+          expected PERSON: foo: false to foo
           \`\`\`
 
         `

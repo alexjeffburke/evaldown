@@ -74,29 +74,20 @@ repository: https://github.com/unexpectedjs/unexpected
     });
 
     it("should make the file options available to file globals", async () => {
-      const createSomeGlobal = sinon
-        .stub()
-        .returns(() => ({ foo: true, bar: 1 }));
       const markdown = new Markdown(markdownWithMetadata, {
         marker: "abc"
       });
 
-      markdown._prepareGlobals({
-        fileGlobals: {
-          someGlobal: createSomeGlobal
+      const options = markdown._prepareOptions();
+
+      expect(options, "to satisfy", {
+        fileMetadata: {
+          template: "default.ejs",
+          theme: "dark",
+          title: "Unexpected",
+          repository: "https://github.com/unexpectedjs/unexpected"
         }
       });
-
-      expect(createSomeGlobal, "to have a call satisfying", [
-        {
-          metadata: {
-            template: "default.ejs",
-            theme: "dark",
-            title: "Unexpected",
-            repository: "https://github.com/unexpectedjs/unexpected"
-          }
-        }
-      ]);
     });
   });
 
@@ -161,9 +152,7 @@ repository: https://github.com/unexpectedjs/unexpected
       );
       await maker.evaluate({
         pwdPath: __dirname,
-        globals: {
-          expect
-        }
+        fileGlobals: { expect: () => expect }
       });
 
       const markdown = await maker.withInlinedExamples();
@@ -192,9 +181,7 @@ repository: https://github.com/unexpectedjs/unexpected
       );
       await maker.evaluate({
         pwdPath: __dirname,
-        globals: {
-          expect
-        }
+        fileGlobals: { expect: () => expect }
       });
 
       const markdown = await maker.withInlinedExamples();
@@ -233,7 +220,7 @@ repository: https://github.com/unexpectedjs/unexpected
       const maker = new Markdown(codeBlockWithSkipped, {
         marker: "evaldown",
         pwdPath: __dirname,
-        globals: { expect }
+        fileGlobals: { expect: () => expect }
       });
       await maker.evaluate();
 
@@ -252,7 +239,7 @@ repository: https://github.com/unexpectedjs/unexpected
       const maker = new Markdown(codeBlockWithSkipped, {
         marker: "evaldown",
         pwdPath: __dirname,
-        globals: { expect }
+        fileGlobals: { expect: () => expect }
       });
       await maker.evaluate();
 
