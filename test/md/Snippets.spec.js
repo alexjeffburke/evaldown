@@ -1,6 +1,7 @@
 const buble = require("buble");
 const expect = require("unexpected");
 
+const errors = require("../../lib/errors");
 const Snippets = require("../../lib/md/Snippets");
 
 function createFakeMarkdown() {
@@ -36,6 +37,28 @@ describe("Snippets", () => {
     expect(snippets.get(1), "to equal", testSnippets[1]);
   });
 
+  describe("#check()", () => {
+    it("should record and wrap a check error", async () => {
+      const snippets = new Snippets([
+        {
+          code: "I've been orphaned!",
+          lang: "output"
+        }
+      ]);
+
+      const result = snippets.check();
+
+      expect(result, "to satisfy", {
+        0: expect
+          .it("to be an", errors.SnippetProcessingError)
+          .and("to have message", "no matching code block for output snippet")
+          .and("to satisfy", {
+            data: { original: expect.it("to be an", Error) }
+          })
+      });
+    });
+  });
+
   describe("#evaluate()", () => {
     it("should reject if called twice", async () => {
       const snippets = new Snippets([]);
@@ -48,6 +71,34 @@ describe("Snippets", () => {
         () => snippets.evaluate(),
         "to be rejected with",
         "the same snippets were evaluated twice"
+      );
+    });
+
+    it("should reject and wrap evaluation errors", async () => {
+      const snippets = new Snippets([
+        {
+          code: "I've been orphaned!",
+          lang: "output"
+        }
+      ]);
+
+      await expect(
+        () =>
+          snippets.evaluate({
+            markdown: createFakeMarkdown(),
+            pwdPath: __dirname
+          }),
+        "to be rejected with",
+        expect
+          .it("to be an", errors.FileEvaluationError)
+          .and("to have message", "")
+          .and("to satisfy", {
+            data: {
+              errors: {
+                0: expect.it("to be an", errors.SnippetProcessingError)
+              }
+            }
+          })
       );
     });
 
@@ -218,7 +269,7 @@ describe("Snippets", () => {
           snippets.getTests();
         },
         "to throw",
-        `No matching code block for output:\nI've been orphaned!`
+        "no matching code block for output snippet"
       );
     });
 
@@ -243,7 +294,7 @@ describe("Snippets", () => {
           snippets.getTests();
         },
         "to throw",
-        `Cannot match output block to hidden snippet:\nYou can't see me`
+        "cannot match hidden code block to output snippet"
       );
     });
   });

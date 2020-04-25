@@ -226,8 +226,8 @@ describe("evaluateSnippets", () => {
     });
   });
 
-  describe("with an error during evaluation", () => {
-    it("should reject evaluation on a reference error", () => {
+  describe("with errors during evaluation", () => {
+    it("should record and wrap a reference error", async () => {
       const snippets = [
         {
           lang: "javascript",
@@ -239,26 +239,19 @@ describe("evaluateSnippets", () => {
         }
       ];
 
-      return expect(
-        () =>
-          evaluateSnippets(snippets, {
-            markdown: createFakeMarkdown(),
-            pwdPath: __dirname
-          }),
-        "to be rejected with",
-        expect
-          .it("to be an", errors.FileEvaluationError)
-          .and("to have message", "")
+      const result = await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
+      });
+
+      expect(result, "to satisfy", {
+        0: expect
+          .it("to be an", errors.SnippetEvaluationError)
+          .and("to have message", "expect is not defined")
           .and("to satisfy", {
-            data: {
-              errors: {
-                0: expect
-                  .it("to be an", errors.SnippetEvaluationError)
-                  .and("to have message", "expect is not defined")
-              }
-            }
+            data: { original: expect.it("to be an", Error) }
           })
-      );
+      });
     });
   });
 

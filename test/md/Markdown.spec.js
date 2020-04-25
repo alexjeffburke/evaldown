@@ -91,29 +91,6 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("evaluate", () => {
-    it("should throw if an output block occurrs with no code block", function() {
-      const markdown = new Markdown(
-        ["```output", "Missing output", "```"].join("\n"),
-        {
-          marker: "evaldown"
-        }
-      );
-
-      return expect(
-        () => markdown.evaluate(),
-        "to be rejected with",
-        expect.it(error =>
-          expect(
-            error.message,
-            "to start with",
-            "No matching code block for output:\nMissing output"
-          )
-        )
-      );
-    });
-  });
-
   describe("getSnippets", () => {
     it("should cache the snippets", () => {
       sinon.spy(Snippets, "fromMarkdown");
