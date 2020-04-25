@@ -61,6 +61,23 @@ describe("Stats", () => {
 
     it("should output basic error plural", () => {
       const stats = new Stats();
+      stats.addError("something.md", new Error("boom"));
+      stats.addError("other.md", new Error("kaboom"));
+
+      expect(
+        stats.toReport(),
+        "to equal snapshot",
+        expect.unindent`
+        processed 2 files with errors...
+
+        "something.md" Error: boom
+        "other.md" Error: kaboom
+      `
+      );
+    });
+
+    it("should output evaluation error singular", () => {
+      const stats = new Stats();
       stats.addError(
         "something.md",
         new errors.FileEvaluationError({
@@ -81,6 +98,43 @@ describe("Stats", () => {
         "something.md" FileEvaluationError:
           - [0] Error: fail
       `
+      );
+    });
+
+    it("should output evaluation error plural", () => {
+      const stats = new Stats();
+      stats.addError(
+        "something.md",
+        new errors.FileEvaluationError({
+          data: {
+            errors: {
+              0: { data: { original: new Error("fail") } }
+            }
+          }
+        })
+      );
+      stats.addError(
+        "other.md",
+        new errors.FileEvaluationError({
+          data: {
+            errors: {
+              2: { data: { original: new Error("wail") } }
+            }
+          }
+        })
+      );
+
+      expect(
+        stats.toReport(),
+        "to equal snapshot",
+        expect.unindent`
+          processed 2 files with errors...
+
+          "something.md" FileEvaluationError:
+            - [0] Error: fail
+          "other.md" FileEvaluationError:
+            - [2] Error: wail
+        `
       );
     });
   });
