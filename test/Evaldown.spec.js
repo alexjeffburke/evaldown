@@ -855,6 +855,50 @@ describe("Evaldown", () => {
       );
     });
 
+    it("should avoid hiding snippets when operating inplace", async () => {
+      const sourceFile = "example.md";
+      const sourceFilePath = path.join(TESTDATA_PATH, "flag-hide", sourceFile);
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+      const evaldown = new Evaldown({
+        inplace: true,
+        outputFormat: "markdown",
+        sourcePath: path.dirname(sourceFilePath),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      try {
+        await expect(
+          sourceFilePath,
+          "to be present on disk with content satisfying",
+          "to equal snapshot",
+          expect.unindent`
+            <!-- evaldown hide:true -->
+            \`\`\`javascript
+            function doSomething() {
+              return { foo: "bar" };
+            }
+
+            global.doSomething = doSomething;
+            \`\`\`
+
+            \`\`\`javascript
+            return global.doSomething();
+            \`\`\`
+
+            \`\`\`output
+            { foo: 'bar' }
+            \`\`\`
+
+          `
+        );
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+
     it("should allow ignoring snippets", async () => {
       const evaldown = new Evaldown({
         outputFormat: "inlined",
