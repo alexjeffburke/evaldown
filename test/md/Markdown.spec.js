@@ -428,4 +428,36 @@ repository: https://github.com/unexpectedjs/unexpected
       });
     });
   });
+
+  describe("maybeRemoveNewlines()", () => {
+    const maybeRemoveNewlines = Markdown.maybeRemoveNewlines;
+
+    it("should remove newlines", () => {
+      const [str, count] = maybeRemoveNewlines("foobar\n\n", 6, 2);
+
+      expect(str, "to equal", "foobar");
+      expect(count, "to equal", 2);
+    });
+
+    it("should stop removing when it sees a non-newline", () => {
+      const [str, count] = maybeRemoveNewlines("\n\n\nfoobar", 0, 4);
+
+      expect(str, "to equal", "foobar");
+      expect(count, "to equal", 3);
+    });
+
+    it("should stop removing when it reaches the maximum", () => {
+      const [str, count] = maybeRemoveNewlines("\n\n\n\n\n", 0, 4);
+
+      expect(str, "to equal", "\n");
+      expect(count, "to equal", 4);
+    });
+
+    it("should not remove if the first character is not a newline", () => {
+      const [str, count] = maybeRemoveNewlines("foobar\n\n", 0, 2);
+
+      expect(str, "to equal", "foobar\n\n");
+      expect(count, "to equal", 0);
+    });
+  });
 });

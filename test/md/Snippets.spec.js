@@ -205,7 +205,7 @@ describe("Snippets", () => {
       ]);
     });
 
-    it("should throw if output black was not matched with a source block", () => {
+    it("should throw if an output block was not preceded by a source block", () => {
       const snippets = new Snippets([
         {
           code: "I've been orphaned!",
@@ -219,6 +219,31 @@ describe("Snippets", () => {
         },
         "to throw",
         `No matching code block for output:\nI've been orphaned!`
+      );
+    });
+
+    it("should throw if an output block was preceded by a hidden block", () => {
+      const snippets = new Snippets([
+        {
+          code: "You can't see me",
+          lang: "javascript",
+          flags: {
+            evaluate: true,
+            hide: true
+          }
+        },
+        {
+          code: "I'm not supposed to be here!",
+          lang: "output"
+        }
+      ]);
+
+      expect(
+        () => {
+          snippets.getTests();
+        },
+        "to throw",
+        `Cannot match output block to hidden snippet:\nYou can't see me`
       );
     });
   });

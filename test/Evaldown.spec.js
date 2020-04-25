@@ -807,6 +807,54 @@ describe("Evaldown", () => {
       );
     });
 
+    it('should allow hiding snippets outputting as "markdown"', async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "flag-hide"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          \`\`\`javascript
+          return global.doSomething();
+          \`\`\`
+
+          \`\`\`output
+          { foo: 'bar' }
+          \`\`\`
+
+        `
+      );
+    });
+
+    it('should allow hiding snippets outputting as "inlined"', async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "inlined",
+        sourcePath: path.join(TESTDATA_PATH, "flag-hide"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <pre class="code lang-javascript"><div><span style="color: #07a">return</span>&nbsp;global<span style="color: #999">.</span><span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></pre>
+
+          <pre class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">'bar'</span>&nbsp;}</div></pre>
+
+        `
+      );
+    });
+
     it("should allow ignoring snippets", async () => {
       const evaldown = new Evaldown({
         outputFormat: "inlined",
