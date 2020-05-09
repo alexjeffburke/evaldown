@@ -137,7 +137,7 @@ repository: https://github.com/unexpectedjs/unexpected
       return expect(
         markdown.toHtml(),
         "to equal snapshot",
-        '<div class="code lang-javascript"><div>expect({&nbsp;a:&nbsp;&#39;b&#39;&nbsp;},&nbsp;&#39;to&nbsp;equal&#39;,&nbsp;{&nbsp;a:&nbsp;1234&nbsp;});</div></div>'
+        '<div class="code lang-javascript"><div><span style="color: #DD4A68">expect</span><span style="color: #999">({</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&#39;b&#39;</span>&nbsp;<span style="color: #999">},</span>&nbsp;<span style="color: #690">&#39;to&nbsp;equal&#39;</span><span style="color: #999">,</span>&nbsp;<span style="color: #999">{</span>&nbsp;a<span style="color: #a67f59">:</span>&nbsp;<span style="color: #905">1234</span>&nbsp;<span style="color: #999">});</span></div></div>'
       );
     });
 
