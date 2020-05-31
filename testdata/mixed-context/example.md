@@ -28,6 +28,12 @@ expect(new Person(false), 'to foo');
 <!-- evaldown freshContext:true -->
 
 ```javascript
+class Person {
+  constructor(foo) {
+    this.foo = !!foo;
+  }
+}
+
 expect.addType({
   name: 'Person',
   base: 'object',

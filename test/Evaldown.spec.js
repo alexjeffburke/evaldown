@@ -875,7 +875,7 @@ describe("Evaldown", () => {
           "to be present on disk with content satisfying",
           "to equal snapshot",
           expect.unindent`
-            <!-- evaldown hide:true -->
+            <!-- evaldown hide:true, nowrap:true -->
             \`\`\`javascript
             function doSomething() {
               return { foo: "bar" };
@@ -1040,6 +1040,12 @@ describe("Evaldown", () => {
           <!-- evaldown freshContext:true -->
 
           \`\`\`javascript
+          class Person {
+            constructor(foo) {
+              this.foo = !!foo;
+            }
+          }
+
           expect.addType({
             name: 'Person',
             base: 'object',
@@ -1111,6 +1117,12 @@ describe("Evaldown", () => {
           <!-- evaldown freshContext:true -->
 
           \`\`\`javascript
+          class Person {
+            constructor(foo) {
+              this.foo = !!foo;
+            }
+          }
+
           expect.addType({
             name: 'Person',
             base: 'object',
