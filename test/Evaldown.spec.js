@@ -181,31 +181,6 @@ describe("Evaldown", () => {
         `
       );
     });
-
-    it('should allow capturing "nowrap"', async function() {
-      const evaldown = new Evaldown({
-        outputCapture: "nowrap",
-        sourcePath: path.join(TESTDATA_PATH, "capture-nowrap"),
-        targetPath: TESTDATA_OUTPUT_PATH
-      });
-
-      await evaldown.processFiles();
-
-      // check the file was created
-      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "scope.html");
-      await expect(
-        expectedOutputFile,
-        "to be present on disk with content satisfying",
-        "to equal snapshot",
-        expect.unindent`
-          <p>Testing output capturing.</p>
-          <div class="code lang-javascript"><div><span style="color: #07a">const</span>&nbsp;assert&nbsp;<span style="color: #a67f59">=</span>&nbsp;<span style="color: #DD4A68">require</span><span style="color: #999">(</span><span style="color: #690">&quot;assert&quot;</span><span style="color: #999">);</span></div><div>&nbsp;</div><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">fooer</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #690">&quot;f00&quot;</span><span style="color: #999">;</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div>assert<span style="color: #999">.</span><span style="color: #DD4A68">strictEqual</span><span style="color: #999">(</span><span style="color: #DD4A68">fooer</span><span style="color: #999">(),</span>&nbsp;<span style="color: #690">&quot;foo&quot;</span><span style="color: #999">,</span>&nbsp;<span style="color: #690">&quot;Not&nbsp;the&nbsp;same&nbsp;:-(&quot;</span><span style="color: #999">);</span></div></div>
-
-          <div class="output"><div><span style="color: red; font-weight: bold">Not&nbsp;the&nbsp;same&nbsp;:-(</span></div></div>
-
-        `
-      );
-    });
   });
 
   describe("with output format selection", function() {
@@ -875,7 +850,7 @@ describe("Evaldown", () => {
           "to be present on disk with content satisfying",
           "to equal snapshot",
           expect.unindent`
-            <!-- evaldown hide:true, nowrap:true -->
+            <!-- evaldown hide:true -->
             \`\`\`javascript
             function doSomething() {
               return { foo: "bar" };
@@ -1009,7 +984,7 @@ describe("Evaldown", () => {
         "to be present on disk with content satisfying",
         "to equal snapshot",
         expect.unindent`
-          <!-- evaldown nowrap:true -->
+          <!-- evaldown persist:true -->
 
           \`\`\`javascript
           class Person {
@@ -1040,12 +1015,6 @@ describe("Evaldown", () => {
           <!-- evaldown freshContext:true -->
 
           \`\`\`javascript
-          class Person {
-            constructor(foo) {
-              this.foo = !!foo;
-            }
-          }
-
           expect.addType({
             name: 'Person',
             base: 'object',
@@ -1086,7 +1055,7 @@ describe("Evaldown", () => {
         "to be present on disk with content satisfying",
         "to equal snapshot",
         expect.unindent`
-          <!-- evaldown nowrap:true -->
+          <!-- evaldown persist:true -->
 
           \`\`\`javascript
           class Person {
@@ -1117,12 +1086,6 @@ describe("Evaldown", () => {
           <!-- evaldown freshContext:true -->
 
           \`\`\`javascript
-          class Person {
-            constructor(foo) {
-              this.foo = !!foo;
-            }
-          }
-
           expect.addType({
             name: 'Person',
             base: 'object',

@@ -304,37 +304,6 @@ repository: https://github.com/unexpectedjs/unexpected
     });
 
     describe("with alternate capture modes", () => {
-      it("should produces updated markdown for nowrap", async function() {
-        const maker = new Markdown(
-          [
-            "```javascript",
-            "Promise.reject(new Error('boom'));",
-            "```",
-            "",
-            "```output",
-            "Missing output",
-            "```"
-          ].join("\n"),
-          {
-            marker: "evaldown",
-            capture: "nowrap"
-          }
-        );
-        await maker.evaluate({ pwdPath: __dirname });
-
-        const markdown = await maker.withUpdatedExamples();
-
-        expect(
-          locateAndReturnOutputBlock(markdown.toText()),
-          "to equal snapshot",
-          expect.unindent`
-            \`\`\`output
-            boom
-            \`\`\`
-          `
-        );
-      });
-
       it("should produces updated markdown for promise rejection", async function() {
         const maker = new Markdown(
           [

@@ -1,4 +1,4 @@
-<!-- evaldown hide:true, nowrap:true -->
+<!-- evaldown hide:true -->
 ```javascript
 function doSomething() {
   return { foo: "bar" };
