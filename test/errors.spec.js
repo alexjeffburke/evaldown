@@ -28,30 +28,32 @@ describe("errors", () => {
         process.env.DEBUG = origEnvDebug;
       }
     });
+  });
 
+  describe("snippetErrorsToMsg()", () => {
     it("should serialise a FileEvaluationError", () => {
-      const e = new errors.FileEvaluationError({
-        data: {
-          errors: {
-            1: new errors.SnippetEvaluationError({
-              data: { original: new Error("foo") }
-            }),
-            5: new errors.SnippetEvaluationError({
-              data: { original: new Error("bar") }
-            })
-          }
-        }
-      });
+      const snippetErrors = {
+        1: new errors.SnippetEvaluationError({
+          data: { original: new Error("foo") }
+        }),
+        5: new errors.SnippetEvaluationError({
+          data: { original: new Error("bar") }
+        })
+      };
+
+      const e = new errors.FileEvaluationError(
+        errors.snippetErrorsToMsg(snippetErrors)
+      );
 
       expect(
-        errors.errorToOutput(e),
-        "to equal snapshot",
-        expect.unindent`
-        FileEvaluationError
-        snippets with errors:
-          - [1] Error: foo
-          - [5] Error: bar
-      `
+        String(e),
+        "to equal",
+        [
+          "FileEvaluationError: ",
+          "  snippets with errors:",
+          "  - [1] Error: foo",
+          "  - [5] Error: bar"
+        ].join("\n")
       );
     });
   });

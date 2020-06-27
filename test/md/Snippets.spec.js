@@ -81,6 +81,14 @@ describe("Snippets", () => {
           lang: "output"
         }
       ]);
+      const expectedSnippetErrors = {
+        0: new errors.SnippetProcessingError({
+          message: "no matching code block for output snippet",
+          data: {
+            original: new Error("no matching code block for output snippet")
+          }
+        })
+      };
 
       await expect(
         () =>
@@ -89,16 +97,12 @@ describe("Snippets", () => {
             pwdPath: __dirname
           }),
         "to be rejected with",
-        expect
-          .it("to be an", errors.FileEvaluationError)
-          .and("to have message", "")
-          .and("to satisfy", {
-            data: {
-              errors: {
-                0: expect.it("to be an", errors.SnippetProcessingError)
-              }
-            }
-          })
+        expect.it("to be an", errors.FileEvaluationError).and("to satisfy", {
+          message: errors.snippetErrorsToMsg(expectedSnippetErrors),
+          data: {
+            errors: expectedSnippetErrors
+          }
+        })
       );
     });
 
