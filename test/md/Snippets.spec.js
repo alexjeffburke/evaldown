@@ -38,7 +38,7 @@ describe("Snippets", () => {
   });
 
   describe("#check()", () => {
-    it("should record and wrap a check error", async () => {
+    it("should record and wrap an output block was not preceded by a source block", async () => {
       const snippets = new Snippets([
         {
           code: "I've been orphaned!",
@@ -53,7 +53,44 @@ describe("Snippets", () => {
           .it("to be an", errors.SnippetProcessingError)
           .and("to have message", "no matching code block for output snippet")
           .and("to satisfy", {
-            data: { original: expect.it("to be an", Error) }
+            data: {
+              original: new Error("no matching code block for output snippet")
+            }
+          })
+      });
+    });
+
+    it("should record and wrap an output block was preceded by a hidden block", async () => {
+      const snippets = new Snippets([
+        {
+          code: "You can't see me",
+          lang: "javascript",
+          flags: {
+            evaluate: true,
+            hide: true
+          }
+        },
+        {
+          code: "I'm not supposed to be here!",
+          lang: "output"
+        }
+      ]);
+
+      const result = snippets.check();
+
+      expect(result, "to satisfy", {
+        1: expect
+          .it("to be an", errors.SnippetProcessingError)
+          .and(
+            "to have message",
+            "cannot match hidden code block to output snippet"
+          )
+          .and("to satisfy", {
+            data: {
+              original: new Error(
+                "cannot match hidden code block to output snippet"
+              )
+            }
           })
       });
     });
@@ -74,21 +111,17 @@ describe("Snippets", () => {
       );
     });
 
-    it("should reject and wrap evaluation errors", async () => {
-      const snippets = new Snippets([
-        {
-          code: "I've been orphaned!",
-          lang: "output"
-        }
-      ]);
+    it("should reject and wrap any errors returned by check", async () => {
+      const snippets = new Snippets([]);
       const expectedSnippetErrors = {
         0: new errors.SnippetProcessingError({
-          message: "no matching code block for output snippet",
+          message: "some error",
           data: {
-            original: new Error("no matching code block for output snippet")
+            original: new Error("some error")
           }
         })
       };
+      snippets.check = () => expectedSnippetErrors;
 
       await expect(
         () =>
@@ -260,45 +293,21 @@ describe("Snippets", () => {
       ]);
     });
 
-    it("should throw if an output block was not preceded by a source block", () => {
-      const snippets = new Snippets([
-        {
-          code: "I've been orphaned!",
-          lang: "output"
-        }
-      ]);
+    it("should throw the first error returned by check", () => {
+      const snippets = new Snippets([]);
+      snippets.check = () => ({
+        0: new errors.SnippetProcessingError({
+          message: "some error",
+          data: { original: new Error("some error") }
+        })
+      });
 
       expect(
         () => {
           snippets.getTests();
         },
         "to throw",
-        "no matching code block for output snippet"
-      );
-    });
-
-    it("should throw if an output block was preceded by a hidden block", () => {
-      const snippets = new Snippets([
-        {
-          code: "You can't see me",
-          lang: "javascript",
-          flags: {
-            evaluate: true,
-            hide: true
-          }
-        },
-        {
-          code: "I'm not supposed to be here!",
-          lang: "output"
-        }
-      ]);
-
-      expect(
-        () => {
-          snippets.getTests();
-        },
-        "to throw",
-        "cannot match hidden code block to output snippet"
+        "some error"
       );
     });
   });
