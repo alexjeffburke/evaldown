@@ -94,6 +94,33 @@ describe("Snippets", () => {
           })
       });
     });
+
+    it("should record and wrap a use of the freshExpect flag", async () => {
+      const snippets = new Snippets([
+        {
+          code: "const foo = 'foo';",
+          lang: "javascript",
+          flags: {
+            evaluate: true,
+            freshExpect: true
+          }
+        }
+      ]);
+
+      const result = snippets.check();
+
+      expect(result, "to satisfy", {
+        0: expect
+          .it("to be an", errors.SnippetProcessingError)
+          .and(
+            "to have message",
+            "freshExpect flag has been removed in favour of freshContext"
+          )
+          .and("to satisfy", {
+            data: { original: expect.it("to be an", Error) }
+          })
+      });
+    });
   });
 
   describe("#evaluate()", () => {
