@@ -305,17 +305,41 @@ describe("Snippets", () => {
 
   describe("#getTests()", () => {
     it("should combine each code/output pair", () => {
-      const snippets = new Snippets(
-        testSnippets.map(snippet => ({ ...snippet, evaluate: false }))
-      );
+      const snippets = new Snippets(testSnippets);
 
-      expect(snippets.getTests(), "to satisfy", [
+      expect(snippets.getTests(), "to equal", [
         {
           code:
             'throw new Error("foo\\n  at bar (/somewhere.js:1:2)\\n  at quux (/blah.js:3:4)\\n  at baz (/yadda.js:5:6)")',
+          lang: "javascript",
           flags: { evaluate: true },
           output:
             "foo\n  at bar (/path/to/file.js:x:y)\n  at quux (/path/to/file.js:x:y)"
+        }
+      ]);
+    });
+
+    it("should skip code blocks that were not evaluated", () => {
+      const localSnippets = testSnippets.map(snippet => ({
+        ...snippet,
+        flags: { ...snippet.flags, evaluate: false }
+      }));
+      const snippets = new Snippets(localSnippets);
+
+      expect(snippets.getTests(), "to equal", []);
+    });
+
+    it("should leave null output if not yet evaluated", () => {
+      const localSnippets = [testSnippets[0]];
+      const snippets = new Snippets(localSnippets);
+
+      expect(snippets.getTests(), "to equal", [
+        {
+          code:
+            'throw new Error("foo\\n  at bar (/somewhere.js:1:2)\\n  at quux (/blah.js:3:4)\\n  at baz (/yadda.js:5:6)")',
+          lang: "javascript",
+          flags: { evaluate: true },
+          output: null
         }
       ]);
     });
@@ -336,6 +360,25 @@ describe("Snippets", () => {
         "to throw",
         "some error"
       );
+    });
+
+    describe("with typescript", function() {
+      it("should combine each code/output pair", () => {
+        const localSnippets = testSnippets.map(snippet => ({ ...snippet }));
+        localSnippets[0].lang = "typescript";
+        const snippets = new Snippets(localSnippets);
+
+        expect(snippets.getTests(), "to exhaustively satisfy", [
+          {
+            code:
+              'throw new Error("foo\\n  at bar (/somewhere.js:1:2)\\n  at quux (/blah.js:3:4)\\n  at baz (/yadda.js:5:6)")',
+            lang: "typescript",
+            flags: { evaluate: true },
+            output:
+              "foo\n  at bar (/path/to/file.js:x:y)\n  at quux (/path/to/file.js:x:y)"
+          }
+        ]);
+      });
     });
   });
 
