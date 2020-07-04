@@ -59,7 +59,7 @@
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.0",
     "magicpen-prism": "^4.0.0",
-    "marked-papandreou": "^0.3.3-patch3",
+    "marked": "^1.1.0",
     "unexpected": "^11.13.0",
     "yargs": "^15.3.1"
   }

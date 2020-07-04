@@ -153,7 +153,7 @@ describe("Evaldown", () => {
           <p>Testing output capturing.</p>
           <div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div>
 
-          <div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">&#39;bar&#39;</span>&nbsp;}</div></div>
+          <div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">'bar'</span>&nbsp;}</div></div>
 
         `
       );
@@ -176,7 +176,7 @@ describe("Evaldown", () => {
           <p>Testing console capturing.</p>
           <div class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&quot;hello,&nbsp;world!&quot;</span><span style="color: #999">);</span></div><div>console<span style="color: #999">.</span><span style="color: #DD4A68">error</span><span style="color: #999">(</span><span style="color: #690">&quot;foobar&quot;</span><span style="color: #999">);</span></div></div>
 
-          <div class="output"><div><span style="color: #df5000">&#39;hello,&nbsp;world!&#39;</span></div><div><span style="color: red; font-weight: bold">&#39;foobar&#39;</span></div></div>
+          <div class="output"><div><span style="color: #df5000">'hello,&nbsp;world!'</span></div><div><span style="color: red; font-weight: bold">'foobar'</span></div></div>
 
         `
       );
@@ -690,12 +690,12 @@ describe("Evaldown", () => {
           <p>First there is a return value:</p>
           <div class="code lang-javascript"><div><span style="color: #07a">function</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">()</span>&nbsp;<span style="color: #999">{</span></div><div>&nbsp;&nbsp;<span style="color: #07a">return</span>&nbsp;<span style="color: #999">{</span>&nbsp;foo<span style="color: #a67f59">:</span>&nbsp;<span style="color: #690">&quot;bar&quot;</span>&nbsp;<span style="color: #999">};</span></div><div><span style="color: #999">}</span></div><div>&nbsp;</div><div><span style="color: #708090">//&nbsp;objects&nbsp;are&nbsp;inspected&nbsp;too</span></div><div><span style="color: #07a">return</span>&nbsp;<span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></div>
 
-          <div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">&#39;bar&#39;</span>&nbsp;}</div></div>
+          <div class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">'bar'</span>&nbsp;}</div></div>
 
           <p>Then we try logging to the console:</p>
-          <div class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">&#39;foo&nbsp;bar&nbsp;baz&#39;</span><span style="color: #999">);</span></div><div>console<span style="color: #999">.</span><span style="color: #DD4A68">warn</span><span style="color: #999">(</span><span style="color: #690">&#39;..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing&#39;</span><span style="color: #999">);</span></div></div>
+          <div class="code lang-javascript"><div>console<span style="color: #999">.</span><span style="color: #DD4A68">log</span><span style="color: #999">(</span><span style="color: #690">'foo&nbsp;bar&nbsp;baz'</span><span style="color: #999">);</span></div><div>console<span style="color: #999">.</span><span style="color: #DD4A68">warn</span><span style="color: #999">(</span><span style="color: #690">'..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing'</span><span style="color: #999">);</span></div></div>
 
-          <div class="output"><div><span style="color: #df5000">&#39;foo&nbsp;bar&nbsp;baz&#39;</span></div><div><span style="color: red; font-weight: bold">&#39;..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing&#39;</span></div></div>
+          <div class="output"><div><span style="color: #df5000">'foo&nbsp;bar&nbsp;baz'</span></div><div><span style="color: red; font-weight: bold">'..as&nbsp;is&nbsp;customary&nbsp;when&nbsp;testing'</span></div></div>
 
         `
       );
