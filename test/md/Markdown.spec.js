@@ -1,11 +1,11 @@
-var expect = require("unexpected")
+const expect = require("unexpected")
   .clone()
   .use(require("unexpected-sinon"))
   .use(require("unexpected-snapshot"));
-var sinon = require("sinon");
+const sinon = require("sinon");
 
-var Markdown = require("../../lib/md/Markdown");
-var Snippets = require("../../lib/md/Snippets");
+const Markdown = require("../../lib/md/Markdown");
+const Snippets = require("../../lib/md/Snippets");
 
 const codeBlockWithSkipped = [
   "Asserts deep equality.",
