@@ -324,4 +324,44 @@ describe("evaluateSnippets", () => {
       expect(snippets[0].output, "to satisfy", { kind: "result" });
     });
   });
+
+  describe("prepareCode()", () => {
+    it("should handle a trailing comment", () => {
+      const code = evaluateSnippets.prepareCode(
+        {
+          code: "const foo = 'foo'; // this is rather fooed"
+        },
+        {}
+      );
+
+      expect(
+        code,
+        "to equal snapshot",
+        expect.unindent`
+        (function () {
+        const foo = 'foo'; // this is rather fooed
+        })();
+      `
+      );
+    });
+
+    it("should handle a trailing comment (async)", () => {
+      const code = evaluateSnippets.prepareCode(
+        {
+          code: "const foo = 'foo'; // this is rather fooed"
+        },
+        { async: true }
+      );
+
+      expect(
+        code,
+        "to equal snapshot",
+        expect.unindent`
+        (async function () {
+        const foo = 'foo'; // this is rather fooed
+        })();
+      `
+      );
+    });
+  });
 });

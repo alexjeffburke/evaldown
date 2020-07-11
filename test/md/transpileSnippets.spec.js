@@ -40,16 +40,18 @@ describe("transpileSnippets", () => {
       snippets[0].transpiled,
       "to equal snapshot",
       expect.unindent`
-          var Greeter = function Greeter(name) {
-            this.name = name;
-          };
+        (function () {
+        var Greeter = function Greeter(name) {
+          this.name = name;
+        };
 
-          Greeter.prototype.greet = function greet () {
-            return 'Greetings, ' + this.name;
-          };
+        Greeter.prototype.greet = function greet () {
+          return 'Greetings, ' + this.name;
+        };
 
-          return new Greeter('foo').greet();
-        `
+        return new Greeter('foo').greet();
+        })();
+      `
     );
   });
 
@@ -111,7 +113,19 @@ describe("transpileSnippets", () => {
     transpileSnippets(snippets, { transpileFn });
 
     expect(transpileFn, "to have a call satisfying", [
-      "\n//---------------------preamble----------------------\n(async function () {await Promise.resolve('foo');})();"
+      expect.it(code =>
+        expect(
+          code,
+          "to equal snapshot",
+          expect.unindent`
+
+          //---------------------preamble----------------------
+          (async function () {
+          await Promise.resolve('foo');
+          })();
+        `
+        )
+      )
     ]);
   });
 
@@ -131,7 +145,19 @@ describe("transpileSnippets", () => {
     transpileSnippets(snippets, { transpileFn });
 
     expect(transpileFn, "to have a call satisfying", [
-      "\n//---------------------preamble----------------------\n(function () {return { foo: 'bar' };})();"
+      expect.it(code =>
+        expect(
+          code,
+          "to equal snapshot",
+          expect.unindent`
+
+          //---------------------preamble----------------------
+          (function () {
+          return { foo: 'bar' };
+          })();
+        `
+        )
+      )
     ]);
   });
 });
