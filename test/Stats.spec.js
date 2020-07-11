@@ -76,7 +76,7 @@ describe("Stats", () => {
       );
     });
 
-    it("should output evaluation error singular", () => {
+    it("should output evaluation error singular (evaluation)", () => {
       const stats = new Stats();
       stats.addError(
         "something.md",
@@ -96,6 +96,31 @@ describe("Stats", () => {
         processed 1 file with errors...
 
         "something.md" FileEvaluationError:
+          - [0] Error: fail
+      `
+      );
+    });
+
+    it("should output evaluation error singular (processing)", () => {
+      const stats = new Stats();
+      stats.addError(
+        "something.md",
+        new errors.FileProcessingError({
+          data: {
+            errors: {
+              0: { data: { original: new Error("fail") } }
+            }
+          }
+        })
+      );
+
+      expect(
+        stats.toReport(),
+        "to equal snapshot",
+        expect.unindent`
+        processed 1 file with errors...
+
+        "something.md" FileProcessingError:
           - [0] Error: fail
       `
       );

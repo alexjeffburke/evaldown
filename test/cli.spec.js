@@ -391,6 +391,20 @@ describe("cli", () => {
       );
     });
 
+    it('should throw on errors when "validate"', async () => {
+      const pwd = path.join(TESTDATA_PATH, "extensions");
+
+      await expect(
+        cli.file(pwd, {
+          validate: true,
+          _cons: cons,
+          _: ["expect.markdown"]
+        }),
+        "to be rejected with",
+        expect.it("to be an", errors.FileProcessingError)
+      );
+    });
+
     describe("with require", () => {
       it("should output markdown", async () => {
         const pwd = path.join(TESTDATA_PATH, "file-globals");

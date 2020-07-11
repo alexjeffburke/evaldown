@@ -52,6 +52,10 @@ const processArgv = opts =>
       describe: 'Also update "output" blocks within the source markdown.',
       type: "boolean"
     })
+    .option("validate", {
+      describe: "Validate the evaluation and output of the source markdown.",
+      type: "boolean"
+    })
     .option("target-path", {
       describe: "Location to write output files when processing a directory.",
       type: "string"
@@ -68,7 +72,10 @@ const processArgv = opts =>
       describe: "Override the comment marker used to detect snippet flags.",
       type: "string"
     })
-    .conflicts("inplace", ["update", "format"])
+    .conflicts({
+      inplace: ["update", "format"],
+      validate: ["inplace", "update", "format"]
+    })
     .help().argv;
 
 const processArgsAndExecute = (cwd, argv) => {
