@@ -160,18 +160,10 @@ As you change your examples, updating means you can always keep the
 output up-to-date. This mode is considered a key use-case and can
 enabled by default via the configuration file:
 
-```javascript
-module.exports = {
-  inplace: true,
-  sourcePath: "./input",
-  targetPath: "./output"
-};
-```
-
-It can also be activated on the command line on demand:
+It can also be activaited on the command line on demand:
 
 ```
-./node_modules/.bin/evaldown --config <path_to_config> --inplace
+./node_modules/.bin/evaldown --config <path_to_config> --update
 ```
 
 ## Authoring
