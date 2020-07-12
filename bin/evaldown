@@ -44,6 +44,11 @@ const processArgv = opts =>
       type: "string",
       choices: ["markdown", "inlined", "html"]
     })
+    .option("capture", {
+      describe: "Default source to record as output.",
+      type: "string",
+      choices: ["return", "console"]
+    })
     .option("inplace", {
       describe: 'Write to "output" blocks within source markdown only.',
       type: "boolean"

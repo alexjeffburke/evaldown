@@ -150,6 +150,41 @@ describe("cli", () => {
       );
     });
 
+    it("should allow switching the capture to console", async () => {
+      const pwd = path.join(TESTDATA_PATH, "capture-console");
+      const opts = {
+        sourcePath: path.join(TESTDATA_PATH, "capture-console"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      };
+
+      await cli.files(pwd, {
+        _cons: cons,
+        format: "markdown",
+        capture: "console",
+        ...opts
+      });
+
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "captured.md");
+      await expect(
+        await fsExtra.readFile(expectedOutputFile, "utf8"),
+        "to equal snapshot",
+        expect.unindent`
+          Testing console capturing.
+
+          \`\`\`javascript
+          console.log("hello, world!");
+          console.error("foobar");
+          \`\`\`
+
+          \`\`\`output
+          'hello, world!'
+          'foobar'
+          \`\`\`
+
+        `
+      );
+    });
+
     describe("with require", () => {
       it("should output markdown", async () => {
         const pwd = path.join(TESTDATA_PATH, "file-globals");
@@ -278,6 +313,45 @@ describe("cli", () => {
 
         expect(cons.log, "to have a call satisfying", [
           expect.it("to contain", "<div")
+        ]);
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+
+    it("should allow switching the capture to console", async () => {
+      const pwd = path.join(TESTDATA_PATH, "capture-console");
+      const sourceFilePath = path.join(pwd, "captured.md");
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+      try {
+        await cli.file(pwd, {
+          _cons: cons,
+          capture: "console",
+          _: ["captured.md"]
+        });
+
+        expect(cons.log, "to have a call satisfying", [
+          expect.it(output =>
+            expect(
+              output,
+              "to equal snapshot",
+              expect.unindent`
+                Testing console capturing.
+
+                \`\`\`javascript
+                console.log("hello, world!");
+                console.error("foobar");
+                \`\`\`
+
+                \`\`\`output
+                'hello, world!'
+                'foobar'
+                \`\`\`
+
+              `
+            )
+          )
         ]);
       } finally {
         await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
