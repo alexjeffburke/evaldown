@@ -11,6 +11,13 @@ locating JS/TS code blocks in one or more markdown files,
 extracting and evaluating these blocks and provides a range
 formats in which to serialise their pretty-printed output.
 
+We start with discussing making use of the tool from the
+command line, but later sections cover [authoring](#Authoring)
+snippets and [validating](#Validation) them post annotation.
+
+The sections below discuss configuring the tool and
+authoring of examples.
+
 ## Use
 
 We start by introducing an invocation for processing a single
@@ -70,9 +77,6 @@ npm install --save-dev evaldown
 ```
 ./node_modules/.bin/evaldown --config <path_to_config>
 ```
-
-The sections below discuss configuring the tool and
-authoring of examples.
 
 ## Configuration
 
@@ -243,4 +247,21 @@ console.warn("whoa there!");
 'whoa there!'
 ```
 </pre>
+
+
+# Validation
+
+Once you have authored your documentation and annotated the markdown
+such that it can be executed, it is important that as your project
+develops these examples stay correct with respect to future changes.
+
+We can make use of the ability to execute the snippets to check that the
+evaluated output matches what was previously recorded in the markdown. To
+do this we can use the `--validate` option:
+
+```
+npx evaldown --validate ./README.md
+```
+
+This option allows such checks to easily occur as part of CI pipelines.
 
