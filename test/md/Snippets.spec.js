@@ -376,38 +376,8 @@ describe("Snippets", () => {
           }
         },
         {
-          code: "",
-          lang: "output"
-        }
-      ]);
-      snippets.evaluated = true;
-
-      const result = snippets.validate();
-
-      expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetProcessingError)
-          .and("to have message", "snippet errored during evaluation")
-          .and("to satisfy", {
-            data: {
-              original: new Error("snippet errored during evaluation")
-            }
-          })
-      });
-    });
-
-    it("should record a snippet with nowhere to write output", async () => {
-      const snippets = new Snippets([
-        {
           lang: "javascript",
-          flags: {
-            evaluate: true
-          },
-          output: {
-            kind: "",
-            html: "",
-            text: "something"
-          }
+          code: ""
         }
       ]);
       snippets.evaluated = true;
@@ -417,10 +387,10 @@ describe("Snippets", () => {
       expect(result, "to satisfy", {
         0: expect
           .it("to be an", errors.SnippetProcessingError)
-          .and("to have message", "snippet has no matching output block")
+          .and("to have message", "snippet evaluation resulted in an error")
           .and("to satisfy", {
             data: {
-              original: new Error("snippet has no matching output block")
+              original: new Error("snippet evaluation resulted in an error")
             }
           })
       });

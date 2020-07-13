@@ -9,5 +9,5 @@ return "foo";
 ```
 
 ```javascript
-return "foo";
+throw new Error("foo");
 ```

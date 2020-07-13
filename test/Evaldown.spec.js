@@ -542,7 +542,7 @@ describe("Evaldown", () => {
               "FileProcessingError: ",
               "  snippets with errors:",
               "  - [0] Error: snippet did not generate expected output",
-              "  - [2] Error: snippet has no matching output block"
+              "  - [2] Error: snippet evaluation resulted in an error"
             ].join("\n")
           )
         )
