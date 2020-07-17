@@ -362,7 +362,7 @@ describe("Snippets", () => {
       expect(result, "to be null");
     });
 
-    it("should allow multiple snippets without output", async () => {
+    it("should allow multiple snippets without output (with kind)", async () => {
       const snippets = new Snippets([
         {
           lang: "javascript",
@@ -378,6 +378,40 @@ describe("Snippets", () => {
         {
           lang: "javascript",
           code: "not to be confused",
+          flags: {
+            evaluate: true
+          },
+          output: {
+            kind: "",
+            html: "",
+            text: ""
+          }
+        }
+      ]);
+      snippets.evaluated = true;
+
+      const result = snippets.validate();
+
+      expect(result, "to be null");
+    });
+
+    it("should allow multiple snippets without output (without kind)", function() {
+      const snippets = new Snippets([
+        {
+          lang: "javascript",
+          code: "<some code>",
+          flags: {
+            evaluate: true
+          },
+          output: {
+            kind: "",
+            html: "",
+            text: ""
+          }
+        },
+        {
+          lang: "javascript",
+          code: "<other code>",
           flags: {
             evaluate: true
           },
