@@ -299,7 +299,7 @@ describe("cli", () => {
       ]);
     });
 
-    it("should allow switching the format to output to stdout", async () => {
+    it("should allow switching the format to html", async () => {
       const pwd = path.join(TESTDATA_PATH, "extensions");
       const sourceFilePath = path.join(pwd, "expect.markdown");
       const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
@@ -358,100 +358,6 @@ describe("cli", () => {
       }
     });
 
-    it('should write to the source file when "inplace"', async () => {
-      const pwd = path.join(TESTDATA_PATH, "extensions");
-      const sourceFilePath = path.join(pwd, "expect.markdown");
-      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
-
-      try {
-        await cli.file(pwd, {
-          inplace: true,
-          _: ["expect.markdown"]
-        });
-
-        await expect(
-          await fsExtra.readFile(sourceFilePath, "utf8"),
-          "to equal snapshot",
-          expect.unindent`
-            Some string manipulations.
-
-            \`\`\`javascript
-            return "foobar".slice(0, 3);
-            \`\`\`
-
-            \`\`\`output
-            'foo'
-            \`\`\`
-
-            \`\`\`javascript
-            return "foobar".slice(3, 6);
-            \`\`\`
-
-            \`\`\`output
-            'bar'
-            \`\`\`
-
-          `
-        );
-      } finally {
-        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
-      }
-    });
-
-    it('should override any format to "markdown" when "inplace"', async () => {
-      const pwd = path.join(TESTDATA_PATH, "extensions");
-      const sourceFilePath = path.join(pwd, "expect.markdown");
-      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
-
-      try {
-        await cli.file(pwd, {
-          format: "html",
-          inplace: true,
-          _: ["expect.markdown"]
-        });
-
-        await expect(
-          await fsExtra.readFile(sourceFilePath, "utf8"),
-          "not to contain",
-          "<div"
-        );
-      } finally {
-        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
-      }
-    });
-
-    it('should write to the source file and output to stdout when "update"', async () => {
-      const pwd = path.join(TESTDATA_PATH, "extensions");
-      const sourceFilePath = path.join(pwd, "expect.markdown");
-      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
-
-      try {
-        await cli.file(pwd, {
-          _cons: cons,
-          update: true,
-          _: ["expect.markdown"]
-        });
-
-        await expect(cons.log, "was called");
-      } finally {
-        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
-      }
-    });
-
-    it("should pass through a rejection to ensure it is logged later", async () => {
-      const pwd = path.join(TESTDATA_PATH, "some-errors");
-
-      await expect(
-        () =>
-          cli.file(pwd, {
-            _cons: cons,
-            _: ["example.md"]
-          }),
-        "to be rejected with",
-        expect.it("to be an", errors.FileEvaluationError)
-      );
-    });
-
     it("should throw on inaccessible", async () => {
       const pwd = path.join(TESTDATA_PATH, "example");
       const opts = {
@@ -465,18 +371,184 @@ describe("cli", () => {
       );
     });
 
-    it('should throw on errors when "validate"', async () => {
-      const pwd = path.join(TESTDATA_PATH, "extensions");
+    it("should throw on an evaluation error", async () => {
+      const pwd = path.join(TESTDATA_PATH, "some-errors");
+
+      await expect(
+        () =>
+          cli.file(pwd, {
+            _cons: cons,
+            _: ["example.md"]
+          }),
+        "to be rejected with",
+        expect.it("to be an", errors.FileEvaluationError)
+      );
+    });
+
+    it('should throw on a processing error when "validate"', async () => {
+      const pwd = path.join(TESTDATA_PATH, "validate");
 
       await expect(
         cli.file(pwd, {
           validate: true,
           _cons: cons,
-          _: ["expect.markdown"]
+          _: ["example.md"]
         }),
         "to be rejected with",
         expect.it("to be an", errors.FileProcessingError)
       );
+    });
+
+    describe("when operating in inplace mode", () => {
+      it("should write to the source file", async () => {
+        const pwd = path.join(TESTDATA_PATH, "extensions");
+        const sourceFilePath = path.join(pwd, "expect.markdown");
+        const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+        try {
+          await cli.file(pwd, {
+            inplace: true,
+            _: ["expect.markdown"]
+          });
+
+          await expect(
+            await fsExtra.readFile(sourceFilePath, "utf8"),
+            "to equal snapshot",
+            expect.unindent`
+              Some string manipulations.
+
+              \`\`\`javascript
+              return "foobar".slice(0, 3);
+              \`\`\`
+
+              \`\`\`output
+              'foo'
+              \`\`\`
+
+              \`\`\`javascript
+              return "foobar".slice(3, 6);
+              \`\`\`
+
+              \`\`\`output
+              'bar'
+              \`\`\`
+
+            `
+          );
+        } finally {
+          await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+        }
+      });
+
+      it('should override any format to "markdown"', async () => {
+        const pwd = path.join(TESTDATA_PATH, "extensions");
+        const sourceFilePath = path.join(pwd, "expect.markdown");
+        const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+        try {
+          await cli.file(pwd, {
+            format: "html",
+            inplace: true,
+            _: ["expect.markdown"]
+          });
+
+          await expect(
+            await fsExtra.readFile(sourceFilePath, "utf8"),
+            "not to contain",
+            "<div"
+          );
+        } finally {
+          await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+        }
+      });
+    });
+
+    describe("when operating in update mode", () => {
+      it("should write to the source file", async () => {
+        const pwd = path.join(TESTDATA_PATH, "extensions");
+        const sourceFilePath = path.join(pwd, "expect.markdown");
+        const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+        try {
+          await cli.file(pwd, {
+            _cons: cons,
+            update: true,
+            _: ["expect.markdown"]
+          });
+
+          await expect(
+            await fsExtra.readFile(sourceFilePath, "utf8"),
+            "to equal snapshot",
+            expect.unindent`
+              Some string manipulations.
+
+              \`\`\`javascript
+              return "foobar".slice(0, 3);
+              \`\`\`
+
+              \`\`\`output
+              'foo'
+              \`\`\`
+
+              \`\`\`javascript
+              return "foobar".slice(3, 6);
+              \`\`\`
+
+              \`\`\`output
+              'bar'
+              \`\`\`
+
+            `
+          );
+        } finally {
+          await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+        }
+      });
+
+      it("should output to stdout", async () => {
+        const pwd = path.join(TESTDATA_PATH, "extensions");
+        const sourceFilePath = path.join(pwd, "expect.markdown");
+        const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+        try {
+          await cli.file(pwd, {
+            _cons: cons,
+            update: true,
+            _: ["expect.markdown"]
+          });
+
+          await expect(cons.log, "to have a call satisfying", [
+            expect.it(output =>
+              expect(
+                output,
+                "to equal snapshot",
+                expect.unindent`
+              Some string manipulations.
+
+              \`\`\`javascript
+              return "foobar".slice(0, 3);
+              \`\`\`
+
+              \`\`\`output
+              'foo'
+              \`\`\`
+
+              \`\`\`javascript
+              return "foobar".slice(3, 6);
+              \`\`\`
+
+              \`\`\`output
+              'bar'
+              \`\`\`
+
+            `
+              )
+            )
+          ]);
+        } finally {
+          await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+        }
+      });
     });
 
     describe("with require", () => {
