@@ -7,6 +7,7 @@ const fsExtra = require("fs-extra");
 const path = require("path");
 const sinon = require("sinon");
 
+const errors = require("../lib/errors");
 const Evaldown = require("../lib/Evaldown");
 const Stats = require("../lib/Stats");
 
@@ -44,6 +45,10 @@ describe("Evaldown", () => {
 
   beforeEach(async () => {
     await fsExtra.emptyDir(TESTDATA_OUTPUT_PATH);
+  });
+
+  afterEach(() => {
+    sinon.reset();
   });
 
   it("should be a function", () => {
@@ -522,30 +527,63 @@ describe("Evaldown", () => {
   });
 
   describe("when operating in validate mode", function() {
-    it("should error with the snippet failures", async () => {
-      const sourceFile = "example.md";
-      const sourceFilePath = path.join(TESTDATA_PATH, "validate", sourceFile);
+    it("should log to stdout with snippet failures", async () => {
+      const _cons = {
+        log: sinon.stub().named("console.log")
+      };
+      const sourcePath = path.join(TESTDATA_PATH, "validate");
+
+      await new Evaldown({
+        validate: true,
+        sourcePath,
+        targetPath: TESTDATA_OUTPUT_PATH
+      }).validateFiles({
+        _cons,
+        pwd: sourcePath
+      });
+
+      expect(_cons.log, "to have calls satisfying", [
+        [],
+        ["  failing.md FAILED"],
+        [
+          [
+            "FileProcessingError: ",
+            "  snippets with errors:",
+            "  - [0] Error: snippet did not generate expected output",
+            "  - [2] Error: snippet evaluation resulted in an error",
+            ""
+          ].join("\n")
+        ],
+        ["  passing.md PASSED"]
+      ]);
+    });
+
+    it("should return stats with snippet failures", async () => {
+      const sourceFile = "failing.md";
+      const sourcePath = path.join(TESTDATA_PATH, "validate");
+
+      const result = await new Evaldown({
+        validate: true,
+        sourcePath,
+        targetPath: TESTDATA_OUTPUT_PATH
+      })._validateFiles({
+        pwd: sourcePath,
+        reporter: "none",
+        markdownFiles: [sourceFile]
+      });
 
       await expect(
-        () =>
-          new Evaldown({
-            validate: true,
-            sourcePath: path.dirname(sourceFilePath),
-            targetPath: TESTDATA_OUTPUT_PATH
-          }).processFile(sourceFile),
-        "to be rejected with",
-        expect.it(e =>
-          expect(
-            String(e),
-            "to equal snapshot",
-            [
-              "FileProcessingError: ",
-              "  snippets with errors:",
-              "  - [0] Error: snippet did not generate expected output",
-              "  - [2] Error: snippet evaluation resulted in an error"
-            ].join("\n")
-          )
-        )
+        result,
+        "to exhaustively satisfy",
+        new Stats({
+          errored: 1,
+          errorEntries: [
+            {
+              file: "failing.md",
+              error: expect.it("to be an", errors.FileProcessingError)
+            }
+          ]
+        })
       );
     });
   });

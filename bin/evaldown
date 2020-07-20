@@ -73,6 +73,14 @@ const processArgv = opts =>
       describe: "Module to prepend to every evaluated file.",
       type: "string"
     })
+    .option("reporter", {
+      type: "string",
+      describe: "The name of the reporter to use for validation output."
+    })
+    .option("ci", {
+      type: "boolean",
+      describe: "Switch forcing console output when running validation in CI."
+    })
     .option("comment-marker", {
       describe: "Override the comment marker used to detect snippet flags.",
       type: "string"
@@ -80,6 +88,10 @@ const processArgv = opts =>
     .conflicts({
       inplace: ["update", "format"],
       validate: ["inplace", "update", "format"]
+    })
+    .implies({
+      reporter: ["validate"],
+      ci: ["validate"]
     })
     .help().argv;
 

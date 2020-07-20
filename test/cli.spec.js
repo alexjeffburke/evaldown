@@ -2,6 +2,7 @@ const expect = require("unexpected")
   .clone()
   .use(require("unexpected-sinon"))
   .use(require("unexpected-snapshot"));
+const fs = require("fs");
 const fsExtra = require("fs-extra");
 const path = require("path");
 const sinon = require("sinon");
@@ -15,8 +16,18 @@ const TESTDATA_OUTPUT_PATH = path.join(TESTDATA_PATH, "output");
 function createFakeConsole() {
   return {
     log: sinon.stub().named("console.log"),
+    warn: sinon.stub().named("console.warn"),
     error: sinon.stub().named("console.error")
   };
+}
+
+function isPathDirectory(path) {
+  const stat = fs.statSync(path);
+  try {
+    expect(stat.isDirectory(), "to be true");
+  } catch (e) {
+    expect.fail({ message: `The path "${path}" was not a directory.` });
+  }
 }
 
 function usingOpts(pwd, optsFile) {
@@ -183,6 +194,53 @@ describe("cli", () => {
 
         `
       );
+    });
+
+    describe("when operating in validate mode", () => {
+      it("should record a processing error", async () => {
+        const pwd = path.join(TESTDATA_PATH, "validate");
+
+        await expect(
+          cli.files(pwd, {
+            sourcePath: ".",
+            validate: true,
+            reporter: "none"
+          }),
+          "to be fulfilled with",
+          { total: 2, succeeded: 1, errored: 1 }
+        );
+      });
+
+      it("should write output as HTML", async () => {
+        const pwd = path.join(TESTDATA_PATH, "validate");
+        const reportPath = path.join(pwd, "evaldown");
+
+        try {
+          await cli.files(pwd, {
+            sourcePath: ".",
+            validate: true,
+            reporter: "html"
+          });
+
+          isPathDirectory(reportPath);
+        } finally {
+          await fsExtra.remove(reportPath);
+        }
+      });
+
+      it("should always output to the console with the ci flag", async () => {
+        const pwd = path.join(TESTDATA_PATH, "validate");
+
+        await cli.files(pwd, {
+          sourcePath: ".",
+          validate: true,
+          reporter: "none",
+          ci: true,
+          _cons: cons
+        });
+
+        expect(cons.warn, "was called");
+      });
     });
 
     describe("with require", () => {
@@ -385,20 +443,6 @@ describe("cli", () => {
       );
     });
 
-    it('should throw on a processing error when "validate"', async () => {
-      const pwd = path.join(TESTDATA_PATH, "validate");
-
-      await expect(
-        cli.file(pwd, {
-          validate: true,
-          _cons: cons,
-          _: ["example.md"]
-        }),
-        "to be rejected with",
-        expect.it("to be an", errors.FileProcessingError)
-      );
-    });
-
     describe("when operating in inplace mode", () => {
       it("should write to the source file", async () => {
         const pwd = path.join(TESTDATA_PATH, "extensions");
@@ -548,6 +592,52 @@ describe("cli", () => {
         } finally {
           await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
         }
+      });
+    });
+
+    describe("when operating in validate mode", () => {
+      it("should record a processing error", async () => {
+        const pwd = path.join(TESTDATA_PATH, "validate");
+
+        await expect(
+          cli.file(pwd, {
+            validate: true,
+            reporter: "none",
+            _: ["failing.md"]
+          }),
+          "to be fulfilled"
+        );
+      });
+
+      it("should write output as HTML", async () => {
+        const pwd = path.join(TESTDATA_PATH, "validate");
+        const reportPath = path.join(pwd, "evaldown");
+
+        try {
+          await cli.file(pwd, {
+            validate: true,
+            reporter: "html",
+            _: ["failing.md"]
+          });
+
+          isPathDirectory(reportPath);
+        } finally {
+          await fsExtra.remove(reportPath);
+        }
+      });
+
+      it("should always output to the console with the ci flag", async () => {
+        const pwd = path.join(TESTDATA_PATH, "validate");
+
+        await cli.file(pwd, {
+          validate: true,
+          reporter: "none",
+          ci: true,
+          _cons: cons,
+          _: ["failing.md"]
+        });
+
+        expect(cons.warn, "was called");
       });
     });
 
