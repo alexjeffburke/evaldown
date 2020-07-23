@@ -316,7 +316,7 @@ describe("Snippets", () => {
       );
     });
 
-    it("should validate empty snippets", async () => {
+    it("should allow empty snippets", async () => {
       const snippets = new Snippets([
         {
           lang: "javascript",
@@ -332,6 +332,43 @@ describe("Snippets", () => {
         {
           lang: "output",
           code: ""
+        }
+      ]);
+      snippets.evaluated = true;
+
+      const result = snippets.validate();
+
+      expect(result, "to be null");
+    });
+
+    it("should allow a single snippet with output", async () => {
+      const snippets = new Snippets([
+        {
+          lang: "javascript",
+          flags: {
+            evaluate: true
+          },
+          output: {
+            kind: "error",
+            html: "",
+            text: [
+              "foo",
+              "  at bar (/somewhere.js:1:2)",
+              "  at quux (/blah.js:3:4)",
+              "  at baz (/yadda.js:5:6)"
+            ].join("\n")
+          }
+        },
+        {
+          lang: "output",
+          code: [
+            "foo",
+            "  at bar (/path/to/file.js:x:y)",
+            "  at quux (/path/to/file.js:x:y)"
+          ].join("\n"),
+          flags: {
+            cleanStackTrace: true
+          }
         }
       ]);
       snippets.evaluated = true;
@@ -478,7 +515,8 @@ describe("Snippets", () => {
         },
         {
           lang: "output",
-          code: ""
+          code: "",
+          flags: {}
         }
       ]);
       snippets.evaluated = true;
@@ -512,7 +550,8 @@ describe("Snippets", () => {
         },
         {
           lang: "output",
-          code: "other"
+          code: "other",
+          flags: {}
         }
       ]);
       snippets.evaluated = true;
