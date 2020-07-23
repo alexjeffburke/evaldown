@@ -14,6 +14,16 @@ const Stats = require("../lib/Stats");
 const TESTDATA_PATH = path.join(__dirname, "..", "testdata");
 const TESTDATA_OUTPUT_PATH = path.join(TESTDATA_PATH, "output");
 
+function toLines(spy) {
+  const lines = [];
+  for (const call of spy.getCalls()) {
+    const { args } = call;
+    const msg = args.length > 0 ? args[0] : "";
+    lines.push(`${msg}\n`);
+  }
+  return lines;
+}
+
 describe("Evaldown", () => {
   expect.addAssertion(
     "<string> [not] to be present on disk",
@@ -546,19 +556,17 @@ describe("Evaldown", () => {
         pwd: sourcePath
       });
 
-      expect(_cons.log, "to have calls satisfying", [
-        [],
-        ["  failing.md FAILED"],
-        [
-          [
-            "FileProcessingError: ",
-            "  snippets with errors:",
-            "  - [0] Error: snippet did not generate expected output",
-            "  - [2] Error: snippet evaluation resulted in an error",
-            ""
-          ].join("\n")
-        ],
-        ["  passing.md PASSED"]
+      expect(toLines(_cons.log), "to equal snapshot", [
+        "  \n",
+        "  failing.md\n",
+        "  - [0] javascript FAILED\n",
+        "SnippetValidationError: snippet did not generate expected output\n\n",
+        "  - [2] javascript FAILED\n",
+        "SnippetValidationError: snippet evaluation resulted in an error\n\n",
+        "  passing.md\n",
+        "  - [0] javascript PASSED\n",
+        "  skipping.md\n",
+        "  - [0] javascript SKIPPED\n"
       ]);
     });
 
@@ -580,7 +588,7 @@ describe("Evaldown", () => {
         result,
         "to exhaustively satisfy",
         new Stats({
-          errored: 1,
+          errored: 2,
           errorEntries: [
             {
               file: "failing.md",

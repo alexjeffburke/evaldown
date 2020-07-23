@@ -336,9 +336,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { error } = snippets.validate();
 
-      expect(result, "to be null");
+      expect(error, "to be null");
     });
 
     it("should allow a single snippet with output", async () => {
@@ -373,9 +373,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { error } = snippets.validate();
 
-      expect(result, "to be null");
+      expect(error, "to be null");
     });
 
     it("should allow a single snippet without output", async () => {
@@ -394,9 +394,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { error } = snippets.validate();
 
-      expect(result, "to be null");
+      expect(error, "to be null");
     });
 
     it("should allow multiple snippets without output (with kind)", async () => {
@@ -427,9 +427,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { error } = snippets.validate();
 
-      expect(result, "to be null");
+      expect(error, "to be null");
     });
 
     it("should allow multiple snippets without output (without kind)", function() {
@@ -461,9 +461,94 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { error } = snippets.validate();
 
-      expect(result, "to be null");
+      expect(error, "to be null");
+    });
+
+    it("should ignore an output snippet", async () => {
+      const snippets = new Snippets([
+        {
+          lang: "output",
+          code: ""
+        }
+      ]);
+      snippets.evaluated = true;
+
+      const { results } = snippets.validate();
+
+      expect(results, "to exhaustively satisfy", {});
+    });
+
+    it("should record a pass", async () => {
+      const snippets = new Snippets([
+        {
+          lang: "javascript",
+          flags: {
+            evaluate: true
+          },
+          output: {
+            kind: "",
+            html: "",
+            text: ""
+          }
+        }
+      ]);
+      snippets.evaluated = true;
+
+      const { results } = snippets.validate();
+
+      expect(results, "to exhaustively satisfy", {
+        0: { status: "pass", error: null }
+      });
+    });
+
+    it("should record a skip", async () => {
+      const snippets = new Snippets([
+        {
+          lang: "javascript",
+          flags: {
+            evaluate: false
+          }
+        }
+      ]);
+      snippets.evaluated = true;
+
+      const { results } = snippets.validate();
+
+      expect(results, "to exhaustively satisfy", {
+        0: { status: "pending", error: null }
+      });
+    });
+
+    it("should record a fail as a combined error", async () => {
+      const snippets = new Snippets([
+        {
+          lang: "javascript",
+          flags: {
+            evaluate: true
+          },
+          output: {
+            kind: "error",
+            html: "",
+            text: ""
+          }
+        }
+      ]);
+      snippets.evaluated = true;
+
+      const { error } = snippets.validate();
+
+      expect(
+        error,
+        "to satisfy",
+        new errors.FileProcessingError({
+          message: expect.it("to be a string").and("not to be empty"),
+          data: {
+            errors: [expect.it("to be an", errors.SnippetValidationError)]
+          }
+        })
+      );
     });
 
     it("should record an evaluation error", async () => {
@@ -478,25 +563,24 @@ describe("Snippets", () => {
             html: "",
             text: ""
           }
-        },
-        {
-          lang: "javascript",
-          code: ""
         }
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { results } = snippets.validate();
 
-      expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetValidationError)
-          .and("to have message", "snippet evaluation resulted in an error")
-          .and("to satisfy", {
-            data: {
-              original: new Error("snippet evaluation resulted in an error")
-            }
-          })
+      expect(results, "to exhaustively satisfy", {
+        0: {
+          status: "fail",
+          error: expect
+            .it("to be an", errors.SnippetValidationError)
+            .and("to have message", "snippet evaluation resulted in an error")
+            .and("to satisfy", {
+              data: {
+                original: new Error("snippet evaluation resulted in an error")
+              }
+            })
+        }
       });
     });
 
@@ -521,17 +605,20 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { results } = snippets.validate();
 
-      expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetValidationError)
-          .and("to have message", "snippet did not generate expected output")
-          .and("to satisfy", {
-            data: {
-              original: new Error("snippet did not generate expected output")
-            }
-          })
+      expect(results, "to exhaustively satisfy", {
+        0: {
+          status: "fail",
+          error: expect
+            .it("to be an", errors.SnippetValidationError)
+            .and("to have message", "snippet did not generate expected output")
+            .and("to satisfy", {
+              data: {
+                original: new Error("snippet did not generate expected output")
+              }
+            })
+        }
       });
     });
 
@@ -556,17 +643,20 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { results } = snippets.validate();
 
-      expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetValidationError)
-          .and("to have message", "snippet did not generate expected output")
-          .and("to satisfy", {
-            data: {
-              original: new Error("snippet did not generate expected output")
-            }
-          })
+      expect(results, "to exhaustively satisfy", {
+        0: {
+          status: "fail",
+          error: expect
+            .it("to be an", errors.SnippetValidationError)
+            .and("to have message", "snippet did not generate expected output")
+            .and("to satisfy", {
+              data: {
+                original: new Error("snippet did not generate expected output")
+              }
+            })
+        }
       });
     });
 
@@ -590,17 +680,20 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const result = snippets.validate();
+      const { results } = snippets.validate();
 
-      expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetValidationError)
-          .and("to have message", "snippet did not generate expected output")
-          .and("to satisfy", {
-            data: {
-              original: new Error("snippet did not generate expected output")
-            }
-          })
+      expect(results, "to exhaustively satisfy", {
+        0: {
+          status: "fail",
+          error: expect
+            .it("to be an", errors.SnippetValidationError)
+            .and("to have message", "snippet did not generate expected output")
+            .and("to satisfy", {
+              data: {
+                original: new Error("snippet did not generate expected output")
+              }
+            })
+        }
       });
     });
   });

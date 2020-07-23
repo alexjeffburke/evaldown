@@ -207,7 +207,7 @@ describe("cli", () => {
             reporter: "none"
           }),
           "to be fulfilled with",
-          { total: 2, succeeded: 1, errored: 1 }
+          { total: 3, succeeded: 1, errored: 2 }
         );
       });
 
