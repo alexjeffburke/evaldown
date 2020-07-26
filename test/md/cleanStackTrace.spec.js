@@ -26,6 +26,16 @@ describe("cleanStackTrace", function() {
     );
   });
 
+  it("should accept special characters and spaces in the function name", function() {
+    expect(
+      cleanStackTrace(
+        "foo\n  at Object.attri bute$☺ (/home/andreas/work/css-generators/node_modules/postcss-minify-selectors/dist/index.js:46:47)"
+      ),
+      "to equal",
+      "foo\n  at Object.attri bute$☺ (/path/to/file.js:x:y)"
+    );
+  });
+
   it("should only preserve 2 stack locations per trace", function() {
     expect(
       cleanStackTrace(
