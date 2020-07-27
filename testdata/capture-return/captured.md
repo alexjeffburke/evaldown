@@ -1,6 +1,14 @@
 Testing output capturing.
 
 ```javascript
+return "foo";
+```
+
+```output
+'foo'
+```
+
+```javascript
 function doSomething() {
   return { foo: "bar" };
 }

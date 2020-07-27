@@ -2,7 +2,7 @@ const expect = require("unexpected");
 
 const InspectedConsole = require("../lib/InspectedConsole");
 
-const { toString } = InspectedConsole.symbols;
+const { setOption, toString } = InspectedConsole.symbols;
 
 describe("InspectedConsole", () => {
   let inspectedConsole;
@@ -15,7 +15,28 @@ describe("InspectedConsole", () => {
     });
   });
 
-  describe("with strings", () => {
+  it("should throw on an unsupported option", () => {
+    expect(
+      () => {
+        const ic = new InspectedConsole();
+        ic[setOption]("foobar", "baz");
+      },
+      "to throw",
+      "invalid option"
+    );
+  });
+
+  describe("without quoting", () => {
+    it("should escape \\n", () => {
+      inspectedConsole[setOption]("isQuoted", false);
+
+      inspectedConsole.log("\n");
+
+      expect(inspectedConsole[toString]("text"), "to equal", "\\n");
+    });
+  });
+
+  describe("with quoting", () => {
     it("should escape \\n", () => {
       inspectedConsole.log("\n");
 

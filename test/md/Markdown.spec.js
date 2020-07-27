@@ -329,7 +329,7 @@ repository: https://github.com/unexpectedjs/unexpected
           "to equal snapshot",
           expect.unindent`
             \`\`\`output
-            'foobar'
+            foobar
             \`\`\`
           `
         );

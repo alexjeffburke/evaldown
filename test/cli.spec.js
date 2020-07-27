@@ -188,8 +188,8 @@ describe("cli", () => {
           \`\`\`
 
           \`\`\`output
-          'hello, world!'
-          'foobar'
+          hello, world!
+          foobar
           \`\`\`
 
         `
@@ -403,8 +403,8 @@ describe("cli", () => {
                 \`\`\`
 
                 \`\`\`output
-                'hello, world!'
-                'foobar'
+                hello, world!
+                foobar
                 \`\`\`
 
               `
