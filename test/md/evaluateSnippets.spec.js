@@ -253,6 +253,52 @@ describe("evaluateSnippets", () => {
           })
       });
     });
+
+    it("should serialise error output at a consistent width", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code: `expect({ foobar: 'foobar', goobar: 'goobar', hoobar: 'hoobar', alice: true, bob: false }, 'to equal', {})`
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname,
+        fileGlobals: {
+          expect: () => expect
+        }
+      });
+
+      expect(snippets[0].output, "to satisfy", {
+        text: expect.it(str =>
+          expect(
+            str,
+            "to equal snapshot",
+            expect.unindent`
+              expected
+              {
+                foobar: 'foobar',
+                goobar: 'goobar',
+                hoobar: 'hoobar',
+                alice: true,
+                bob: false
+              }
+              to equal {}
+
+              {
+                foobar: 'foobar', // should be removed
+                goobar: 'goobar', // should be removed
+                hoobar: 'hoobar', // should be removed
+                alice: true, // should be removed
+                bob: false // should be removed
+              }
+            `
+          )
+        )
+      });
+    });
   });
 
   describe("with preamble", () => {
