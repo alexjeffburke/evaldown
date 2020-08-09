@@ -361,7 +361,8 @@ repository: https://github.com/unexpectedjs/unexpected
           markdown.toText(),
           "to equal snapshot",
           expect.unindent`
-            <-- evaldown async:true -->
+            <!-- evaldown async:true -->
+
             \`\`\`javascript
             return Promise.resolve('ahoy');
             \`\`\`
