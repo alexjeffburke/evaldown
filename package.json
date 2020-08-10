@@ -1,6 +1,6 @@
 {
   "name": "evaldown",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Evalute JavaScript snippets in markdown files and output static pages.",
   "main": "lib/Evaldown.js",
   "bin": {
