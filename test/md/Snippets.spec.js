@@ -50,7 +50,7 @@ describe("Snippets", () => {
 
       expect(result, "to satisfy", {
         0: expect
-          .it("to be an", errors.SnippetProcessingError)
+          .it("to be an", errors.SnippetValidationError)
           .and("to have message", "no matching code block for output snippet")
           .and("to satisfy", {
             data: {
@@ -80,7 +80,7 @@ describe("Snippets", () => {
 
       expect(result, "to satisfy", {
         1: expect
-          .it("to be an", errors.SnippetProcessingError)
+          .it("to be an", errors.SnippetValidationError)
           .and(
             "to have message",
             "cannot match hidden code block to output snippet"
@@ -111,7 +111,7 @@ describe("Snippets", () => {
 
       expect(result, "to satisfy", {
         0: expect
-          .it("to be an", errors.SnippetProcessingError)
+          .it("to be an", errors.SnippetValidationError)
           .and(
             "to have message",
             "freshExpect flag has been removed in favour of freshContext"
@@ -141,7 +141,7 @@ describe("Snippets", () => {
     it("should reject and wrap any errors returned by check", async () => {
       const snippets = new Snippets([]);
       const expectedSnippetErrors = {
-        0: new errors.SnippetProcessingError({
+        0: new errors.SnippetValidationError({
           message: "some error",
           data: {
             original: new Error("some error")
@@ -490,7 +490,7 @@ describe("Snippets", () => {
 
       expect(result, "to satisfy", {
         0: expect
-          .it("to be an", errors.SnippetProcessingError)
+          .it("to be an", errors.SnippetValidationError)
           .and("to have message", "snippet evaluation resulted in an error")
           .and("to satisfy", {
             data: {
@@ -525,7 +525,7 @@ describe("Snippets", () => {
 
       expect(result, "to satisfy", {
         0: expect
-          .it("to be an", errors.SnippetProcessingError)
+          .it("to be an", errors.SnippetValidationError)
           .and("to have message", "snippet did not generate expected output")
           .and("to satisfy", {
             data: {
@@ -560,7 +560,7 @@ describe("Snippets", () => {
 
       expect(result, "to satisfy", {
         0: expect
-          .it("to be an", errors.SnippetProcessingError)
+          .it("to be an", errors.SnippetValidationError)
           .and("to have message", "snippet did not generate expected output")
           .and("to satisfy", {
             data: {
@@ -594,7 +594,7 @@ describe("Snippets", () => {
 
       expect(result, "to satisfy", {
         0: expect
-          .it("to be an", errors.SnippetProcessingError)
+          .it("to be an", errors.SnippetValidationError)
           .and("to have message", "snippet did not generate expected output")
           .and("to satisfy", {
             data: {
@@ -649,7 +649,7 @@ describe("Snippets", () => {
     it("should throw the first error returned by check", () => {
       const snippets = new Snippets([]);
       snippets.check = () => ({
-        0: new errors.SnippetProcessingError({
+        0: new errors.SnippetValidationError({
           message: "some error",
           data: { original: new Error("some error") }
         })
