@@ -499,7 +499,7 @@ describe("Snippets", () => {
       const { results } = snippets.validate();
 
       expect(results, "to exhaustively satisfy", {
-        0: { status: "pass", error: null }
+        0: { compare: "nothrow", status: "pass", error: null }
       });
     });
 
@@ -517,7 +517,7 @@ describe("Snippets", () => {
       const { results } = snippets.validate();
 
       expect(results, "to exhaustively satisfy", {
-        0: { status: "pending", error: null }
+        0: { compare: "none", status: "pending", error: null }
       });
     });
 
@@ -571,6 +571,7 @@ describe("Snippets", () => {
 
       expect(results, "to exhaustively satisfy", {
         0: {
+          compare: "nothrow",
           status: "fail",
           error: expect
             .it("to be an", errors.SnippetValidationError)
@@ -609,6 +610,7 @@ describe("Snippets", () => {
 
       expect(results, "to exhaustively satisfy", {
         0: {
+          compare: "output",
           status: "fail",
           error: expect
             .it("to be an", errors.SnippetValidationError)
@@ -647,6 +649,7 @@ describe("Snippets", () => {
 
       expect(results, "to exhaustively satisfy", {
         0: {
+          compare: "output",
           status: "fail",
           error: expect
             .it("to be an", errors.SnippetValidationError)
@@ -684,6 +687,7 @@ describe("Snippets", () => {
 
       expect(results, "to exhaustively satisfy", {
         0: {
+          compare: "output",
           status: "fail",
           error: expect
             .it("to be an", errors.SnippetValidationError)
