@@ -38,6 +38,19 @@ describe("Snippets", () => {
   });
 
   describe("#check()", () => {
+    it("should ignore an uninterpreted lang", async () => {
+      const snippets = new Snippets([
+        {
+          code: "ignore me",
+          lang: "css"
+        }
+      ]);
+
+      const result = snippets.check();
+
+      expect(result, "to be null");
+    });
+
     it("should record and wrap an output block was not preceded by a source block", async () => {
       const snippets = new Snippets([
         {
@@ -314,6 +327,20 @@ describe("Snippets", () => {
         "to throw",
         "cannot validate snippets without evaluation"
       );
+    });
+
+    it("should ignore an uninterpreted lang", async () => {
+      const snippets = new Snippets([
+        {
+          code: "ignore me",
+          lang: "css"
+        }
+      ]);
+      snippets.evaluated = true;
+
+      const { error } = snippets.validate();
+
+      expect(error, "to be null");
     });
 
     it("should allow empty snippets", async () => {
