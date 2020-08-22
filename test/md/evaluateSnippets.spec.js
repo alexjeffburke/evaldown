@@ -227,6 +227,30 @@ describe("evaluateSnippets", () => {
   });
 
   describe("with errors during evaluation", () => {
+    it("should record and wrap an invalid code error", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code: "class Foo {}\n<Foobar />"
+        }
+      ];
+
+      const result = await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
+      });
+
+      expect(result, "to satisfy", {
+        0: expect
+          .it("to be an", errors.SnippetEvaluationError)
+          .and("to have message", "unable to parse code")
+          .and("to satisfy", {
+            data: { original: expect.it("to be an", errors.InvalidCodeError) }
+          })
+      });
+    });
+
     it("should record and wrap a reference error", async () => {
       const snippets = [
         {
