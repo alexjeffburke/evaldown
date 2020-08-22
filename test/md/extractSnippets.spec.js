@@ -135,7 +135,7 @@ describe("extractSnippets", function() {
   describe("with html comments", function() {
     it("should ignore an empty preceding comment with a marker", function() {
       expect(
-        extractSnippets('<!--evaldown-->\n```js\nalert("Hello!");\n```\n', {
+        extractSnippets('<!-- evaldown -->\n```js\nalert("Hello!");\n```\n', {
           marker: "evaldown"
         }),
         "to satisfy",
