@@ -1,0 +1,3 @@
+```js
+expect.unindent`foobar`
+```

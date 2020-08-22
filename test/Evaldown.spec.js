@@ -1,3 +1,4 @@
+const buble = require("buble");
 const expect = require("unexpected")
   .clone()
   .use(require("unexpected-sinon"))
@@ -705,6 +706,32 @@ describe("Evaldown", () => {
       expect(stats, "to be a", Stats).and("to satisfy", {
         succeeded: 0,
         errored: 1
+      });
+    });
+  });
+
+  describe("when using a transpiler", () => {
+    it("should fail to transpile", async function() {
+      const sourcePath = path.join(TESTDATA_PATH, "transpile-error");
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath,
+        targetPath: TESTDATA_OUTPUT_PATH,
+        transpileFn: content => buble.transform(content).code
+      });
+
+      const result = await evaldown.processFiles();
+
+      expect(result, "to satisfy", {
+        errored: 1,
+        errorEntries: [
+          {
+            error: {
+              name: "CompileError",
+              message: /^Transforming tagged template strings is not fully supported./
+            }
+          }
+        ]
       });
     });
   });
