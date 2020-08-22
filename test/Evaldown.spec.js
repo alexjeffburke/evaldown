@@ -559,12 +559,12 @@ describe("Evaldown", () => {
       expect(toLines(_cons.log), "to equal snapshot", [
         "  \n",
         "  failing.md\n",
-        "  - [1] captured output FAILED\n",
+        "  - [1] javascript evaluation and output comparison FAILED\n",
         "SnippetValidationError: snippet did not generate expected output\n\n",
         "  - [2] javascript evaluation FAILED\n",
         "SnippetValidationError: snippet evaluation resulted in an error\n\n",
         "  passing.md\n",
-        "  - [1] captured output PASSED\n",
+        "  - [1] javascript evaluation and output comparison PASSED\n",
         "  skipping.md\n",
         "  - [0] javascript evaluation SKIPPED\n"
       ]);
