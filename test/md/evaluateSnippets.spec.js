@@ -473,6 +473,31 @@ describe("evaluateSnippets", () => {
 
       expect(snippets[0].output, "to satisfy", { kind: "result" });
     });
+
+    it("should rewrite the transpiled code", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          transpiled: "(function () {var foo = true;})();"
+        },
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code:
+            "(function () {if (typeof foo !== 'boolean') throw new Error('boo');})();"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname,
+        capture: "return"
+      });
+
+      // check the var defined by the transpiled snippet remained available
+      expect(snippets[1].output, "to satisfy", { kind: "result" });
+    });
   });
 
   describe("prepareCode()", () => {
