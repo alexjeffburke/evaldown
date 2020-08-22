@@ -254,6 +254,86 @@ describe("evaluateSnippets", () => {
       });
     });
 
+    it("should serialise a thrown undefined", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code: "throw undefined;"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
+      });
+
+      expect(snippets[0].output, "to satisfy", {
+        kind: "error",
+        text: "rejection or thrown exception without value"
+      });
+    });
+
+    it("should serialise a thrown object", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code: "throw { error: true };"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
+      });
+
+      expect(snippets[0].output, "to satisfy", {
+        kind: "error",
+        text: "rejection or thrown exception with value: { error: true }"
+      });
+    });
+
+    it("should serialise a thrown string (empty)", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code: "throw '';"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
+      });
+
+      expect(snippets[0].output, "to satisfy", {
+        kind: "error",
+        text: "rejection or thrown exception with string value: <empty>"
+      });
+    });
+
+    it("should serialise a thrown string (non-empty)", async () => {
+      const snippets = [
+        {
+          lang: "javascript",
+          flags: { evaluate: true },
+          code: "throw 'something';"
+        }
+      ];
+
+      await evaluateSnippets(snippets, {
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
+      });
+
+      expect(snippets[0].output, "to satisfy", {
+        kind: "error",
+        text: "rejection or thrown exception with string value: something"
+      });
+    });
+
     it("should serialise error output at a consistent width", async () => {
       const snippets = [
         {
