@@ -1026,6 +1026,39 @@ describe("Evaldown", () => {
       );
     });
 
+    it("should allow skipping snippets but still render them coloured", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "inlined",
+        sourcePath: path.join(TESTDATA_PATH, "flag-evaluate"),
+        targetPath: TESTDATA_OUTPUT_PATH,
+        fileGlobals: {
+          expect: () => {
+            // setup an expect the the colour of numbers customised
+            const clone = expectNoSnapshot.clone();
+            clone.use(require("magicpen-prism"));
+            clone.use(pen => {
+              pen.installTheme("html", {
+                prismSymbol: ["#66D9EF", "bold"]
+              });
+            });
+            return clone;
+          }
+        }
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <pre class="code lang-javascript"><div><span style="color: #07a">const</span>&nbsp;num&nbsp;<span style="color: #a67f59">=</span>&nbsp;<span style="color: #66D9EF; font-weight: bold">123</span><span style="color: #999">;</span></div></pre>
+
+        `
+      );
+    });
+
     it("should allow snippets receiving a fresh context", async () => {
       const evaldown = new Evaldown({
         outputFormat: "markdown",
