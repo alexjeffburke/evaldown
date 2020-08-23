@@ -299,26 +299,56 @@ describe("Evaldown", () => {
   });
 
   describe("with file globals", () => {
-    it("should make the global available", async () => {
-      function fileGlobalFunction() {
-        return "woop woop";
+    it("should make the global available after require", async () => {
+      function makeFunctionForFile() {
+        const hasExpect = !!global.expect;
+
+        return function() {
+          return `woop ${hasExpect ? "woop" : "nope"}`;
+        };
       }
 
       const evaldown = new Evaldown({
+        outputFormat: "markdown",
         sourcePath: path.join(TESTDATA_PATH, "file-globals"),
         targetPath: TESTDATA_OUTPUT_PATH,
+        filePreamble: await fsExtra.readFile(
+          path.join(TESTDATA_PATH, "require", "expect.js"),
+          "utf8"
+        ),
         fileGlobals: {
-          fileGlobalFunction: () => fileGlobalFunction
+          fileGlobalFunction: () => makeFunctionForFile()
         }
       });
 
       await evaldown.processFiles();
 
-      const expectedOutputFile = path.join(
-        TESTDATA_OUTPUT_PATH,
-        "example.html"
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, "example.md");
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          Function fun.
+
+          \`\`\`javascript
+          return fileGlobalFunction();
+          \`\`\`
+
+          \`\`\`output
+          'woop woop'
+          \`\`\`
+
+          \`\`\`javascript
+          return \`still here ..\${fileGlobalFunction()}\`;
+          \`\`\`
+
+          \`\`\`output
+          'still here ..woop woop'
+          \`\`\`
+
+        `
       );
-      await expect(expectedOutputFile, "to be present on disk");
     });
   });
 
