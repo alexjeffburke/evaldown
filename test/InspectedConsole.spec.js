@@ -46,6 +46,30 @@ describe("InspectedConsole", () => {
         "Foo, welcome to the Bar"
       );
     });
+
+    it("should write an empty line when called without args", () => {
+      inspectedConsole[setOption]("isQuoted", false);
+
+      inspectedConsole.log();
+
+      expect(inspectedConsole[toString]("text"), "to equal", "");
+    });
+
+    it("should write a string value when given undefined", () => {
+      inspectedConsole[setOption]("isQuoted", false);
+
+      inspectedConsole.log(undefined);
+
+      expect(inspectedConsole[toString]("text"), "to equal", "undefined");
+    });
+
+    it("should write a string value when given null", () => {
+      inspectedConsole[setOption]("isQuoted", false);
+
+      inspectedConsole.log(null);
+
+      expect(inspectedConsole[toString]("text"), "to equal", "null");
+    });
   });
 
   describe("with quoting", () => {
