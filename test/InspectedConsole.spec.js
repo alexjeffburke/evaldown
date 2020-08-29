@@ -34,6 +34,18 @@ describe("InspectedConsole", () => {
 
       expect(inspectedConsole[toString]("text"), "to equal", "\\n");
     });
+
+    it("should format and perform substitutions", () => {
+      inspectedConsole[setOption]("isQuoted", false);
+
+      inspectedConsole.log("%s, welcome to the %s", "Foo", "Bar");
+
+      expect(
+        inspectedConsole[toString]("text"),
+        "to equal",
+        "Foo, welcome to the Bar"
+      );
+    });
   });
 
   describe("with quoting", () => {
