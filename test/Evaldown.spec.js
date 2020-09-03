@@ -12,6 +12,7 @@ const errors = require("../lib/errors");
 const Evaldown = require("../lib/Evaldown");
 const Stats = require("../lib/Stats");
 
+const ORIGINAL_DIRNAME = __dirname;
 const TESTDATA_PATH = path.join(__dirname, "..", "testdata");
 const TESTDATA_OUTPUT_PATH = path.join(TESTDATA_PATH, "output");
 
@@ -628,6 +629,45 @@ describe("Evaldown", () => {
           ]
         })
       );
+    });
+  });
+
+  describe("when performing evaluation", () => {
+    it("should set __dirname as an absolute path to the source file directory", async function() {
+      const sourceFile = "dirname/example.md";
+
+      const evaldown = new Evaldown({
+        sourcePath: TESTDATA_PATH,
+        targetPath: TESTDATA_OUTPUT_PATH,
+        outputFormat: "markdown"
+      });
+
+      await evaldown.processFile(sourceFile);
+
+      // check the file was created
+      const expectedInputFile = path.join(TESTDATA_PATH, sourceFile);
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, sourceFile);
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to contain",
+        `'${path.dirname(expectedInputFile)}'`
+      );
+    });
+
+    it("should reset __dirname after evaluation", async function() {
+      const sourceFile = "dirname/example.md";
+
+      const evaldown = new Evaldown({
+        sourcePath: TESTDATA_PATH,
+        targetPath: TESTDATA_OUTPUT_PATH,
+        outputFormat: "markdown"
+      });
+
+      await evaldown.processFile(sourceFile);
+
+      // check __dirname has its original value
+      expect(__dirname, "to equal", ORIGINAL_DIRNAME);
     });
   });
 
