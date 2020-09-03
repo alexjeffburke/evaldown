@@ -997,12 +997,34 @@ describe("Evaldown", () => {
         path.join(TESTDATA_OUTPUT_PATH, "example.md"),
         "to be present on disk with content satisfying",
         "to equal snapshot",
+        // check only the latter two snippets were included
         expect.unindent`
           <pre class="code lang-javascript"><div><span style="color: #07a">return</span>&nbsp;global<span style="color: #999">.</span><span style="color: #DD4A68">doSomething</span><span style="color: #999">();</span></div></pre>
 
           <pre class="output"><div>{&nbsp;<span style="color: #555">foo</span>:&nbsp;<span style="color: #df5000">'bar'</span>&nbsp;}</div></pre>
 
         `
+      );
+    });
+
+    it("should allow hiding snippets but still capture their output", async () => {
+      const sourceFile = "dirname/example.md";
+
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: TESTDATA_PATH,
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFile(sourceFile);
+
+      const expectedInputFile = path.join(TESTDATA_PATH, sourceFile);
+      const expectedOutputFile = path.join(TESTDATA_OUTPUT_PATH, sourceFile);
+      await expect(
+        expectedOutputFile,
+        "to be present on disk with content satisfying",
+        "to contain",
+        `'${path.dirname(expectedInputFile)}'`
       );
     });
 

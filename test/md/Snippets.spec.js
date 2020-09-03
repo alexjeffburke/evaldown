@@ -73,41 +73,6 @@ describe("Snippets", () => {
       });
     });
 
-    it("should record and wrap an output block was preceded by a hidden block", async () => {
-      const snippets = new Snippets([
-        {
-          code: "You can't see me",
-          lang: "javascript",
-          flags: {
-            evaluate: true,
-            hide: true
-          }
-        },
-        {
-          code: "I'm not supposed to be here!",
-          lang: "output"
-        }
-      ]);
-
-      const result = snippets.check();
-
-      expect(result, "to satisfy", {
-        1: expect
-          .it("to be an", errors.SnippetValidationError)
-          .and(
-            "to have message",
-            "cannot match hidden code block to output snippet"
-          )
-          .and("to satisfy", {
-            data: {
-              original: new Error(
-                "cannot match hidden code block to output snippet"
-              )
-            }
-          })
-      });
-    });
-
     it("should record and wrap a use of the freshExpect flag", async () => {
       const snippets = new Snippets([
         {
