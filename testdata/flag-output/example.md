@@ -1,11 +1,11 @@
 Testing output capturing.
 
 ```javascript
-return "foo";
+console.log('{ text-decoration: none }')
 ```
 
 <!-- evaldown output:true -->
 
-```
-'foo'
+```css
+{ text-decoration: none }
 ```

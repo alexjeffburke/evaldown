@@ -283,7 +283,9 @@ describe("Evaldown", () => {
           expect({ text: "foo!" }, "to equal", { text: "f00!" });
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           expected { text: 'foo!' } to equal { text: 'f00!' }
 
           {
@@ -336,7 +338,9 @@ describe("Evaldown", () => {
           return fileGlobalFunction();
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           'woop woop'
           \`\`\`
 
@@ -344,7 +348,9 @@ describe("Evaldown", () => {
           return \`still here ..\${fileGlobalFunction()}\`;
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           'still here ..woop woop'
           \`\`\`
 
@@ -375,7 +381,9 @@ describe("Evaldown", () => {
           return foobar;
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           { foo: 'bar' }
           \`\`\`
 
@@ -553,7 +561,9 @@ describe("Evaldown", () => {
             expect({ text: "foo!" }, "to equal", { text: "f00!" });
             \`\`\`
 
-            \`\`\`output
+            <!-- evaldown output:true -->
+
+            \`\`\`
             expected { text: 'foo!' } to equal { text: 'f00!' }
 
             {
@@ -833,7 +843,9 @@ describe("Evaldown", () => {
           return greet("foo");
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           'Greetings, foo'
           \`\`\`
 
@@ -937,7 +949,9 @@ describe("Evaldown", () => {
           return doSomething();
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           { foo: 'bar' }
           \`\`\`
 
@@ -949,7 +963,9 @@ describe("Evaldown", () => {
           console.warn('..as is customary when testing');
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           foo bar baz
           ..as is customary when testing
           \`\`\`
@@ -976,7 +992,9 @@ describe("Evaldown", () => {
           return global.doSomething();
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           { foo: 'bar' }
           \`\`\`
 
@@ -1061,7 +1079,9 @@ describe("Evaldown", () => {
             return global.doSomething();
             \`\`\`
 
-            \`\`\`output
+            <!-- evaldown output:true -->
+
+            \`\`\`
             { foo: 'bar' }
             \`\`\`
 
@@ -1181,7 +1201,9 @@ describe("Evaldown", () => {
           expect({ foo: null }, 'to foo');
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           Unknown assertion 'to foo', did you mean: 'to be ok'
           \`\`\`
 
@@ -1189,8 +1211,41 @@ describe("Evaldown", () => {
           expect({ foo: null }, 'to foo');
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
 
+          \`\`\`
+
+          \`\`\`
+
+        `
+      );
+    });
+
+    it("should allow snippets flagged as output with a custom lang", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        outputCapture: "console",
+        sourcePath: path.join(TESTDATA_PATH, "flag-output"),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "example.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          Testing output capturing.
+
+          \`\`\`javascript
+          console.log('{ text-decoration: none }')
+          \`\`\`
+
+          <!-- evaldown output:true -->
+
+          \`\`\`css
+          { text-decoration: none }
           \`\`\`
 
         `
@@ -1239,7 +1294,9 @@ describe("Evaldown", () => {
           expect(new Person(false), 'to foo');
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           expected Person({ foo: false }) to foo
           \`\`\`
 
@@ -1261,7 +1318,9 @@ describe("Evaldown", () => {
           expect(new Person(false), 'to foo');
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           expected PERSON: foo: false to foo
           \`\`\`
 
@@ -1310,7 +1369,9 @@ describe("Evaldown", () => {
           expect(new Person(false), 'to foo');
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           expected Person({ foo: false }) to foo
           \`\`\`
 
@@ -1332,7 +1393,9 @@ describe("Evaldown", () => {
           expect(new Person(false), 'to foo');
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           expected PERSON: foo: false to foo
           \`\`\`
 

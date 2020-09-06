@@ -23,7 +23,7 @@ const testSnippets = [
   },
   {
     lang: "output",
-    flags: { cleanStackTrace: true, evaluate: true },
+    flags: { output: true, cleanStackTrace: true },
     index: 148,
     code:
       "foo\n  at bar (/path/to/file.js:x:y)\n  at quux (/path/to/file.js:x:y)"
@@ -55,7 +55,8 @@ describe("Snippets", () => {
       const snippets = new Snippets([
         {
           code: "I've been orphaned!",
-          lang: "output"
+          lang: "output",
+          flags: { output: true }
         }
       ]);
 
@@ -359,6 +360,7 @@ describe("Snippets", () => {
             "  at quux (/path/to/file.js:x:y)"
           ].join("\n"),
           flags: {
+            output: true,
             cleanStackTrace: true
           }
         }
@@ -593,7 +595,7 @@ describe("Snippets", () => {
         {
           lang: "output",
           code: "",
-          flags: {}
+          flags: { output: true }
         }
       ]);
       snippets.evaluated = true;
@@ -632,7 +634,7 @@ describe("Snippets", () => {
         {
           lang: "output",
           code: "other",
-          flags: {}
+          flags: { output: true }
         }
       ]);
       snippets.evaluated = true;
@@ -670,7 +672,8 @@ describe("Snippets", () => {
         },
         {
           lang: "output",
-          code: "other"
+          code: "other",
+          flags: { output: true }
         }
       ]);
       snippets.evaluated = true;

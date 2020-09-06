@@ -268,14 +268,17 @@ describe("extractSnippets", function() {
   });
 
   describe("with an output block", function() {
-    it("should capture flags from a preceding comment", function() {
+    it("should include flags from a preceding comment", function() {
       expect(
         extractSnippets(
           '```js\nalert("Hello!");\n```\n\n<!-- evaldown foo:true -->\n```output\nthe output\n```\n',
           { marker: "evaldown" }
         ),
         "to satisfy",
-        [{ lang: "javascript" }, { lang: "output", flags: { foo: true } }]
+        [
+          { lang: "javascript" },
+          { lang: "output", flags: { output: true, foo: true } }
+        ]
       );
     });
   });

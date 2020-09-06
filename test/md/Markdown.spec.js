@@ -30,12 +30,12 @@ const codeBlockWithSkipped = [
   "```"
 ].join("\n");
 
-function locateAndReturnOutputBlock(output) {
-  const blockIndex = output.indexOf("```output");
+function locateAndReturnOutputBlock(output, marker = "evaldown") {
+  const blockIndex = output.indexOf(`<!-- ${marker} output:true`);
   if (blockIndex === -1) {
     throw new Error("unable to locate output block");
   }
-  return output.slice(blockIndex);
+  return output.slice(output.indexOf("```", blockIndex));
 }
 
 function locateAndReturnOutputHtml(output) {
@@ -226,7 +226,7 @@ repository: https://github.com/unexpectedjs/unexpected
         locateAndReturnOutputBlock(markdown.toText()),
         "to equal snapshot",
         expect.unindent`
-          \`\`\`output
+          \`\`\`
           expected { text: 'foo!' } to equal { text: 'f00!' }
 
           {
@@ -261,10 +261,10 @@ repository: https://github.com/unexpectedjs/unexpected
       const markdown = await maker.withUpdatedExamples();
 
       expect(
-        locateAndReturnOutputBlock(markdown.toText()),
+        locateAndReturnOutputBlock(markdown.toText(), "unexpected-markdown"),
         "to equal snapshot",
         expect.unindent`
-          \`\`\`output
+          \`\`\`
           foo
             at bar (/path/to/file.js:x:y)
             at quux (/path/to/file.js:x:y)
@@ -296,7 +296,7 @@ repository: https://github.com/unexpectedjs/unexpected
         locateAndReturnOutputBlock(markdown.toText()),
         "to equal snapshot",
         expect.unindent`
-          \`\`\`output
+          \`\`\`
           { foo: 'bar' }
           \`\`\`
         `
@@ -328,7 +328,7 @@ repository: https://github.com/unexpectedjs/unexpected
           locateAndReturnOutputBlock(markdown.toText()),
           "to equal snapshot",
           expect.unindent`
-            \`\`\`output
+            \`\`\`
             foobar
             \`\`\`
           `
@@ -367,12 +367,53 @@ repository: https://github.com/unexpectedjs/unexpected
             return Promise.resolve('ahoy');
             \`\`\`
 
-            \`\`\`output
+            <!-- evaldown output:true -->
+
+            \`\`\`
             'ahoy'
             \`\`\`
           `
         );
       });
+    });
+  });
+
+  describe("with legacy output block", () => {
+    it("should produces updated markdown with extra comment marker", async function() {
+      const maker = new Markdown(
+        [
+          "```javascript",
+          "return Promise.resolve('ahoy');",
+          "```",
+          "",
+          "```output",
+          "```"
+        ].join("\n"),
+        {
+          marker: "evaldown",
+          pwdPath: __dirname,
+          capture: "return"
+        }
+      );
+      await maker.evaluate();
+
+      const markdown = await maker.withUpdatedExamples();
+
+      expect(
+        markdown.toText(),
+        "to equal snapshot",
+        expect.unindent`
+          \`\`\`javascript
+          return Promise.resolve('ahoy');
+          \`\`\`
+
+          <!-- evaldown output:true -->
+
+          \`\`\`
+          'ahoy'
+          \`\`\`
+        `
+      );
     });
   });
 

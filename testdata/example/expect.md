@@ -19,6 +19,8 @@ const expect = require('unexpected');
 expect({ text: "foo!" }, "to equal", { text: "f00!" });
 ```
 
-```output
+<!-- evaldown output:true -->
+
+```
 Missing output
 ```

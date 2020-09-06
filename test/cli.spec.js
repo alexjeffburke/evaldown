@@ -187,7 +187,9 @@ describe("cli", () => {
           console.error("foobar");
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           hello, world!
           foobar
           \`\`\`
@@ -269,7 +271,9 @@ describe("cli", () => {
             return fileGlobalFunction();
             \`\`\`
 
-            \`\`\`output
+            <!-- evaldown output:true -->
+
+            \`\`\`
             '-=defined by require=-'
             \`\`\`
 
@@ -277,7 +281,9 @@ describe("cli", () => {
             return \`still here ..\${fileGlobalFunction()}\`;
             \`\`\`
 
-            \`\`\`output
+            <!-- evaldown output:true -->
+
+            \`\`\`
             'still here ..-=defined by require=-'
             \`\`\`
 
@@ -324,7 +330,9 @@ describe("cli", () => {
             return greet("foo");
             \`\`\`
 
-            \`\`\`output
+            <!-- evaldown output:true -->
+
+            \`\`\`
             'Greetings, foo'
             \`\`\`
 
@@ -402,7 +410,9 @@ describe("cli", () => {
                 console.error("foobar");
                 \`\`\`
 
-                \`\`\`output
+                <!-- evaldown output:true -->
+
+                \`\`\`
                 hello, world!
                 foobar
                 \`\`\`
@@ -465,7 +475,9 @@ describe("cli", () => {
               return "foobar".slice(0, 3);
               \`\`\`
 
-              \`\`\`output
+              <!-- evaldown output:true -->
+
+              \`\`\`
               'foo'
               \`\`\`
 
@@ -473,7 +485,9 @@ describe("cli", () => {
               return "foobar".slice(3, 6);
               \`\`\`
 
-              \`\`\`output
+              <!-- evaldown output:true -->
+
+              \`\`\`
               'bar'
               \`\`\`
 
@@ -530,7 +544,9 @@ describe("cli", () => {
               return "foobar".slice(0, 3);
               \`\`\`
 
-              \`\`\`output
+              <!-- evaldown output:true -->
+
+              \`\`\`
               'foo'
               \`\`\`
 
@@ -538,7 +554,9 @@ describe("cli", () => {
               return "foobar".slice(3, 6);
               \`\`\`
 
-              \`\`\`output
+              <!-- evaldown output:true -->
+
+              \`\`\`
               'bar'
               \`\`\`
 
@@ -573,7 +591,9 @@ describe("cli", () => {
               return "foobar".slice(0, 3);
               \`\`\`
 
-              \`\`\`output
+              <!-- evaldown output:true -->
+
+              \`\`\`
               'foo'
               \`\`\`
 
@@ -581,7 +601,9 @@ describe("cli", () => {
               return "foobar".slice(3, 6);
               \`\`\`
 
-              \`\`\`output
+              <!-- evaldown output:true -->
+
+              \`\`\`
               'bar'
               \`\`\`
 
@@ -662,7 +684,9 @@ describe("cli", () => {
           return fileGlobalFunction();
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           '-=defined by require=-'
           \`\`\`
 
@@ -670,7 +694,9 @@ describe("cli", () => {
           return \`still here ..\${fileGlobalFunction()}\`;
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           'still here ..-=defined by require=-'
           \`\`\`
 
@@ -716,7 +742,9 @@ describe("cli", () => {
           return greet("foo");
           \`\`\`
 
-          \`\`\`output
+          <!-- evaldown output:true -->
+
+          \`\`\`
           'Greetings, foo'
           \`\`\`
 

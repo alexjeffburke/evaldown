@@ -6,5 +6,7 @@ function greet(thing: string) {
 return greet("foo");
 ```
 
-```output
+<!-- evaldown output:true -->
+
+```
 ```
