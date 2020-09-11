@@ -602,7 +602,7 @@ describe("Evaldown", () => {
         "  \n",
         "  failing.md\n",
         "  - [1] javascript evaluation and output comparison FAILED\n",
-        "SnippetValidationError: snippet did not generate expected output\n\n",
+        "SnippetValidationError: \n\x1b[31m\x1b[1mexpected\x1b[22m\x1b[39m \x1b[36m'\\'foo\\''\x1b[39m \x1b[31m\x1b[1mto equal\x1b[22m\x1b[39m \x1b[36m'\"bar\"'\x1b[39m\n\n\x1b[41m\x1b[30m'foo'\x1b[39m\x1b[49m\n\x1b[42m\x1b[30m\"bar\"\x1b[39m\x1b[49m\n\n\n",
         "  - [2] javascript evaluation FAILED\n",
         "SnippetValidationError: snippet evaluation resulted in an error\n\n",
         "  passing.md\n",

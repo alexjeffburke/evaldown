@@ -1,5 +1,5 @@
 const buble = require("buble");
-const expect = require("unexpected");
+const expect = require("unexpected").clone();
 
 const errors = require("../../lib/errors");
 const Snippets = require("../../lib/md/Snippets");
@@ -31,6 +31,18 @@ const testSnippets = [
 ];
 
 describe("Snippets", () => {
+  expect.addAssertion("<any> to be an unexpected error", (expect, subject) => {
+    expect(subject, "to be an", Error).and("to have property", "isUnexpected");
+  });
+
+  expect.addAssertion(
+    "<Error> to have textual message <string>",
+    (expect, subject, value) => {
+      expect.errorMode = "bubble";
+      expect(subject.textMessage, "to equal", value);
+    }
+  );
+
   it("should allow retrieving a snippet by index", () => {
     const snippets = new Snippets(testSnippets);
 
@@ -608,10 +620,13 @@ describe("Snippets", () => {
           status: "fail",
           error: expect
             .it("to be an", errors.SnippetValidationError)
-            .and("to have message", "snippet did not generate expected output")
+            .and(
+              "to have textual message",
+              "\nexpected 'something' to equal ''\n\n-something\n"
+            )
             .and("to satisfy", {
               data: {
-                original: new Error("snippet did not generate expected output")
+                original: expect.it("to be an unexpected error")
               }
             })
         }
@@ -647,10 +662,13 @@ describe("Snippets", () => {
           status: "fail",
           error: expect
             .it("to be an", errors.SnippetValidationError)
-            .and("to have message", "snippet did not generate expected output")
+            .and(
+              "to have textual message",
+              "\nexpected 'something' to equal 'other'\n\n-something\n+other\n"
+            )
             .and("to satisfy", {
               data: {
-                original: new Error("snippet did not generate expected output")
+                original: expect.it("to be an unexpected error")
               }
             })
         }

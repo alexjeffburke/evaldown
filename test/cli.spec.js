@@ -30,6 +30,15 @@ function isPathDirectory(path) {
   }
 }
 
+function isPathFile(path) {
+  const stat = fs.statSync(path);
+  try {
+    expect(stat.isFile(), "to be true");
+  } catch (e) {
+    expect.fail({ message: `The path "${path}" was not a directory.` });
+  }
+}
+
 function usingOpts(pwd, optsFile) {
   return require(path.join(pwd, optsFile));
 }
@@ -215,7 +224,8 @@ describe("cli", () => {
 
       it("should write output as HTML", async () => {
         const pwd = path.join(TESTDATA_PATH, "validate");
-        const reportPath = path.join(pwd, "evaldown");
+        const reportDir = path.join(pwd, "evaldown");
+        const reportPath = path.join(reportDir, "index.html");
 
         try {
           await cli.files(pwd, {
@@ -224,9 +234,14 @@ describe("cli", () => {
             reporter: "html"
           });
 
-          isPathDirectory(reportPath);
+          isPathDirectory(reportDir);
+          isPathFile(reportPath);
+
+          // check the contained error was serialised as HTML
+          const content = fs.readFileSync(reportPath, "utf8");
+          expect(content, "to contain", '<div class="html-error">');
         } finally {
-          await fsExtra.remove(reportPath);
+          await fsExtra.remove(reportDir);
         }
       });
 
