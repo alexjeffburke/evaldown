@@ -1138,6 +1138,70 @@ describe("Evaldown", () => {
       );
     });
 
+    it("should avoid ignoring snippets when operating inplace", async () => {
+      const sourceFile = "example.md";
+      const sourceFilePath = path.join(
+        TESTDATA_PATH,
+        "flag-ignore",
+        sourceFile
+      );
+      const originalSource = await fsExtra.readFile(sourceFilePath, "utf8");
+
+      const evaldown = new Evaldown({
+        inplace: true,
+        sourcePath: path.dirname(sourceFilePath),
+        targetPath: TESTDATA_OUTPUT_PATH
+      });
+
+      await evaldown.processFiles();
+
+      try {
+        await expect(
+          sourceFilePath,
+          "to be present on disk with content satisfying",
+          "to equal snapshot",
+          expect.unindent`
+            <!-- evaldown ignore:true -->
+            \`\`\`javascript
+            function doSomething() {
+              return { foo: "bar" };
+            }
+
+            return doSomething();
+            \`\`\`
+
+            \`\`\`output
+            { foo: 'bar' }
+            \`\`\`
+
+            \`\`\`javascript
+            return 'baz';
+            \`\`\`
+
+            <!-- evaldown output:true -->
+
+            \`\`\`
+            'baz'
+            \`\`\`
+
+            <!-- evaldown ignore:true -->
+            <pre>
+            \`\`\`javascript
+            return 'baz';
+            \`\`\`
+
+            \`\`\`output
+            'baz'
+            \`\`\`
+            </pre>
+
+          `
+        );
+      } finally {
+        await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
+      }
+    });
+
     it("should allow skipping snippets but still render them coloured", async () => {
       const evaldown = new Evaldown({
         outputFormat: "inlined",
