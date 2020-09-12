@@ -15,5 +15,9 @@ matrix:
       node_js: "10"
       env:
         - TARGET=coverage
+    - name: Documentation
+      node_js: "10"
+      env:
+        - TARGET=test-docs
 script: npm run $TARGET
 after_success: "<coverage/lcov.info ./node_modules/coveralls/bin/coveralls.js"

@@ -15,6 +15,7 @@
     "docs": "./bin/evaldown --format markdown ./docs/README.md > README.md",
     "lint": "eslint . && prettier --check '**/*.js'",
     "test": "mocha",
+    "test-docs": "./bin/evaldown --validate --reporter spec ./docs/README.md",
     "version": "npm run docs && git add README.md"
   },
   "keywords": [
