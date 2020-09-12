@@ -75,7 +75,7 @@ npm install --save-dev evaldown
 ```
 
 ```
-./node_modules/.bin/evaldown --config <path_to_config>
+npx evaldown --config <path_to_config>
 ```
 
 ## Configuration
@@ -145,8 +145,16 @@ In some cases, rather than capture the result you may wish to capture the
 logging output of a command, perhaps for code that emits messages when it
 finished or just an example that uses the console.
 
-Capturing from the console can be configured by adding an outputCapture
-key with a value of `"console"` to the configuration object:
+The most convenient way to capture the console is usually to add a flag
+to the particular snippet ([this is discussed below](#console-true)). If
+all the examples require the console, it can be enabled globally via an
+option to the CLI:
+
+```
+npx evaldown --capture console ...
+```
+
+or by adding an outputCapture key to the configuration object:
 
 <!-- evaldown evaluate:false -->
 
@@ -177,7 +185,7 @@ Inside the input folder, you can make add markdown files that contain
 to be followed by "output" snippets.
 
 By default, value returned from the code block is what will be captured
-and displayed in the
+and displayed in the subsequent output block:
 
 <!-- evaldown ignore:true -->
 <pre>
@@ -206,35 +214,44 @@ function doSomething() {
 return doSomething();
 ```
 
-```output
+<!-- evaldown output:true -->
+
+```
 { foo: 'bar' }
 ```
 
-### Customising snippets
+### Customising snippets with flags
 
 When authoring examples you may find that you want to customise how
-individual snippets are treated - be this to allow using promises or
-to capture the console.
-
-HTML comments inserted above the code blocks allow doing just this.
-First, we look at an example that makes use of some `async` code:
-
-<!-- evaldown ignore:true -->
-<pre>
-<!-- evaldown async:true -->
-```js
-return Promise.resolve('foo');
-```
-
-```output
-'foo'
-```
-</pre>
+individual snippets are treated - this is done by annotations above
+the code clocks inline in the markdown.
 
 Comments with the `evaldown` marker will be located and the values
 afterwards, which we call _flags_, will be used as processing hints.
 
-Outputting uses of the `console` would look something like:
+#### async: true
+
+This flag permits the use of the `await` keyword:
+
+<!-- evaldown ignore:true -->
+<pre>
+<!-- evaldown async:true -->
+
+```js
+const value = await Promise.resolve('foo');
+
+return `${value}bar`;
+```
+
+```output
+'foobar'
+```
+</pre>
+
+#### console: true
+
+This flag will instrument the console such that any logged lines
+will appear in the output snippet:
 
 <!-- evaldown ignore:true -->
 <pre>
@@ -244,10 +261,9 @@ console.warn("whoa there!");
 ```
 
 ```output
-'whoa there!'
+whoa there!
 ```
 </pre>
-
 
 # Validation
 
@@ -261,6 +277,32 @@ do this we can use the `--validate` option:
 
 ```
 npx evaldown --validate ./README.md
+```
+
+In the case of an output mismatch an informative diff is produced:
+
+<!-- evaldown hide:true,console:true -->
+
+```js
+try {
+  require('unexpected')('foo', 'to equal', 'foobar');
+} catch (e) {
+  const textMessage = e.getErrorMessage('text').toString();
+  const lines = ['SnippetValidationError:', ...textMessage.split('\n')];
+  for (const line of lines) {
+    console.log(line);
+  }
+}
+```
+
+<!-- evaldown output:true -->
+
+```
+SnippetValidationError:
+expected \'foo\' to equal \'foobar\'
+
+-foo
++foobar
 ```
 
 This option allows such checks to easily occur as part of CI pipelines.
