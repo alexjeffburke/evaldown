@@ -11,3 +11,7 @@ return "foo";
 ```javascript
 throw new Error("foo");
 ```
+
+```javascript
+require("foobar");
+```
