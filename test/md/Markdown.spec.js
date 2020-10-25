@@ -91,15 +91,15 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("getSnippets", () => {
-    it("should cache the snippets", () => {
-      sinon.spy(Snippets, "fromMarkdown");
+  describe("validateSnippets", () => {
+    it("should throw if called before evaluation", () => {
       const markdown = new Markdown("", { marker: "evaldown" });
 
-      markdown.getSnippets();
-      markdown.getSnippets();
-
-      expect(Snippets.fromMarkdown, "was called times", 1);
+      return expect(
+        () => markdown.validateSnippets(),
+        "to throw",
+        "snippets were not evaluated"
+      );
     });
   });
 
