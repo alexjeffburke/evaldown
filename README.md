@@ -3,7 +3,7 @@
 Evaluate JavaScript and TypeScript snippets in markdown files.
 
 [![NPM version](https://img.shields.io/npm/v/evaldown.svg)](https://www.npmjs.com/package/evaldown)
-[![Build Status](https://img.shields.io/travis/alexjeffburke/evaldown/master.svg)](https://travis-ci.org/alexjeffburke/evaldown)
+[![Build Status](https://github.com/alexjeffburke/evaldown/workflows/tests/badge.svg)](https://github.com/alexjeffburke/evaldown)
 [![Coverage Status](https://img.shields.io/coveralls/alexjeffburke/evaldown/master.svg)](https://coveralls.io/r/alexjeffburke/evaldown?branch=master)
 
 This tool provides both CLI and programmatic interfaces for

@@ -595,6 +595,7 @@ describe("Evaldown", () => {
         targetPath: TESTDATA_OUTPUT_PATH
       }).validateFiles({
         _cons,
+        _format: "ansi", // force terminal style output for Github Actions
         pwd: sourcePath
       });
 
