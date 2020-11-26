@@ -75,14 +75,11 @@ describe("Snippets", () => {
       const result = snippets.check();
 
       expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetValidationError)
-          .and("to have message", "no matching code block for output snippet")
-          .and("to satisfy", {
-            data: {
-              original: new Error("no matching code block for output snippet")
-            }
-          })
+        0: expect.it("to be an", errors.SnippetFailureError).and("to satisfy", {
+          data: {
+            original: new Error("no matching code block for output snippet")
+          }
+        })
       });
     });
 
@@ -101,15 +98,13 @@ describe("Snippets", () => {
       const result = snippets.check();
 
       expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetValidationError)
-          .and(
-            "to have message",
-            "freshExpect flag has been removed in favour of freshContext"
-          )
-          .and("to satisfy", {
-            data: { original: expect.it("to be an", Error) }
-          })
+        0: expect.it("to be an", errors.SnippetFailureError).and("to satisfy", {
+          data: {
+            original: new Error(
+              "freshExpect flag has been removed in favour of freshContext"
+            )
+          }
+        })
       });
     });
   });
@@ -129,11 +124,10 @@ describe("Snippets", () => {
       );
     });
 
-    it("should reject and wrap any errors returned by check", async () => {
+    it("should wrap any errors returned by check", async () => {
       const snippets = new Snippets([]);
       const expectedSnippetErrors = {
-        0: new errors.SnippetValidationError({
-          message: "some error",
+        0: new errors.SnippetFailureError({
           data: {
             original: new Error("some error")
           }
@@ -141,20 +135,15 @@ describe("Snippets", () => {
       };
       snippets.check = () => expectedSnippetErrors;
 
-      await expect(
-        () =>
-          snippets.evaluate({
-            markdown: createFakeMarkdown(),
-            pwdPath: __dirname
-          }),
-        "to be rejected with",
-        expect.it("to be an", errors.FileEvaluationError).and("to satisfy", {
-          message: errors.snippetErrorsToMsg(expectedSnippetErrors),
-          data: {
-            errors: expectedSnippetErrors
-          }
-        })
-      );
+      await snippets.evaluate({
+        markdown: createFakeMarkdown(),
+        pwdPath: __dirname
+      });
+
+      expect(snippets.itemsErrors, "to equal", {
+        type: "check",
+        errors: expectedSnippetErrors
+      });
     });
 
     describe("when transpiled", () => {
@@ -558,10 +547,12 @@ describe("Snippets", () => {
       expect(
         error,
         "to satisfy",
-        new errors.FileProcessingError({
+        new errors.FileEvaluationError({
           message: expect.it("to be a string").and("not to be empty"),
           data: {
-            errors: [expect.it("to be an", errors.SnippetValidationError)]
+            errors: {
+              0: expect.it("to be an", errors.SnippetValidationError)
+            }
           }
         })
       );

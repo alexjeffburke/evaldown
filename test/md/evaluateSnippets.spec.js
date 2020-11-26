@@ -242,12 +242,11 @@ describe("evaluateSnippets", () => {
       });
 
       expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetEvaluationError)
-          .and("to have message", "unable to parse code")
-          .and("to satisfy", {
-            data: { original: expect.it("to be an", errors.InvalidCodeError) }
-          })
+        0: expect.it("to be an", errors.SnippetFailureError).and("to satisfy", {
+          data: {
+            original: new errors.InvalidCodeError("unable to parse code")
+          }
+        })
       });
     });
 
@@ -269,12 +268,9 @@ describe("evaluateSnippets", () => {
       });
 
       expect(result, "to satisfy", {
-        0: expect
-          .it("to be an", errors.SnippetEvaluationError)
-          .and("to have message", "expect is not defined")
-          .and("to satisfy", {
-            data: { original: expect.it("to be an", Error) }
-          })
+        0: expect.it("to be an", errors.SnippetFailureError).and("to satisfy", {
+          data: { original: new ReferenceError("expect is not defined") }
+        })
       });
     });
 

@@ -607,7 +607,7 @@ describe("Evaldown", () => {
         "  - [2] javascript evaluation FAILED\n",
         "SnippetValidationError: snippet evaluation resulted in an error\n\n",
         "  - [3] javascript evaluation FAILED\n",
-        "SnippetValidationError: snippet evaluation resulted in an error\n\n",
+        "SnippetValidationError: Cannot find module 'foobar'\n\n",
         "  passing.md\n",
         "  - [1] javascript evaluation and output comparison PASSED\n",
         "  skipping.md\n",
@@ -637,7 +637,7 @@ describe("Evaldown", () => {
           errorEntries: [
             {
               file: "failing.md",
-              error: expect.it("to be an", errors.FileProcessingError)
+              error: expect.it("to be an", errors.FileEvaluationError)
             }
           ]
         })

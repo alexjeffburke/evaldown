@@ -5,7 +5,6 @@ const expect = require("unexpected")
 const sinon = require("sinon");
 
 const Markdown = require("../../lib/md/Markdown");
-const Snippets = require("../../lib/md/Snippets");
 
 const codeBlockWithSkipped = [
   "Asserts deep equality.",
