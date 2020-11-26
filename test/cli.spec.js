@@ -630,6 +630,24 @@ describe("cli", () => {
           await fsExtra.writeFile(sourceFilePath, originalSource, "utf8");
         }
       });
+
+      it("should record a check error", async () => {
+        const pwd = path.join(TESTDATA_PATH, "check-nosource");
+
+        const error = await expect(
+          cli.file(pwd, {
+            update: true,
+            _cons: cons,
+            _: ["example.md"]
+          }),
+          "to be rejected"
+        );
+        expect(String(error).split("\n"), "to equal snapshot", [
+          "FileProcessingError: ",
+          "  snippets with errors:",
+          "  - [0] Error: no matching code block for output snippet"
+        ]);
+      });
     });
 
     describe("when operating in validate mode", () => {

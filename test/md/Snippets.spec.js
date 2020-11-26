@@ -137,7 +137,8 @@ describe("Snippets", () => {
 
       await snippets.evaluate({
         markdown: createFakeMarkdown(),
-        pwdPath: __dirname
+        pwdPath: __dirname,
+        throwOnError: false
       });
 
       expect(snippets.itemsErrors, "to equal", {
