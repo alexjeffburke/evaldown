@@ -48,8 +48,8 @@
     "prettier": "^1.19.1",
     "sinon": "^9.0.1",
     "typescript": "^3.8.3",
-    "unexpected-sinon": "^10.11.2",
-    "unexpected-snapshot": "^1.0.0"
+    "unexpected-sinon": "^11.0.0",
+    "unexpected-snapshot": "^1.1.0"
   },
   "dependencies": {
     "acorn": "^7.1.1",
@@ -62,7 +62,7 @@
     "magicpen-prism": "^4.0.0",
     "marked": "^1.1.0",
     "mocha": "^8.0.1",
-    "unexpected": "^11.13.0",
+    "unexpected": "^12.0.0",
     "yargs": "^15.3.1"
   }
 }
