@@ -1,3 +1,12 @@
+### v1.6.0 (2020-11-28)
+
+- [Remove require stack from MODULE\_NOT\_FOUND errors.](https://github.com/alexjeffburke/evaldown/commit/7d649d7280a4698720bb8305d758bfad95cc4b5a) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Correctly update the source version of the README.](https://github.com/alexjeffburke/evaldown/commit/64dd382946d94de69f18bba1431821ac9b43e062) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Upgrade unexpected to 12 and bump associated pugins](https://github.com/alexjeffburke/evaldown/commit/c46008652dd526dc3f83d7cfc0a6653dfd8a9120) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Fix output when directly processing a file that errors in check\(\).](https://github.com/alexjeffburke/evaldown/commit/7afa158de45b445dd3635f307905a48617d9efe3) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Rework error architecture and surface require errors as per-snippet.](https://github.com/alexjeffburke/evaldown/commit/9c58ec05e8e3ff6f9f226deb3eba0acb2bf71073) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [+5 more](https://github.com/alexjeffburke/evaldown/compare/v1.5.0...v1.6.0)
+
 ### v1.5.0 (2020-09-12)
 
 - [Add changelog generation to the version hook.](https://github.com/alexjeffburke/evaldown/commit/0b3ad676221b6cbe34e315f1f4391a66fc46bc78) ([Alex J Burke](mailto:alex@alexjeffburke.com))
