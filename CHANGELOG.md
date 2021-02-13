@@ -1,3 +1,7 @@
+### v1.7.0 (2021-02-13)
+
+- [Upgrade to marked 2.0.0.](https://github.com/alexjeffburke/evaldown/commit/f35534eb22954fe22e6f47065a6f51f82080ae4a) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+
 ### v1.6.0 (2020-11-28)
 
 - [Remove require stack from MODULE\_NOT\_FOUND errors.](https://github.com/alexjeffburke/evaldown/commit/7d649d7280a4698720bb8305d758bfad95cc4b5a) ([Alex J Burke](mailto:alex@alexjeffburke.com))
