@@ -1213,6 +1213,45 @@ describe("Evaldown", () => {
       }
     });
 
+    it("should allow console snippets that are also async", async () => {
+      const evaldown = new Evaldown({
+        outputFormat: "markdown",
+        sourcePath: path.join(TESTDATA_PATH, "flag-console"),
+        targetPath: TESTDATA_OUTPUT_PATH,
+        filePreamble: await fsExtra.readFile(
+          path.join(TESTDATA_PATH, "require", "expect.js"),
+          "utf8"
+        )
+      });
+
+      await evaldown.processFiles();
+
+      await expect(
+        path.join(TESTDATA_OUTPUT_PATH, "async.md"),
+        "to be present on disk with content satisfying",
+        "to equal snapshot",
+        expect.unindent`
+          <!-- evaldown console:true,async:true -->
+
+          \`\`\`javascript
+          console.log('foo bar baz');
+
+          await Promise.resolve().then(() => {
+            console.log('..as is customary when testing');
+          });
+          \`\`\`
+
+          <!-- evaldown output:true -->
+
+          \`\`\`
+          foo bar baz
+          ..as is customary when testing
+          \`\`\`
+
+        `
+      );
+    });
+
     it("should allow skipping snippets but still render them coloured", async () => {
       const evaldown = new Evaldown({
         outputFormat: "inlined",

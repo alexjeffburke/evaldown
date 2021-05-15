@@ -548,6 +548,17 @@ describe("evaluateSnippets", () => {
       expect(flags, "to equal", { return: true, other: true });
     });
 
+    it("should pass through async flag unconditional on capture", () => {
+      const snippet = {
+        flags: { async: true }
+      };
+      const flags = evaluateSnippets.prepareFlags(snippet, {
+        capture: "console"
+      });
+
+      expect(flags, "to equal", { console: true, async: true });
+    });
+
     describe("when snippet flags conflict with the cature", () => {
       it("should not set flag corresponding to the capture (console)", () => {
         const snippet = {
