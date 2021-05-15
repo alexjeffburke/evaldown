@@ -535,4 +535,41 @@ describe("evaluateSnippets", () => {
       );
     });
   });
+
+  describe("prepareFlags()", () => {
+    it("should set flag corresponding to the capture", () => {
+      const snippet = {
+        flags: { other: true }
+      };
+      const flags = evaluateSnippets.prepareFlags(snippet, {
+        capture: "return"
+      });
+
+      expect(flags, "to equal", { return: true, other: true });
+    });
+
+    describe("when snippet flags conflict with the cature", () => {
+      it("should not set flag corresponding to the capture (console)", () => {
+        const snippet = {
+          flags: { console: true, other: true }
+        };
+        const flags = evaluateSnippets.prepareFlags(snippet, {
+          capture: "return"
+        });
+
+        expect(flags, "to equal", { console: true, other: true });
+      });
+
+      it("should not set flag corresponding to the capture (return)", () => {
+        const snippet = {
+          flags: { return: true, other: true }
+        };
+        const flags = evaluateSnippets.prepareFlags(snippet, {
+          capture: "console"
+        });
+
+        expect(flags, "to equal", { return: true, other: true });
+      });
+    });
+  });
 });
