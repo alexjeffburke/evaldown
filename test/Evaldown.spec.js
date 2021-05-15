@@ -26,6 +26,8 @@ function toLines(spy) {
   return lines;
 }
 
+const nodeConsole = console;
+
 describe("Evaldown", () => {
   expect.addAssertion(
     "<string> [not] to be present on disk",
@@ -60,6 +62,12 @@ describe("Evaldown", () => {
   });
 
   afterEach(() => {
+    try {
+      expect(global.console, "to equal", nodeConsole);
+    } catch (e) {
+      expect.fail("InspectedConsole was leak detected.");
+    }
+
     sinon.reset();
   });
 
