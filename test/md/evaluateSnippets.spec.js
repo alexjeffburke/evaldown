@@ -214,14 +214,14 @@ describe("evaluateSnippets", () => {
       });
 
       expect(createSomeGlobal, "to have a call satisfying", [
-        {
+        expect.it("to equal", {
           metadata: {
             template: "default.ejs",
             theme: "dark",
             title: "Unexpected",
             repository: "https://github.com/unexpectedjs/unexpected"
           }
-        }
+        })
       ]);
     });
   });

@@ -72,7 +72,7 @@ repository: https://github.com/unexpectedjs/unexpected
       });
     });
 
-    it("should make the file options available to file globals", async () => {
+    it("should make the file options available to evaluation", async () => {
       const markdown = new Markdown(markdownWithMetadata, {
         marker: "abc"
       });
@@ -80,12 +80,7 @@ repository: https://github.com/unexpectedjs/unexpected
       const options = markdown._prepareOptions();
 
       expect(options, "to satisfy", {
-        fileMetadata: {
-          template: "default.ejs",
-          theme: "dark",
-          title: "Unexpected",
-          repository: "https://github.com/unexpectedjs/unexpected"
-        }
+        fileMetadata: expect.it("to be", markdown.metadata)
       });
     });
   });
