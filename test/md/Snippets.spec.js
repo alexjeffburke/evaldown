@@ -306,7 +306,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { error } = snippets.validate();
+      const { error } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(error, "to be null");
     });
@@ -331,7 +333,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { error } = snippets.validate();
+      const { error } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(error, "to be null");
     });
@@ -369,7 +373,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { error } = snippets.validate();
+      const { error } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(error, "to be null");
     });
@@ -390,7 +396,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { error } = snippets.validate();
+      const { error } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(error, "to be null");
     });
@@ -423,7 +431,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { error } = snippets.validate();
+      const { error } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(error, "to be null");
     });
@@ -457,7 +467,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { error } = snippets.validate();
+      const { error } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(error, "to be null");
     });
@@ -471,7 +483,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { results } = snippets.validate();
+      const { results } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(results, "to exhaustively satisfy", {});
     });
@@ -492,7 +506,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { results } = snippets.validate();
+      const { results } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(results, "to exhaustively satisfy", {
         0: {
@@ -515,7 +531,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { results } = snippets.validate();
+      const { results } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(results, "to exhaustively satisfy", {
         0: {
@@ -543,7 +561,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { error } = snippets.validate();
+      const { error } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(
         error,
@@ -575,7 +595,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { results } = snippets.validate();
+      const { results } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(results, "to exhaustively satisfy", {
         0: {
@@ -615,7 +637,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { results } = snippets.validate();
+      const { results } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(results, "to exhaustively satisfy", {
         0: {
@@ -658,7 +682,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { results } = snippets.validate();
+      const { results } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(results, "to exhaustively satisfy", {
         0: {
@@ -701,7 +727,9 @@ describe("Snippets", () => {
       ]);
       snippets.evaluated = true;
 
-      const { results } = snippets.validate();
+      const { results } = snippets.validate({
+        markdown: createFakeMarkdown()
+      });
 
       expect(results, "to exhaustively satisfy", {
         0: {

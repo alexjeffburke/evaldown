@@ -90,6 +90,20 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
+  describe("getExpect", () => {
+    it("should throw if called before expect is initialised", () => {
+      expect(
+        () => {
+          new Markdown("", {
+            marker: "evaldown"
+          }).getExpect();
+        },
+        "to throw",
+        "expect was not initialised"
+      );
+    });
+  });
+
   describe("validateSnippets", () => {
     it("should throw if called before evaluation", () => {
       const markdown = new Markdown("", { marker: "evaldown" });
