@@ -90,7 +90,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("getExpect", () => {
+  describe("#getExpect()", () => {
     it("should throw if called before expect is initialised", () => {
       expect(
         () => {
@@ -104,7 +104,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("validateSnippets", () => {
+  describe("#validateSnippets()", () => {
     it("should throw if called before evaluation", () => {
       const markdown = new Markdown("", { marker: "evaldown" });
 
@@ -116,7 +116,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("withExamples", () => {
+  describe("#withExamples()", () => {
     it("should reject if called before evaluation", () => {
       const markdown = new Markdown("", { marker: "evaldown" });
 
@@ -128,7 +128,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("withInlinedExamples", function() {
+  describe("#withInlinedExamples()", function() {
     it("should render a syntax highlighted code block", async function() {
       const maker = new Markdown(
         [
@@ -224,7 +224,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("withUpdatedExamples", function() {
+  describe("#withUpdatedExamples()", function() {
     it("should produce updated markdown for an unexpected diff", async function() {
       const maker = new Markdown(codeBlockWithSkipped, {
         marker: "evaldown",
@@ -430,7 +430,7 @@ repository: https://github.com/unexpectedjs/unexpected
     });
   });
 
-  describe("maybeRemoveNewlines()", () => {
+  describe("Markdown.maybeRemoveNewlines()", () => {
     const maybeRemoveNewlines = Markdown.maybeRemoveNewlines;
 
     it("should remove newlines", () => {
