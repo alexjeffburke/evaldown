@@ -1,3 +1,12 @@
+### v1.8.0 (2021-05-19)
+
+- [Restore passing format and test override after 89efc54.](https://github.com/alexjeffburke/evaldown/commit/97db39119cf4d756a22aa81c44244e9bad3ee67c) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Upgrade to magicpen-prism 5.0.0.](https://github.com/alexjeffburke/evaldown/commit/3c9d0d39166ec00eed64b683b32f4bcb1c7b293b) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Tighten a couple of test assertions and naming.](https://github.com/alexjeffburke/evaldown/commit/f5bbaa12d0edda75288d5442f797302aca513743) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Use standard describe block naming in the Markdown spec file.](https://github.com/alexjeffburke/evaldown/commit/f7c5953965b2e1b640b20401fb67216a97731bf4) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Rationalise handling of the expect for output inspection.](https://github.com/alexjeffburke/evaldown/commit/89efc542ae84daf50ada7ea2d08498c4bedaca56) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [+5 more](https://github.com/alexjeffburke/evaldown/compare/v1.7.0...v1.8.0)
+
 ### v1.7.0 (2021-02-13)
 
 - [Upgrade to marked 2.0.0.](https://github.com/alexjeffburke/evaldown/commit/f35534eb22954fe22e6f47065a6f51f82080ae4a) ([Alex J Burke](mailto:alex@alexjeffburke.com))
