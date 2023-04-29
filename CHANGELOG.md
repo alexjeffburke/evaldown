@@ -1,3 +1,12 @@
+### v2.0.0 (2023-04-29)
+
+- [Switch to a newer ubuntu worker version in CI.](https://github.com/alexjeffburke/evaldown/commit/be7257d620855c6f37de679750fd776a5f7e5453) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Bump offline-github-changelog to ^3.0.1.](https://github.com/alexjeffburke/evaldown/commit/8a8adf404c47569ca24adf9d9861bfd68c92b5e3) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Catch up with breaking marked import change after f8aa619.](https://github.com/alexjeffburke/evaldown/commit/b7222f7dccf9d3764eedf8df96cf581417e3b95d) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Bump all runtime dependencies to avoid warnings.](https://github.com/alexjeffburke/evaldown/commit/fb4d5cb525fc667808a03541607ade96b69b2496) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [Raise minimum node version to 14.](https://github.com/alexjeffburke/evaldown/commit/4e93684165a92fdeadd1e5b7ee648e5f8be19c82) ([Alex J Burke](mailto:alex@alexjeffburke.com))
+- [+2 more](https://github.com/alexjeffburke/evaldown/compare/v1.8.0...v2.0.0)
+
 ### v1.8.0 (2021-05-19)
 
 - [Restore passing format and test override after 89efc54.](https://github.com/alexjeffburke/evaldown/commit/97db39119cf4d756a22aa81c44244e9bad3ee67c) ([Alex J Burke](mailto:alex@alexjeffburke.com))
@@ -181,9 +190,9 @@
 #### Pull requests
 
 - [#51](https://github.com/alexjeffburke/evaldown/pull/51) Upgrade mocha to version 7.0.0 ([depfu[bot]](mailto:23717796+depfu[bot]@users.noreply.github.com))
-- [#50](https://github.com/alexjeffburke/evaldown/pull/50) Use the output from the expect of the UnexpectedError instead of the top-level one ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
-- [#48](https://github.com/alexjeffburke/evaldown/pull/48) Rejection from promises ([Alex J Burke](mailto:alex@alexjeffburke.com))
-- [#47](https://github.com/alexjeffburke/evaldown/pull/47) Avoid breaking with const\/let when babel is not present ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [#50](https://github.com/alexjeffburke/evaldown/pull/50) Use the output from the expect of the UnexpectedError instead of the top-level one ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [#48](https://github.com/alexjeffburke/evaldown/pull/48) Rejection from promises ([Alex J Burke](mailto:alex@alexjeffburke.com), [Alex J Burke](mailto:alex@alexjeffburke.com))
+- [#47](https://github.com/alexjeffburke/evaldown/pull/47) Avoid breaking with const\/let when babel is not present ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
 - [#45](https://github.com/alexjeffburke/evaldown/pull/45) Upgrade eslint-plugin-node to version 11.0.0 ([depfu[bot]](mailto:23717796+depfu[bot]@users.noreply.github.com))
 - [#44](https://github.com/alexjeffburke/evaldown/pull/44) Add the ability for output blocks to specify a cleanStackTrace flag ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
 - [#43](https://github.com/alexjeffburke/evaldown/pull/43) Upgrade prettier to version 1.19.1 ([depfu[bot]](mailto:23717796+depfu[bot]@users.noreply.github.com))
@@ -192,20 +201,20 @@
 - [#38](https://github.com/alexjeffburke/evaldown/pull/38) Allow a 3.x series peer of magicpen-prism for newer Unexpected. ([Alex J Burke](mailto:alex@alexjeffburke.com))
 - [#37](https://github.com/alexjeffburke/evaldown/pull/37) Upgrade async to version 3.0.0 ([depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
 - [#35](https://github.com/alexjeffburke/evaldown/pull/35) Upgrade mocha to version 6.0.0 ([depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
-- [#33](https://github.com/alexjeffburke/evaldown/pull/33) Support multiple preceding html comments ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [#33](https://github.com/alexjeffburke/evaldown/pull/33) Support multiple preceding html comments ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
 - [#32](https://github.com/alexjeffburke/evaldown/pull/32) Allow code block modifiers\/flags in HTML comments ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
 - [#31](https://github.com/alexjeffburke/evaldown/pull/31) Use the next major version of unexpected ([Sune Simonsen](mailto:sune@we-knowhow.dk))
-- [#30](https://github.com/alexjeffburke/evaldown/pull/30) Add prettier setup ([Andreas Lind](mailto:andreaslindpetersen@gmail.com))
-- [#29](https://github.com/alexjeffburke/evaldown/pull/29) Unsupport node versions &lt; 6 ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
+- [#30](https://github.com/alexjeffburke/evaldown/pull/30) Add prettier setup ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com))
+- [#29](https://github.com/alexjeffburke/evaldown/pull/29) Unsupport node versions &lt; 6 ([Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [Andreas Lind](mailto:andreaslindpetersen@gmail.com), [depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
 - [#13](https://github.com/alexjeffburke/evaldown/pull/13) Upgrade async to version 2.6.1 ([depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
 - [#15](https://github.com/alexjeffburke/evaldown/pull/15) Upgrade esprima to version 4.0.1 ([depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
 - [#16](https://github.com/alexjeffburke/evaldown/pull/16) Upgrade passerror to version 1.1.1 ([depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
 - [#18](https://github.com/alexjeffburke/evaldown/pull/18) Upgrade source-map-support to version 0.5.9 ([depfu[bot]](mailto:depfu[bot]@users.noreply.github.com))
 - [#8](https://github.com/alexjeffburke/evaldown/pull/8) Babel transpile before esprima parsing ([Sune Simonsen](mailto:sune@we-knowhow.dk))
 - [#1](https://github.com/alexjeffburke/evaldown/pull/1) Make magicpen-prism a peer dependency and try it on semver ([Sune Simonsen](mailto:sune@we-knowhow.dk))
-- [#6](https://github.com/alexjeffburke/evaldown/pull/6) Rewrite function declarations to variable declarations to avoid Babel bug ([Sune Simonsen](mailto:sune@we-knowhow.dk))
+- [#6](https://github.com/alexjeffburke/evaldown/pull/6) Rewrite function declarations to variable declarations to avoid Babel bug ([Sune Simonsen](mailto:sune@we-knowhow.dk), [Sune Simonsen](mailto:sune@we-knowhow.dk))
 - [#5](https://github.com/alexjeffburke/evaldown/pull/5) Support babel transpiling when generating html and updating snippets ([Sune Simonsen](mailto:sune@we-knowhow.dk))
-- [#4](https://github.com/alexjeffburke/evaldown/pull/4) Integrate with babel and source map support ([Andreas Lind](mailto:andreas@one.com))
+- [#4](https://github.com/alexjeffburke/evaldown/pull/4) Integrate with babel and source map support ([Andreas Lind](mailto:andreas@one.com), [Andreas Lind](mailto:andreas@one.com), [Andreas Lind](mailto:andreas@one.com), [Andreas Lind](mailto:andreas@one.com))
 
 #### Commits to master
 
@@ -223,5 +232,4 @@
 - [Document the markdown output format.](https://github.com/alexjeffburke/evaldown/commit/6b6796524b30658baebfc1cd6643347e7341c4ac) ([Alex J Burke](mailto:alex@alexjeffburke.com))
 - [Settle on "wrapOutput" to specify an output wrapping function.](https://github.com/alexjeffburke/evaldown/commit/ad68f0a96cb735692be8ae4a6f3cab6e6accca05) ([Alex J Burke](mailto:alex@alexjeffburke.com))
 - [Add "console" capture to the README.](https://github.com/alexjeffburke/evaldown/commit/7780d185bf16c8c6a955a019633ad121af0a3d9d) ([Alex J Burke](mailto:alex@alexjeffburke.com))
-- [+28 more](https://github.com/alexjeffburke/evaldown/compare/3a69602f26e54cc73b58f1f3e945daab6fc72938%5E...v0.1.0)
-
+- [+28 more](https://github.com/alexjeffburke/evaldown/compare/7780d185bf16c8c6a955a019633ad121af0a3d9d...v0.1.0)
