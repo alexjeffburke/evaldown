@@ -637,19 +637,16 @@ describe("Evaldown", () => {
         markdownFiles: [sourceFile]
       });
 
-      await expect(
-        result,
-        "to exhaustively satisfy",
-        new Stats({
-          errored: 3,
-          errorEntries: [
-            {
-              file: "failing.md",
-              error: expect.it("to be an", errors.FileEvaluationError)
-            }
-          ]
-        })
-      );
+      expect(result, "to exhaustively satisfy", {
+        succeeded: 0,
+        errored: 3,
+        errorEntries: [
+          {
+            file: "failing.md",
+            error: expect.it("to be an", errors.FileEvaluationError)
+          }
+        ]
+      });
     });
   });
 
